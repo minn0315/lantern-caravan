@@ -1,8 +1,8 @@
-import {BONUS_LABELS} from './balance-schema.js?v=45';
-import {discoveredItems} from './discoveries.js?v=45';
-import {COMPANIONS,CARDS,RELICS,ENEMIES,BOSSES} from './catalog.js?v=45';
-import {characterArt,enemyArt,cardIllustration,icon} from './art.js?v=45';
-import {cardLines} from './presentation.js?v=45';
+import {BONUS_LABELS} from './balance-schema.js?v=46';
+import {discoveredItems} from './discoveries.js?v=46';
+import {COMPANIONS,CARDS,RELICS,ENEMIES,BOSSES} from './catalog.js?v=46';
+import {characterArt,enemyArt,cardIllustration,icon} from './art.js?v=46';
+import {cardLines} from './presentation.js?v=46';
 export const ENCYCLOPEDIA_GROUPS={heroes:'キャラ',cards:'カード',relics:'レリック',enemies:'敵',bosses:'ボス'};
 const entries={heroes:COMPANIONS,cards:Object.values(CARDS),relics:RELICS,enemies:ENEMIES,bosses:BOSSES};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

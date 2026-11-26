@@ -16,6 +16,7 @@ textarea{width:100%;min-height:84px;background:#141510;color:var(--muted);border
 </style></head><body><main>
 <div class="eyebrow">DATA TRANSFER</div>
 <h1>旧サイトからのデータ移行</h1>
+<p class="note">旧サイトのタイトル画面に「新しいサイトへデータを移す」ボタンが表示されている場合は、それを押すだけで移行できます（①〜③は不要です）。</p>
 <p class="lead">旧サイト（chatgpt.site）で遊んだ実績・旅人の解放状況・図鑑・隠し要素の進み具合・進行中の旅・手動記録・設定を、この新しいサイトへまとめて移します。遊んだ<b>端末・ブラウザごと</b>に1回ずつ行ってください。</p>
 
 <section>
@@ -31,11 +32,11 @@ textarea{width:100%;min-height:84px;background:#141510;color:var(--muted);border
 <h2>② 旧サイトでツールを実行する</h2>
 <ol><li><a href="https://lantern-caravan-yoru.fernycarat8.chatgpt.site/" target="_blank" rel="noopener">旧サイト</a>を、いつも遊んでいたブラウザで開きます。</li>
 <li>開いたまま、登録した「灯火のデータを持ち出す」（スマホは「灯火移行」）を実行します。<br><small>PC：ブックマークバーで押す ／ iPhone：ブックマーク一覧から押す ／ Android：アドレスバーに「灯火移行」と入力し、候補に出たブックマークを押す</small></li>
-<li>「○件を書き出しました」と出れば成功です。ファイル <code>lantern-caravan-all-data.json</code> が保存され、同じ内容がコピーもされます。</li></ol>
+<li>自動で新しいサイトの「データの受け取り」画面に移動します。内容を確認して「引き継ぐ」を押せば完了です。<br><small>データがとても大きい場合だけ、ファイル <code>lantern-caravan-all-data.json</code> が保存されます。そのときは③の方法で読み込んでください。</small></li></ol>
 </section>
 
 <section>
-<h2>③ 新しいサイトで読み込む</h2>
+<h2>③ ファイルが保存された場合だけ：新しいサイトで読み込む</h2>
 <ol><li><a href="./">新しいサイト</a>を開き、タイトルの「設定・音量・セーブ」→「データの引き継ぎ」→「開く」を押します。</li>
 <li>「ファイルを選ぶ」で保存したファイルを選ぶか、「コピーした内容を貼り付ける」に貼り付けて「読み込む」を押します。</li>
 <li>内容を確認して「引き継ぐ」を押すと完了です。</li></ol>
@@ -44,7 +45,7 @@ textarea{width:100%;min-height:84px;background:#141510;color:var(--muted);border
 </section>
 </main>
 <script>
-const CODE="javascript:(()=>{try{const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('lantern')&&k!=='lantern:balance-draft')d[k]=localStorage.getItem(k)}const n=Object.keys(d).length;if(!n){alert('このページには灯火のキャラバンのデータがありません。旧サイトを開いた状態で実行してください。');return}const j=JSON.stringify({format:'lantern-backup',version:1,exportedAt:Date.now(),origin:location.origin,data:d});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='lantern-caravan-all-data.json';document.body.appendChild(a);a.click();a.remove();try{navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{})}catch(e){}alert('灯火のキャラバンのデータ'+n+'件を書き出しました。新しいサイトの「データの引き継ぎ」で読み込んでください。')}catch(e){alert('書き出しに失敗しました：'+e.message)}})()";
+const CODE="javascript:(async()=>{try{const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('lantern')&&k!=='lantern:balance-draft')d[k]=localStorage.getItem(k)}const n=Object.keys(d).length;if(!n){alert('このページには灯火のキャラバンのデータがありません。旧サイトを開いた状態で実行してください。');return}const j=JSON.stringify({format:'lantern-backup',version:1,exportedAt:Date.now(),origin:location.origin,data:d});const U='https://minn0315.github.io/lantern-caravan/';let p='j.'+encodeURIComponent(j);if(window.CompressionStream){const b=new Uint8Array(await new Response(new Blob([j]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());let s='';for(let i=0;i<b.length;i+=32768)s+=String.fromCharCode.apply(null,b.subarray(i,i+32768));p='g.'+btoa(s).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'')}if(p.length<=1500000){location.href=U+'receive.html#data='+p;return}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='lantern-caravan-all-data.json';document.body.appendChild(a);a.click();a.remove();alert('データが大きいためファイル（lantern-caravan-all-data.json）に保存しました。新しいサイトの「データの引き継ぎ」で読み込んでください。')}catch(e){alert('書き出しに失敗しました：'+e.message)}})()";
 document.getElementById('tool-link').href=CODE;
 document.getElementById('tool-link').addEventListener('click',e=>{e.preventDefault();alert('このボタンはブックマークバーへドラッグして登録してください。旧サイトを開いた状態で実行します。')});
 document.getElementById('code').value=CODE;

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#191a16"><meta name="robots" content="noindex"><title>データの受け取り — 灯火のキャラバン</title>
+<style>
+:root{--bg:#191a16;--panel:#23241e;--line:#3d3d31;--ink:#ece3cc;--muted:#b7ad94;--accent:#c96a4a;--gold:#e1c785}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Noto Sans JP",system-ui,sans-serif}
+main{max-width:620px;margin:0 auto;padding:32px 16px 64px}h1{font:700 1.5rem/1.35 "Noto Serif JP",serif;margin:.2em 0 .5em}.eyebrow{color:var(--muted);font-size:.8rem;letter-spacing:.12em}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;margin:18px 0}ul{padding-left:1.2em;margin:.4em 0}li{margin:.25em 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button,a.btn{font:inherit;border-radius:8px;padding:11px 18px;cursor:pointer;text-decoration:none;display:inline-block}
+.primary{background:var(--accent);color:#fff;border:1px solid var(--accent);font-weight:700}.ghost{background:#3a3b31;color:var(--ink);border:1px solid #5a5a48}
+.muted{color:var(--muted)}.error{color:#f0a08a}[hidden]{display:none!important}
+</style></head><body><main>
+<div class="eyebrow">DATA TRANSFER</div>
+<h1>旧サイトからのデータ受け取り</h1>
+<section id="waiting"><p>旧サイトからデータを受け取っています…</p><p class="muted">この画面が続く場合は、旧サイトの画面に戻って「新しいサイトへデータを移す」をもう一度押してください。</p></section>
+<section id="confirm" hidden><p><b>この内容を引き継ぎますか？</b></p><ul id="summary"></ul><p class="muted">実績・解放状況・図鑑は、このサイトの記録と合わせて残ります（どちらかで達成していれば達成）。進行中の旅・手動記録・設定は旧サイトの内容に置き換わります。</p><div class="actions"><button class="primary" id="apply">引き継ぐ</button><a class="btn ghost" href="./">引き継がずにゲームへ</a></div></section>
+<section id="done" hidden><p><b>引き継ぎが完了しました。</b></p><p class="muted">まもなくゲームを開きます。</p><div class="actions"><a class="btn primary" href="./">ゲームを開く</a></div></section>
+<section id="failed" hidden><p class="error" id="error"></p><div class="actions"><a class="btn ghost" href="migrate.html">手動で移行する方法</a><a class="btn ghost" href="./">ゲームへ</a></div></section>
+</main>
+<script type="module">
+import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=46';
+const OLD_ORIGINS=['https://lantern-caravan-yoru.fernycarat8.chatgpt.site'];
+if(location.hostname==='localhost')OLD_ORIGINS.push('http://localhost:8765'); // ローカル検証用
+const $=id=>document.getElementById(id),show=id=>{for(const s of ['waiting','confirm','done','failed'])$(s).hidden=s!==id};
+let backup=null,received=false;
+function receive(text){if(received)return;received=true;try{backup=parseBackup(text);const s=summarizeBackup(backup);$('summary').innerHTML=[`実績：${s.achievements}個`,`迎えた旅人：${s.travelers}人 ／ 通算勝利：${s.wins}`,`進行中の旅：${s.run?`第${s.run.chapter}ステージ・${s.run.step}地点目`:'なし'}`,`手動記録：${s.manualSlots}件 ／ 設定：${s.settings?'あり':'なし'} ／ デバッグ版：${s.debug?'あり':'なし'}`].map(t=>`<li>${t}</li>`).join('');show('confirm')}catch(e){$('error').textContent=e.message;show('failed')}}
+$('apply').addEventListener('click',()=>{try{applyBackup(backup,localStorage);show('done');setTimeout(()=>location.href='./',1500)}catch(e){$('error').textContent='引き継ぎに失敗しました：'+e.message;show('failed')}});
+// ① 旧サイトから別タブで開かれた場合：postMessage で受け取る（データ量の制限なし）
+addEventListener('message',ev=>{if(!OLD_ORIGINS.includes(ev.origin)||ev.data?.type!=='lantern-backup'||typeof ev.data.payload!=='string')return;ev.source?.postMessage?.({type:'lantern-migrate-received'},ev.origin);receive(ev.data.payload)});
+if(window.opener){const ping=()=>{if(received)return;for(const origin of OLD_ORIGINS){try{window.opener.postMessage({type:'lantern-migrate-ready'},origin)}catch{}}};ping();const timer=setInterval(()=>{if(received)clearInterval(timer);else ping()},400)}
+// ② 同じタブで移動してきた場合：URLの # 以降で受け取る（サーバーには送信されません）
+const hash=location.hash.startsWith('#data=')?location.hash.slice(6):'';
+async function unpack(packed){
+ if(packed.startsWith('j.'))return decodeURIComponent(packed.slice(2));
+ if(!packed.startsWith('g.'))return decodeURIComponent(packed);
+ const b64=packed.slice(2).replace(/-/g,'+').replace(/_/g,'/'),bin=atob(b64+'==='.slice((b64.length+3)%4)),bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+ return await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+}
+if(hash){history.replaceState(null,'',location.pathname);unpack(hash).then(receive).catch(()=>{$('error').textContent='データを読み取れませんでした。お手数ですが手動で移行してください。';show('failed')})}
+else if(!window.opener)setTimeout(()=>{if(!received){$('error').textContent='旧サイトからのデータが届きませんでした。';show('failed')}},1500);
+</script>
+</body></html>

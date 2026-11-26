@@ -1,6 +1,6 @@
-import {recoverGoddessCards} from './deck-integrity.js?v=45';
-import {validDebugOverrides} from './debug-rules.js?v=45';
-import * as E from './engine.js?v=45';
+import {recoverGoddessCards} from './deck-integrity.js?v=46';
+import {validDebugOverrides} from './debug-rules.js?v=46';
+import * as E from './engine.js?v=46';
 const phases=['map','battle','reward','shop','camp','event','won','lost','mystery','incident','relic','forge','shrine','recruit','cardpick','remove','blessing','cycle','shopupgrade','goddess','demon-gate'];
 const num=(n,max=1e8)=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=max;
 const index=(n,max)=>Number.isInteger(n)&&n>=0&&n<max;

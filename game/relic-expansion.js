@@ -1,4 +1,4 @@
-import {designRelic} from './relic-design.js?v=45';
+import {designRelic} from './relic-design.js?v=46';
 // Additional relic content. All effects are implemented in engine.js.
 // Keep special-stage rewards outside the normal and boss offer pools.
 export const ADDITIONAL_RELICS = [

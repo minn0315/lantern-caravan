@@ -1,8 +1,8 @@
-import {roundHP,normalizeHealth} from './health.js?v=45';
-import {DEBUG_EDITOR_GROUPS,DEBUG_CARD_FIELDS,DEBUG_CARD_FLAGS,parseDebugOverrides} from './debug-rules.js?v=45';
-import * as E from './engine.js?v=45';
-import {valid} from './saves.js?v=45';
-import {cardLines} from './presentation.js?v=45';
+import {roundHP,normalizeHealth} from './health.js?v=46';
+import {DEBUG_EDITOR_GROUPS,DEBUG_CARD_FIELDS,DEBUG_CARD_FLAGS,parseDebugOverrides} from './debug-rules.js?v=46';
+import * as E from './engine.js?v=46';
+import {valid} from './saves.js?v=46';
+import {cardLines} from './presentation.js?v=46';
 export const DEBUG_MODE=/\/debug(\/(index\.html)?)?$/.test(globalThis.location?.pathname||'');
 export function debugStorage(storage){return{getItem:key=>storage.getItem('lantern-debug:'+key),setItem:(key,value)=>storage.setItem('lantern-debug:'+key,value),removeItem:key=>storage.removeItem?.('lantern-debug:'+key)}}
 const copy=x=>JSON.parse(JSON.stringify(x)),num=(v,min,max,step=1)=>{const n=Number(v);if(!Number.isFinite(n))throw Error('数値を入力してください。');return Math.max(min,Math.min(max,Math.round(n/step)*step))};
