@@ -24,5 +24,5 @@ python server.py
 
 ## 更新時の注意
 
-- JS/CSS を変更したら全ファイルの `?v=NN` を一括で上げる（ブラウザキャッシュ対策）。
+- JS/CSS を変更したら全ファイル（`game/version.json` と game-loader.js の BUILD を含む）の `v=NN` を一括で上げる。古いページを開いたままのプレイヤーも、次回起動時に version.json を見て自動で最新版に読み直す。
 - 表示数値の検証: ブラウザのコンソールで `await (await import('./tests/verify-card-display.js?v=44')).run()`
