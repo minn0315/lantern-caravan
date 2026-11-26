@@ -1,7 +1,7 @@
 // 全データ（セーブ・手動記録・実績・解放状況・図鑑・隠し要素・設定・デバッグ版データ）の書き出し／読み込み
-import {mergeProgress,emptyProgress} from './progress.js?v=46';
-import {decodeSave} from './saves.js?v=46';
-import {normalizeHiddenProgress} from './hidden-traveler.js?v=46';
+import {mergeProgress,emptyProgress} from './progress.js?v=47';
+import {decodeSave} from './saves.js?v=47';
+import {normalizeHiddenProgress} from './hidden-traveler.js?v=47';
 
 export const BACKUP_FORMAT='lantern-backup';
 const PROGRESS_KEYS=['lantern-caravan-progress-v1','lantern-debug:lantern-caravan-progress-v1'];

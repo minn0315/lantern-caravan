@@ -1,4 +1,4 @@
-import {GLOSSARY} from './glossary.js?v=46';
+import {GLOSSARY} from './glossary.js?v=47';
 const openTerm=Symbol('open-term-help');
 const aliases={hp:['HP','最大HP'],shield:['盾','シールド'],power:['闘志'],poison:['毒'],weak:['弱点'],vulnerable:['脆弱'],stun:['足止め'],rage:['怒り'],regen:['再生'],thorns:['反撃'],energy:['気力','コスト'],cleanse:['浄化','解毒'],hits:['連撃','多段攻撃'],exhaust:['消滅'],draw:['ドロー'],selfCost:['HP消費'],next:['次ターン'],ultimate:['特殊カード'],fusion:['合成'],goddess:['湖の女神']};
 const terms=new Map();for(const g of GLOSSARY)for(const word of aliases[g.id]||g.name.split(/[・（]/).filter(w=>w.length>=2))terms.set(word,g.id);

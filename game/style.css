@@ -294,3 +294,43 @@ html[data-motion="off"] .poison-impact>i{display:none}
 .backup-paste span{flex:1 1 auto;min-width:0}
 .backup-paste textarea{display:block;width:100%;margin-top:6px;min-height:64px;font:12px/1.5 ui-monospace,monospace;resize:vertical;box-sizing:border-box}
 .backup-summary{margin:.6em 0 1em;padding-left:1.2em;line-height:1.8}
+
+/* カード効果のアイコン表示 */
+.card-description.card-badges{gap:4px;justify-content:flex-start}
+.cb-row{display:flex;flex-wrap:wrap;gap:4px 5px;align-items:center}
+.cb{display:inline-flex;align-items:center;gap:2px;padding:2px 6px 2px 4px;border-radius:7px;line-height:1;white-space:nowrap;position:relative;border:1px solid transparent}
+.cb svg{width:17px;height:17px;flex:none}
+.cb b{font:700 18px/1 Georgia,"Noto Serif JP",serif;letter-spacing:-.02em}
+.cb b i{font:600 11px/1 "Noto Sans JP",sans-serif;font-style:normal;margin-left:1px;opacity:.85}
+.cb-scope{font:700 9px/1 "Noto Sans JP",sans-serif;font-style:normal;padding:2px 3px;border-radius:4px;margin-left:2px;background:rgba(0,0,0,.14)}
+.cb-attack{background:#f3d9d0;color:#8a2c1b;border-color:#e0b3a5}
+.cb-guard{background:#dde4ea;color:#2f4a63;border-color:#b9c7d3}
+.cb-heal{background:#dcebd6;color:#2e5d2a;border-color:#b6d0ad}
+.cb-debuff{background:#e7dcef;color:#5b347a;border-color:#cdb9dd}
+.cb-buff{background:#f5e3c2;color:#8a5212;border-color:#e3c48e}
+.cb-resource{background:#efe7cf;color:#6a5717;border-color:#d8c995}
+.cb-cost{background:#eadedb;color:#7a2a2a;border-color:#d4b2ad;border-style:dashed}
+.cb-cost b{font-size:15px}
+.cb-note{display:block;font-size:10.5px;line-height:1.45;color:#5a5c49}
+.cb-note b{font-size:12px;color:#24271c}
+.cb-more{display:block;font-size:10px;color:#8a7f62}
+.cb-legend{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:6px 8px;align-items:center;font-size:13px;margin:8px 0}
+.cb-legend .cb{justify-self:start}
+@media (max-width:700px){.cb svg{width:15px;height:15px}.cb b{font-size:16px}.cb{padding:2px 5px 2px 3px}.cb-legend{grid-template-columns:auto 1fr}}
+.cb-tag{font:700 11px/1.3 "Noto Sans JP",sans-serif;padding:3px 6px}
+.card-badges .cb-row{justify-content:center;gap:6px;margin-top:6px}
+.card-badges .cb{padding:4px 8px 4px 6px;border-radius:9px;gap:3px}
+.card-badges .cb svg{width:22px;height:22px}
+.card-badges .cb b{font-size:24px}
+.card-badges .cb-cost,.card-badges .cb-tag{padding:3px 6px}
+.card-badges .cb-cost svg{width:16px;height:16px}
+.card-badges .cb-cost b{font-size:15px}
+.card-badges .cb-scope{font-size:10px}
+.card-badges .cb-note{text-align:center;margin-top:2px}
+@media (max-width:700px){.card-badges .cb{padding:3px 6px 3px 4px}.card-badges .cb svg{width:17px;height:17px}.card-badges .cb b{font-size:18px}.card-badges .cb-row{gap:4px;margin-top:3px}}
+.card-badges .cb-range b{font-size:18px}
+.card-badges .cb-range svg{width:18px;height:18px}
+.card-badges .cb{max-width:100%}
+@media (max-width:700px){.card-badges .cb-range b{font-size:14px}.card-badges .cb-range svg{width:14px;height:14px}}
+.cb-legend-title{margin:18px 0 4px;font-size:15px}
+.cb-legend .cb{padding:3px 6px}

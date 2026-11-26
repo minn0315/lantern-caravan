@@ -1,5 +1,5 @@
-import {endingInfo} from './endings.js?v=46';
-import {CHAPTERS,COMPANIONS,SPECIAL_CHAPTER} from './catalog.js?v=46';
+import {endingInfo} from './endings.js?v=47';
+import {CHAPTERS,COMPANIONS,SPECIAL_CHAPTER} from './catalog.js?v=47';
 export const STORY_KINDS=['intro','chapter','ending','defeat'];
 export const STORY_LENGTH=3;
 export function storyFrames(s,cutscene=s.cutscene){
