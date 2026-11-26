@@ -1,8 +1,8 @@
 // カード表示の数値が実際の効果（engine.applyEffects）と一致するかを全カードで検証する。
 // ブラウザで: await (await import('/tests/verify-card-display.js')).run()
-import * as E from '../engine.js?v=48';
-import {resolveDiceEffects} from '../dice-rules.js?v=48';
-import {cardLines} from '../presentation.js?v=48';
+import * as E from '../engine.js?v=49';
+import {resolveDiceEffects} from '../dice-rules.js?v=49';
+import {cardLines} from '../presentation.js?v=49';
 
 const sum = a => a.reduce((n, v) => n + v, 0);
 
@@ -31,10 +31,10 @@ function makeState(card, rng, relics) {
 
 export async function run({trials = 3, seed = 7} = {}) {
   let x = seed; const rng = () => (x = (x * 1103515245 + 12345) % 2147483648) / 2147483648;
-  const relicIds = (await import('../catalog.js?v=48')).RELICS.map(r => r.id);
+  const relicIds = (await import('../catalog.js?v=49')).RELICS.map(r => r.id);
   const failures = []; let checked = 0, textErrors = 0;
-  for (const id of Object.keys(E.CARDS || (await import('../catalog.js?v=48')).CARDS)) {
-    const base = (await import('../catalog.js?v=48')).CARDS[id];
+  for (const id of Object.keys(E.CARDS || (await import('../catalog.js?v=49')).CARDS)) {
+    const base = (await import('../catalog.js?v=49')).CARDS[id];
     if (base.status) continue;
     for (let t = 0; t < trials; t++) {
       const relics = Array.from({length: 1 + Math.floor(rng() * 6)}, () => relicIds[Math.floor(rng() * relicIds.length)]);

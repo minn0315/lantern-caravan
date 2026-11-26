@@ -334,3 +334,20 @@ html[data-motion="off"] .poison-impact>i{display:none}
 @media (max-width:700px){.card-badges .cb-range b{font-size:14px}.card-badges .cb-range svg{width:14px;height:14px}}
 .cb-legend-title{margin:18px 0 4px;font-size:15px}
 .cb-legend .cb{padding:3px 6px}
+
+/* 敵の能力表示 */
+.statuses .trait-chip{background:rgba(40,32,22,.78);color:#f1dfb6;border:1px solid rgba(225,199,133,.55);font-size:10px;padding:1px 5px;border-radius:5px}
+.statuses .trait-flee,.statuses .trait-hitCap{border-color:#e1c785;color:#ffe9a8}
+.trait-list{margin:.4em 0 .8em;padding-left:1.2em;line-height:1.7}
+.treasure-enemy .unit-art img{filter:sepia(.6) saturate(2.2) hue-rotate(5deg) drop-shadow(0 0 10px rgba(255,214,110,.85))}
+.treasure-enemy .unit-label b{color:#ffe3a1}
+.treasure-banner{display:flex;gap:10px;align-items:center;margin:10px auto;max-width:560px;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,rgba(225,199,133,.25),rgba(225,199,133,.08));border:1px solid rgba(225,199,133,.7);color:#f6e6bf}
+.treasure-banner small{display:block;opacity:.9}
+
+/* パスワード */
+.password-form{display:flex;gap:8px;margin:12px 0}
+.password-form input{flex:1;min-width:0;font:600 18px/1.4 "Noto Sans JP",sans-serif;letter-spacing:.08em;padding:10px 12px;border-radius:8px;border:1px solid #8c7c56;background:#fffaf0;color:#2b2a22}
+.password-result{font-weight:700;margin:6px 0}
+.password-result.warn{color:#a3412e}
+.password-result.ok{color:#2e6b34}
+.password-unlocked{padding-left:1.2em}

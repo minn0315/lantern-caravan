@@ -1,10 +1,12 @@
-import {roundHP} from './health.js?v=48';
-import {enemyFlavor} from './enemy-lore.js?v=48';
-import {designRelic} from './relic-design.js?v=48';
-import {DEMON_BOSS} from './demon-stage.js?v=48';
-import {simplifyRelic} from './simple-relics.js?v=48';
-import {attachUpgradePool} from './upgrade-pool.js?v=48';
-import {ADDITIONAL_RELICS,SPECIAL_RELICS} from './relic-expansion.js?v=48';
+import {assignEnemyTraits,TREASURE_ENEMY} from './enemy-traits.js?v=49';
+import {KITS,LEGACY_SPECIAL_NAMES,kitSpecials,finalizeKitEffect} from './character-kits.js?v=49';
+import {roundHP} from './health.js?v=49';
+import {enemyFlavor} from './enemy-lore.js?v=49';
+import {designRelic} from './relic-design.js?v=49';
+import {DEMON_BOSS} from './demon-stage.js?v=49';
+import {simplifyRelic} from './simple-relics.js?v=49';
+import {attachUpgradePool} from './upgrade-pool.js?v=49';
+import {ADDITIONAL_RELICS,SPECIAL_RELICS} from './relic-expansion.js?v=49';
 export {SPECIAL_RELICS};
 export const HEROES=[{id:'row',name:'ロウ',job:'灯の守り手',max:76,color:'#b8c59c',icon:'shield',actor:0,art:0,passive:'通常の盾カードの効果 +1',bonus:{block:1}},{id:'sena',name:'セナ',job:'星詠みの射手',max:56,color:'#c4b2e7',icon:'bow',actor:1,art:1,passive:'弱点のある敵への攻撃 +1',bonus:{weakAttack:1}},{id:'nico',name:'ニコ',job:'旅の錬金術師',max:60,color:'#e2ba86',icon:'flask',actor:2,art:2,passive:'回復カードの回復量 +1',bonus:{heal:1}}];
 export const COMPANIONS=[...HEROES,{id:'kai',name:'カイ',job:'旧都の衛士',max:86,color:'#a9bc9b',icon:'shield',actor:0,art:3,passive:'毎ターン自身に盾2',bonus:{selfTurnShield:2}},{id:'eda',name:'エダ',job:'灰刃の傭兵',max:66,color:'#b7b48e',icon:'sword',actor:0,art:4,passive:'自身の攻撃カードの威力 +2',bonus:{attack:2}},{id:'rika',name:'リカ',job:'湿地の猟師',max:62,color:'#c4afd3',icon:'bow',actor:1,art:5,passive:'自身が付与する毒 +2',bonus:{poison:2}},{id:'mio',name:'ミオ',job:'迷い星の占者',max:50,color:'#b2b8dc',icon:'star',actor:1,art:6,passive:'毎ターン最初の策略カードで1枚引く',bonus:{firstSkillDraw:1}},{id:'fin',name:'フィン',job:'巡礼の薬師',max:66,color:'#d8bf91',icon:'leaf',actor:2,art:7,passive:'回復カードの回復量 +3',bonus:{heal:3}},{id:'towa',name:'トワ',job:'硝子の調香師',max:54,color:'#d5b195',icon:'flask',actor:2,art:8,passive:'自身の全体攻撃 +3、毒 +1',bonus:{aoe:3,poison:1}}];
@@ -134,27 +136,23 @@ for(const h of COMPANIONS.filter(h=>cardWords[h.id])){
 
 const strategies={aurora:{allPower:1,selfShield:6},gold:{goldSpend:8,goldScale:80},dice:{dice:1},armor:{armorRatio:.35},exhaust:{exhaustScale:2},blood:{selfLowBonus:8,selfCost:2},venom:{poisonBurst:1},fuel:{fuelCost:3,fuelScale:20},hand:{handScale:1},wounded:{woundedScale:8},discard:{discardScale:.7},weak:{weakBonus:5,weak:1},frost:{stun:1,exhaust:true},chain:{chainScale:2},harmony:{harmonyScale:3},fallen:{fallenScale:8},puppet:{attackDown:2},wind:{nextEnergy:1},flame:{selfCost:3,power:1},tide:{selfHeal:3},forge:{upgradeScale:3},mirror:{thornsRatio:1}};
 for(const h of COMPANIONS.filter(h=>h.theme)){
- const words=['一撃','守り','手当て','展開','策動','備え','連技','封印','転機','援護','探求','奥伝'];
+ const kit=KITS[h.id],seen=new Set(),sig=e=>JSON.stringify(Object.entries(e).sort());
  for(let n=0;n<62;n++){
-  const k=n%12,rank=Math.floor(n/12),cost=[1,1,1,2,0,1,2,2,0,2,1,3][k];
-  let effect=[{damage:8+rank*2},{shield:10+rank*2,target:'hero'},{heal:7+rank*2,target:'hero'},{aoe:6+rank*2,target:'all'},{draw:1,nextEnergy:1,exhaust:true,target:'all'},{selfShield:7+rank,nextDraw:1,target:'all'},{damage:4+rank,hits:2},{damage:6+rank,weak:1,exhaust:true},{energy:2,selfCost:2,exhaust:true,target:'all'},{allShield:6+rank,target:'all'},{draw:2,selfShield:rank+1,target:'all'},{aoe:16+rank*2,exhaust:true,target:'all'}][k];
-  if(effect.damage||effect.aoe)Object.assign(effect,strategies[h.theme]);
-  if(h.theme==='gold'){if(!effect.damage&&!effect.aoe)effect.goldGain=3+rank;if(k===8){delete effect.selfCost;effect.goldSpend=20}}
-  if(h.theme==='dice'){effect.dice=rank>=4?2:1;effect.diceMode=effect.damage||effect.aoe?'attack':effect.heal?'heal':effect.shield||effect.allShield||effect.selfShield?'shield':'draw'}
-  if(h.theme==='venom'&&k===3){delete effect.aoe;effect.allPoison=4+rank}
-  if(h.theme==='tide'&&k===1)effect.regen=2+rank;
-  if(h.theme==='mirror'&&k===1)effect.thorns=3+rank;
-  if(h.theme==='blood'&&k===4){effect.power=2;effect.selfCost=3}
-  const id=h.id+'_art_'+n;add(h.actor,id,h.job.slice(0,2)+'・'+['灯','道','月','星','夜','暁'][rank]+words[k],cost,effect,h.icon);cards[id].owner=h.id;
+  const k=n%12,rank=Math.floor(n/12),[stem,costDef,make,ic]=kit.cards[k],cost=typeof costDef==='function'?costDef(rank):costDef;
+  const id=h.id+'_art_'+n;let effect=finalizeKitEffect(cost,make(rank));if(seen.has(k+sig(effect)))effect={...effect,selfShield:(effect.selfShield||0)+2*rank};seen.add(k+sig(effect));
+  add(h.actor,id,kit.prefix[rank]+stem,cost,effect,ic||h.icon);cards[id].owner=h.id;
  }
  STARTER_DECKS[h.id]=[0,0,0,1,1,2,2,4,5,8].map(n=>h.id+'_art_'+n);RECRUIT_DECKS[h.id]=[0,0,1,2,4,5].map(n=>h.id+'_art_'+n);
 }
 // One ultimate may be carried by the whole caravan. All are drawn last.
-for(const h of COMPANIONS)for(let k=0;k<10;k++){
- const effect=[{damage:65,ignoreShield:true},{aoe:30,allWeak:3,target:'all'},{allShield:40,target:'all'},{allHeal:30,allCleanse:true,target:'all'},{damage:30,hits:3},{allPower:6,allShield:15,target:'all'},{allPoison:18,allStun:1,target:'all'},{heal:60,revive:true,shield:25,target:'hero'},{energy:4,draw:4,target:'all'},{damage:45,weak:5,selfHeal:20}][k];
- if(h.theme&&(effect.damage||effect.aoe))Object.assign(effect,strategies[h.theme]);
- if(h.theme==='dice'){effect.dice=3;effect.diceMode=effect.damage||effect.aoe?'attack':'shield'}
- const id=h.id+'_ultimate_'+k;add(h.actor,id,'秘奥・'+['破門','星落','不落','帰還','三連','誓約','蝕夜','再臨','開眼','灯継'][k],k===8?0:3,{...effect,special:true,exhaust:true},h.icon);cards[id].owner=h.id;
+for(const h of COMPANIONS){
+ const kit=KITS[h.id],themed=kit?kitSpecials(kit):null,names=kit?kit.specials:LEGACY_SPECIAL_NAMES[h.id];
+ for(let k=0;k<10;k++){
+  const id=h.id+'_ultimate_'+k;
+  if(themed){const[cost,effect]=themed[k];add(h.actor,id,'秘奥・'+names[k],cost,effect,h.icon)}
+  else{const effect=[{damage:65,ignoreShield:true},{aoe:30,allWeak:3,target:'all'},{allShield:40,target:'all'},{allHeal:30,allCleanse:true,target:'all'},{damage:30,hits:3},{allPower:6,allShield:15,target:'all'},{allPoison:18,allStun:1,target:'all'},{heal:60,revive:true,shield:25,target:'hero'},{energy:4,draw:4,target:'all'},{damage:45,weak:5,selfHeal:20}][k];add(h.actor,id,'秘奥・'+(names?.[k]||['破門','星落','不落','帰還','三連','誓約','蝕夜','再臨','開眼','灯継'][k]),k===8?0:3,{...effect,special:true,exhaust:true},h.icon)}
+  cards[id].owner=h.id;
+ }
 }
 
 cards.wound={id:'wound',name:'焦燥',actor:0,cost:1,type:'妨害',icon:'moon',target:'all',exhaust:true,status:true};
@@ -281,6 +279,9 @@ BOSSES.push({id:'sovereign_14_0',kind:'sovereign_14_0',boss:true,name:'振鐘の
 BOSSES.push({id:'sovereign_14_1',kind:'sovereign_14_1',boss:true,name:'時針翼の天使',chapter:14,hp:990,atk:30,pattern:['flurry', 'disrupt', 'attack', 'guardAlly', 'heavy'],ability:'毎ターンHP8回復。妨害と全体攻撃を使う。',shieldTurn:0,regen:8,enrage:7,phaseShield:32,energyDrain:1,atlas:{file:'boss-extra-1',cell:9}});
 BOSSES.push({id:'sovereign_15_0',kind:'sovereign_15_0',boss:true,name:'蝕日の竜',chapter:15,hp:1010,atk:30,pattern:['flurry', 'disrupt', 'attack', 'guardAlly', 'heavy'],ability:'毎ターン盾9。HP半分で攻撃力が上がる。',shieldTurn:9,regen:0,enrage:7,phaseShield:34,energyDrain:0,atlas:{file:'boss-extra-1',cell:10}});
 BOSSES.push({id:'sovereign_15_1',kind:'sovereign_15_1',boss:true,name:'黎明の不死鳥',chapter:15,hp:1040,atk:31,pattern:['venom', 'attack', 'hex', 'mend', 'heavy'],ability:'毎ターンHP8回復。妨害と全体攻撃を使う。',shieldTurn:0,regen:8,enrage:7,phaseShield:34,energyDrain:1,atlas:{file:'boss-extra-1',cell:11}});
+// 耐性・固有能力・複数回行動の割り当てと、逃げる敵の追加
+for(const e of ENEMIES)assignEnemyTraits(e);for(const b of BOSSES)assignEnemyTraits(b,{boss:true});
+ENEMIES.push({...TREASURE_ENEMY,art:ENEMIES.length});
 export const NODE_TYPES=['battle','elite','boss','camp','shop','event','mystery','treasure','shrine','forge','recruit','blessing','goddess'];
 export const EVENTS=[
 {title:'苔むした祠',text:'祠の奥に、巡礼者が残した灯がある。',options:[['祈る','生存者のHP+14 / 灯油-6'],['油を買う','銀貨20 / 灯油+28'],['立ち去る','何も消費せず進む']]},

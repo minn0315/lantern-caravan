@@ -1,4 +1,4 @@
-import {DEBUG_CARD_FIELDS,DEBUG_CARD_FLAGS} from './debug-rules.js?v=48';
+import {DEBUG_CARD_FIELDS,DEBUG_CARD_FLAGS} from './debug-rules.js?v=49';
 export const BALANCE_GROUPS={heroes:'旅人',enemies:'通常敵',bosses:'ボス',relics:'レリック',cards:'カード'};
 export const PATTERNS=['attack','heavy','sweep','flurry','venom','guard','guardAlly','mend','healAll','hex','curse','disrupt','rally','drain','wither','summon'];
 export const MOTIFS=['vines','thorns','fangs','bones','bells','rings','waves','petals','crown','embers','chains','blades','void','stars','spears','halo','seeds','mirrors','breath','spiral','ice','antlers','spores','shell','sand','cage','gears','blood','pages','feathers','eyes','stone','lightning','meteors','web','clocks'];

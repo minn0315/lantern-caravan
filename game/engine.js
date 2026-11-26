@@ -1,20 +1,21 @@
-import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=48';
-import {enemyActionRange} from './enemy-actions.js?v=48';
-import {roundHP,normalizeHealth} from './health.js?v=48';
-import {stampFreshBalance} from './balance-runtime.js?v=48';
-import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=48';
+import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=49';
+import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=49';
+import {enemyActionRange} from './enemy-actions.js?v=49';
+import {roundHP,normalizeHealth} from './health.js?v=49';
+import {stampFreshBalance} from './balance-runtime.js?v=49';
+import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=49';
 export {debugGod,maintainDebugGod};
-import {endingInfo} from './endings.js?v=48';
-import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=48';
-import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=48';
-import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=48';
-import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=48';
-import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=48';
+import {endingInfo} from './endings.js?v=49';
+import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=49';
+import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=49';
+import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=49';
+import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=49';
+import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=49';
 export {GODDESS_GIFTS};
-import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=48';
-import {STORY_KINDS,STORY_LENGTH} from './story.js?v=48';
-export {storyFrames} from './story.js?v=48';
-import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS} from './catalog.js?v=48';
+import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=49';
+import {STORY_KINDS,STORY_LENGTH} from './story.js?v=49';
+export {storyFrames} from './story.js?v=49';
+import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS} from './catalog.js?v=49';
 export {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS};
 export const MAX_UPGRADES=3;
 export const isSpecialStage=s=>!s.demon?.active&&!!s.endless&&s.legacySpecialChapter!==s.chapter&&(s.chapter+1)%50===0;
@@ -275,13 +276,17 @@ function healHero(s,i,n,revive=false,source='card'){let h=s.heroes[i],m=mods(s);
 function healAll(s,n,revive=false,source='card'){s.heroes.forEach((h,i)=>healHero(s,i,n,revive,source))}
 function hurtHero(s,i,n,ignoreShield=false){if(debugGod(s))return{damage:0,blocked:0};let h=s.heroes[i];if(!h||!h.hp)return{damage:0,blocked:0};let hit=Math.max(0,n)+(ignoreShield?0:h.vulnerable>0?3:0);if(!ignoreShield&&h.vulnerable>0)h.vulnerable--;let blocked=ignoreShield?0:Math.min(h.shield,hit),damage=Math.min(h.hp,Math.max(0,hit-blocked));if(!ignoreShield)h.shield-=blocked;h.hp=roundHP(h.hp-damage);let b=s.battle,m=mods(s);if(damage&&b?.damageEvents)b.damageEvents.push({side:'hero',index:i,amount:damage});if(h.hp===0&&b&&m.revive&&!b.reviveUsed){b.reviveUsed=true;h.hp=Math.min(h.max,m.revive);addLog(s,`${heroInfo(s,i).name}は身代わりの人形で復帰した。`)}return{damage,blocked}}
 export function attackPower(s,c){let m=mods(s),h=s.heroes[c.actor],member=heroInfo(s,c.actor),b=s.battle;return(member.bonus.lowAttack&&h?.hp<=h?.max/2?member.bonus.lowAttack:0)+(member.bonus.fallenAttack||0)*s.heroes.filter(h=>h.max&&!h.hp).length+(member.bonus.chainAttack||0)*Math.min(6,b?.cardsPlayed||0)+(c.upgraded?(member.bonus.upgradeAttack||0):0)+(m.attack||0)+(member.bonus.attack||0)+(c.dice&&c.type==='攻撃'?(member.bonus.diceAttack||0):0)+(h?.power||0)+((c.castCost??c.cost)===1?(m.cheapAttack||0):0)+(b?.cardsPlayed>=2?(m.lateAttack||0):0)}
-function hitEnemy(s,e,n,{ignoreShield=false,weakAttack=0}={}){if(!e.hp)return 0;let amount=n;if(e.weak>0){amount+=4+(mods(s).weakBonus||0)+weakAttack;e.weak--}let block=ignoreShield?0:Math.min(e.shield,amount);if(!ignoreShield)e.shield-=block;let d=s.debugRun&&s.debugOptions?.oneHit?e.hp:Math.min(e.hp,Math.max(0,amount-block));e.hp=roundHP(e.hp-d);if(d&&s.battle?.damageEvents)s.battle.damageEvents.push({side:'enemy',index:e.index,amount:d});return d}
-function bossPhases(s){for(let e of s.battle.enemies){if(e.boss&&e.hp>0&&e.phase===1&&e.hp<=e.max/2){e.phase=2;e.atk+=e.enrage||0;e.shield+=e.phaseShield||0;if(e.intent?.factor)e.intent.value=Math.max(0,Math.round(e.atk*e.intent.factor));for(const action of e.actions||[])if(action.factor)action.value=Math.max(1,Math.round(e.atk*action.factor));addLog(s,`${e.name}が第二形態へ！`);s.notice=`${e.name}：第二形態`}}}
+function hitEnemy(s,e,n,{ignoreShield=false,weakAttack=0,aoe=false}={}){if(!e.hp)return 0;let amount=n;if(e.weak>0){amount+=4+(mods(s).weakBonus||0)+weakAttack;e.weak--}amount=resistedHit(e,amount,aoe);let block=ignoreShield?0:Math.min(e.shield,amount);if(!ignoreShield)e.shield-=block;let d=s.debugRun&&s.debugOptions?.oneHit?e.hp:Math.min(e.hp,Math.max(0,amount-block));e.hp=roundHP(e.hp-d);if(d&&s.battle?.damageEvents)s.battle.damageEvents.push({side:'enemy',index:e.index,amount:d});return d}
+export function resistedHit(e,amount,aoe=false){if(aoe&&e.aoeResist)amount=Math.floor(amount/2);if(e.armor&&amount>0)amount=Math.max(1,amount-e.armor);if(e.hitCap)amount=Math.min(amount,e.hitCap);return amount}
+const resistPoison=(e,n)=>e.poisonResist?Math.ceil(n/2):n;
+function bossPhases(s){for(let e of s.battle.enemies){if(e.boss&&e.hp>0&&e.phase===1&&e.hp<=e.max/2){e.phase=2;if(e.phaseActions)e.actionsMax=Math.max(e.actionsMax||1,e.phaseActions);e.atk+=e.enrage||0;e.shield+=e.phaseShield||0;if(e.intent?.factor)e.intent.value=Math.max(0,Math.round(e.atk*e.intent.factor));for(const action of e.actions||[])if(action.factor)action.value=Math.max(1,Math.round(e.atk*action.factor));addLog(s,`${e.name}が第二形態へ！`);s.notice=`${e.name}：第二形態`}}}
 export function draw(s,n){let b=s.battle;for(let i=0;i<Math.max(0,n);i++){if(!b.draw.length){b.draw=shuffleDraw(s,b.discard);b.discard=[]}if(!b.draw.length||b.hand.length>=12)break;b.hand.push(b.draw.pop())}}
 export function startBattle(s,type){
  let m=mods(s),boss=type==='boss',elite=type==='elite',pool=ENEMIES.filter(e=>e.chapter===biomeIndex(s)),count=boss?1:s.party.filter(Boolean).length===1?1:s.party.filter(Boolean).length===2?2:3;
- let enemies=Array.from({length:count},(_,i)=>{let def=boss?currentBoss(s):pick(s,pool),biome=biomeIndex(s),loop=loopNumber(s);let factor=boss?(s.hard?1.18:1):1+biome*.075+Math.max(0,s.step)*.01+(elite?.2:0)+(s.hard?.18:0);let floor=boss?150+s.chapter*55:20+s.chapter*13;let raw=Math.max(def.hp*factor,floor*(boss?1:.9+def.hp/500));let max=Math.round(raw*(isSpecialStage(s)?2.25:1)*Math.pow(1.25,loop)*(1+(m.enemyHP||0)));let attack=Math.max(def.atk*(boss?(s.hard?1.15:1):1+biome*.025+(elite?.18:0)+(s.hard?.15:0)),8+s.chapter*1.35);return{...def,max:def.fixedStats?def.hp:max,hp:def.fixedStats?def.hp:max,atk:def.fixedStats?def.atk:Math.round(attack*(isSpecialStage(s)?1.5:1)*Math.pow(1.18,loop))+(m.enemyAtk||0),shield:0,poison:0,weak:m.firstWeak||0,stun:0,phase:1,intent:null,index:i}});
+ let enemies=Array.from({length:count},(_,i)=>{let def=boss?currentBoss(s):pick(s,pool),biome=biomeIndex(s),loop=loopNumber(s);let factor=boss?(s.hard?1.18:1):1+biome*.075+Math.max(0,s.step)*.01+(elite?.2:0)+(s.hard?.18:0);let floor=boss?150+s.chapter*55:20+s.chapter*13;let raw=Math.max(def.hp*factor,floor*(boss?1:.9+def.hp/500));let max=Math.round(raw*(isSpecialStage(s)?2.25:1)*Math.pow(1.25,loop)*(1+(m.enemyHP||0)));let attack=Math.max(def.atk*(boss?(s.hard?1.15:1):1+biome*.025+(elite?.18:0)+(s.hard?.15:0)),8+s.chapter*1.35);return{...def,max:def.fixedStats?def.hp:max,hp:def.fixedStats?def.hp:max,atk:def.fixedStats?def.atk:Math.round(attack*(isSpecialStage(s)?1.5:1)*Math.pow(1.18,loop))+(m.enemyAtk||0),shield:0,poison:0,weak:def.weakImmune?0:m.firstWeak||0,stun:0,phase:1,intent:null,index:i}});
  if(s.demon?.active){const e=enemies[0],base=s.demon.base,mult=s.demon.multiplier;if(!e.fixedStats){e.max=e.hp=Math.round(base.max*mult*(e.balanceHPFactor||1));e.atk=Math.round(base.atk*mult*(e.balanceAtkFactor||1))}for(const[k,v]of Object.entries({enrage:Math.round(e.atk*.2),phaseShield:Math.round(e.max*.06),shieldTurn:Math.round((base.shieldTurn||0)*mult),regen:Math.round((base.regen||0)*mult)}))if(!e.balanceEdited?.includes(k))e[k]=v}
+ if(elite&&s.chapter>=3)for(const e of enemies)if(!e.demon)e.actionsMax=Math.max(e.actionsMax||1,2);
+ if(!boss&&!s.demon?.active&&!isSpecialStage(s)&&s.tutorial!==0&&randomInt(s,1000)<treasureChance(s)*1000){const st=treasureStats(s.chapter,loopNumber(s)),foe={...TREASURE_ENEMY,max:st.max,hp:st.max,armor:st.armor,hitCap:st.hitCap,fleeTurns:st.fleeTurns,shield:0,poison:0,weak:0,stun:0,phase:1,intent:null,index:0};if(enemies.length>=2)enemies[enemies.length-1]=foe;else enemies.push(foe);enemies.forEach((e,i)=>e.index=i)}
  s.battle={type,turn:0,enemies,draw:shuffleDraw(s,s.deck.map(c=>({...c,branches:[...(c.branches||[])]}))),discard:[],exhaust:[],hand:[],energy:0,actors:[],linked:false,selected:null,target:0,heroTarget:0,cardsPlayed:0,nextEnergy:0,nextDraw:0,carryEnergy:0,reviveUsed:false,enemyActions:0,statusUid:-1};
  s.heroes.forEach(h=>{for(let k of ['shield','power','poison','vulnerable','regen','thorns'])h[k]=0});s.phase='battle';s.log=[boss?`${currentBoss(s).name}との決戦。`:s.escalated?'強敵が通常の道に現れた！':'夜の気配が近づいてくる。'];beginTurn(s);if(s.tutorial===0&&s.chapter===0&&s.step===0)prepareTutorial(s);
 }
@@ -293,6 +298,7 @@ function planDemonIntents(s,e){
  e.actions=choices.map((skill,i)=>{const kind=skill.kind,factor=skill.factor??({attack:1,heavy:1.5,sweep:.7,flurry:.6,venom:.75,guard:1.3,guardAlly:1.3,mend:1.2,healAll:.8,rally:.2}[kind]||0);return{kind,target:targets.length?targets[(randomInt(s,targets.length)+i)%targets.length]:0,value:skill.value??(factor?Math.max(1,Math.round(e.atk*factor)):kind==='drain'?40:2),hits:skill.hits||(kind==='flurry'?2:1),poison:skill.poison||(kind==='venom'?3:0),factor,skill:skill.id,...(skill.id.startsWith('demon-')?{label:skill.name}:{})}});return e.actions[0];
 }
 export function planIntent(s,e){
+ if(e.fleeing){delete e.actions;return{kind:'guard',target:0,value:0,hits:1,poison:0,flee:Math.max(1,(e.fleeTurns||3)-(s.battle?.turn||1)+1)}}
  if(e.demon)return planDemonIntents(s,e);
  const {actionsMin,actionsMax}=enemyActionRange(e),count=actionsMin===actionsMax?actionsMin:actionsMin+randomInt(s,actionsMax-actionsMin+1),previousAction=e.lastAction,previousTarget=e.lastAttackTarget;
  if(count===1){delete e.actions;return planSingleIntent(s,e)}
@@ -351,10 +357,10 @@ export function damageAmount(s,c,e,aoe=false){let m=mods(s),member=heroInfo(s,c.
 export function previewCardHits(s,c){
  const m=mods(s),member=heroInfo(s,c.actor),weakAdd=4+(m.weakBonus||0)+(member.bonus.weakAttack||0),hits=c.hits||1,foes=(s?.battle?.enemies||[]).filter(e=>e.hp>0);
  if(!foes.length){const dummy={hp:1e9,max:1e9,weak:0,stun:0,poison:0};return{dummy:true,single:c.damage?[damageAmount(s,c,dummy)]:[],aoe:c.aoe?[damageAmount(s,c,dummy,true)]:[],burst:[]}}
- const out={dummy:false,single:[],aoe:[],burst:[]},hit=(e,n)=>{if(e.weak>0){n+=weakAdd;e.weak--}e.hp=Math.max(0,e.hp-n);return n};
+ const out={dummy:false,single:[],aoe:[],burst:[]},hit=(e,n,aoe=false)=>{if(e.weak>0){n+=weakAdd;e.weak--}n=resistedHit(e,n,aoe);e.hp=Math.max(0,e.hp-n);return n};
  for(let t=0;t<foes.length;t++){const sim=foes.map(e=>({...e})),e=sim[t];
   if(c.poisonBurst&&e.poison){out.burst.push(hit(e,e.poison*c.poisonBurst));e.poison=0}
-  for(let h=0;h<hits;h++){if(c.damage&&e.hp>0)out.single.push(hit(e,damageAmount(s,c,e)));if(c.aoe)for(const f of sim)if(f.hp>0)out.aoe.push(hit(f,damageAmount(s,c,f,true)))}
+  for(let h=0;h<hits;h++){if(c.damage&&e.hp>0)out.single.push(hit(e,damageAmount(s,c,e)));if(c.aoe)for(const f of sim)if(f.hp>0)out.aoe.push(hit(f,damageAmount(s,c,f,true),true))}
  }
  return out;
 }
@@ -384,14 +390,16 @@ function applyEffects(s,c,target,heroTarget,previewFace){c={...c};let b=s.battle
  if(c.dice){let rolls=Array.from({length:c.dice},(_,i)=>{const rolled=previewFace||randomInt(s,6)+1;return previewFace?rolled:(s.pendingCast?.rolls?.[(b.diceRolls?.length||0)+i]??rolled)}),sum=rolls.reduce((a,b)=>a+b,0);b.diceRolls??=[];b.diceRolls.push(...rolls);c=resolveDiceEffects(c,sum);addLog(s,`${member.name}の出目：${rolls.join('・')}`)}
  if(c.goldGain)s.gold+=c.goldGain;
  if(c.poisonBurst&&e?.hp&&e.poison){hitEnemy(s,e,e.poison*c.poisonBurst);e.poison=0}
+ let spikes=0;
  if(c.stripShield){if(c.target==='all')b.enemies.filter(e=>e.hp).forEach(e=>e.shield=0);else if(e)e.shield=0;}
  for(let hit=0;hit<(c.hits||1);hit++){
-  if(c.damage&&e?.hp)hitEnemy(s,e,damageAmount(s,c,e),{ignoreShield:!!c.ignoreShield,weakAttack:member.bonus.weakAttack||0});
-  if(c.aoe)for(let foe of b.enemies.filter(e=>e.hp))hitEnemy(s,foe,damageAmount(s,c,foe,true),{ignoreShield:!!c.ignoreShield,weakAttack:member.bonus.weakAttack||0});
+  if(c.damage&&e?.hp){spikes+=e.spikes||0;hitEnemy(s,e,damageAmount(s,c,e),{ignoreShield:!!c.ignoreShield,weakAttack:member.bonus.weakAttack||0})}
+  if(c.aoe)for(let foe of b.enemies.filter(e=>e.hp)){spikes+=foe.spikes||0;hitEnemy(s,foe,damageAmount(s,c,foe,true),{ignoreShield:!!c.ignoreShield,weakAttack:member.bonus.weakAttack||0,aoe:true})}
  }
- if(c.weak&&e?.hp)e.weak+=c.weak;if(c.allWeak)b.enemies.filter(e=>e.hp).forEach(e=>e.weak+=c.allWeak);
- let poisonBonus=(m.poison||0)+(member.bonus.poison||0);if(c.poison&&e?.hp)e.poison+=c.poison+poisonBonus;
- if(c.allPoison)b.enemies.filter(e=>e.hp).forEach(e=>e.poison+=c.allPoison+poisonBonus);
+ if(spikes&&owner?.hp){hurtHero(s,c.actor,spikes);addLog(s,`棘で${heroInfo(s,c.actor).name}に${spikes}ダメージ。`)}
+ if(c.weak&&e?.hp&&!e.weakImmune)e.weak+=c.weak;if(c.allWeak)b.enemies.filter(e=>e.hp&&!e.weakImmune).forEach(e=>e.weak+=c.allWeak);
+ let poisonBonus=(m.poison||0)+(member.bonus.poison||0);if(c.poison&&e?.hp)e.poison+=resistPoison(e,c.poison+poisonBonus);
+ if(c.allPoison)b.enemies.filter(e=>e.hp).forEach(e=>e.poison+=resistPoison(e,c.allPoison+poisonBonus));
  if(c.poisonMultiplier&&e?.hp)e.poison*=c.poisonMultiplier;
  if(c.stun&&e?.hp)applyStun(s,e,c.stun);if(c.allStun)b.enemies.filter(e=>e.hp).forEach(e=>applyStun(s,e,c.allStun));
  if(c.attackDown&&e?.hp){e.atk=Math.max(1,e.atk-c.attackDown);for(const action of new Set([e.intent,...e.actions||[]]))if(action.factor)action.value=Math.max(1,Math.round(e.atk*action.factor))}
@@ -410,7 +418,7 @@ function applyEffects(s,c,target,heroTarget,previewFace){c={...c};let b=s.battle
 }
 function addDebuff(s,i,key,n){if(debugGod(s))return;let h=s.heroes[i];if(h?.hp)h[key]+=Math.max(0,n-(mods(s).debuffWard||0))}
 export function applyStun(s,enemy,turns){
- if(!enemy?.hp||!Number.isInteger(turns)||turns<1)return false;if(enemy.demon&&enemy.demonRules?.apocalypseEnabled!==false&&s.battle.turn>=(enemy.demonRules?.apocalypseTurn??10)){addLog(s,'終焉の詠唱は足止めで止められない。');return false;}
+ if(!enemy?.hp||!Number.isInteger(turns)||turns<1)return false;if(enemy.stunImmune){addLog(s,`${enemy.name}は不動。足止めを受けない。`);return false}if(enemy.demon&&enemy.demonRules?.apocalypseEnabled!==false&&s.battle.turn>=(enemy.demonRules?.apocalypseTurn??10)){addLog(s,'終焉の詠唱は足止めで止められない。');return false;}
  enemy.rage=1;
  if(enemy.lastStunnedTurn===s.battle.turn-1){addLog(s,`${enemy.name}は連続する足止めを無効化し、怒りを得た。`);return false}
  enemy.stun=(enemy.stun||0)+turns;return true;
@@ -426,6 +434,7 @@ export function resolveEnemyRound(s,withTimeline=false){
   if(e.poison){let amount=Math.min(e.hp,e.poison);e.hp-=amount;e.poison--;record('poison',i,null,amount,0,`${e.name}に毒${amount}`);addLog(s,`${e.name}：毒で${amount}ダメージ。`)}
   if(!e.hp)continue;bossPhases(s);
   if(e.demon&&e.demonRules?.apocalypseEnabled!==false&&b.turn>=(e.demonRules?.apocalypseTurn??10))e.stun=0;
+  if(e.fleeing){e.turnSeen=b.turn;if(b.turn>=(e.fleeTurns||3)){e.fled=true;e.hp=0;e.poison=0;addLog(s,`${e.name}は宝を抱えて逃げ去った…`);record('guard',i,null,0,0,`${e.name}が逃げ去った`)}continue}
   if(e.stun>0){e.stun--;e.lastStunnedTurn=b.turn;e.rage=1;record('stun',i,null,0,0,`${e.name}は足止めされた`);addLog(s,`${e.name}は足止めで行動できない。`);continue}
   const roundRage=e.rage||0;e.rage=0;for(const t of e.actions||[e.intent]){activeSkill=t.label||'';if(!e.hp)break;bossPhases(s);let n=enemyIntentValue({...e,intent:t,rage:roundRage});b.enemyActions++;e.lastAction=t.kind;
   if(t.skill==='demon-chain')b.nextEnergy--;if(t.skill==='demon-zero')b.nextDraw--;
@@ -473,7 +482,9 @@ export function checkBattle(s){
  healAll(s,(m.winHeal||0)+(type==='elite'?(m.eliteHeal||0):0),false,'other');if(perfect)s.fuel=Math.min(100,s.fuel+3);
  if(settleCampaignVictory(s))return true;
  let tier=type==='boss'?(isSpecialStage(s)?'special':'boss'):'normal',offeredRelics=type==='boss'||type==='elite'?offerRelics(s,tier):[];
- s.reward={type,gold,perfect,cards:offerCards(s,perfect?4:3),cardClaimed:false,relicClaimed:offeredRelics.length===0,offeredRelics,tier,extraFuel:perfect?3:0};s.phase='reward';return true;
+ const treasure=b.enemies.some(e=>e.treasure&&!e.fled&&e.hp<=0);let treasureInfo=null;
+ if(treasure){const t=treasureReward(s.chapter);gold+=t.gold;s.gold+=t.gold;const potions=addPotions(s,t.potions);if(!offeredRelics.length)offeredRelics=offerRelics(s,'normal');treasureInfo={gold:t.gold,potions};addLog(s,`宝抱えの灯精を倒した！ 銀貨+${t.gold}`)}
+ s.reward={type,gold,perfect,cards:offerCards(s,perfect||treasure?4:3),cardClaimed:false,relicClaimed:offeredRelics.length===0,offeredRelics,tier,extraFuel:perfect?3:0,...(treasureInfo?{treasure:treasureInfo}:{})};s.phase='reward';return true;
 }
 function completeCampaign(s,kind){s.endingKind=kind;s.phase='won';s.reward=null;delete s.demonGate;delete s.upgradeContext;const info=endingInfo(s);s.journal.push(info.title);startStory(s,'ending');return true}
 function openDemonGate(s){const boss=s.battle.enemies.find(e=>e.boss);s.demonGate={stage:s.chapter+1,priorBossId:s.bossId,base:{max:boss.max,atk:boss.atk,shieldTurn:boss.shieldTurn||0,regen:boss.regen||0},multiplier:2};s.reward=null;s.phase='demon-gate';return true}

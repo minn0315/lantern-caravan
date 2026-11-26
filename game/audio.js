@@ -24,7 +24,7 @@ export class AudioMixer{
  setScene(scene){let next=[...MUSIC_TRACKS,'journey','battle'].includes(scene)?scene:'journey';if(this.scene===next)return;this.previousScene=this.scene;this.scene=next;this.syncMusic()}
  createTrack(name){
   if(this.tracks.has(name))return this.tracks.get(name);
-  let element=new Audio(`assets/audio/${name}.mp3?v=48`);element.loop=true;element.preload='auto';
+  let element=new Audio(`assets/audio/${name}.mp3?v=49`);element.loop=true;element.preload='auto';
   let source=this.context.createMediaElementSource(element),gain=this.context.createGain();gain.gain.value=0;source.connect(gain);gain.connect(this.music);
   let track={element,gain,source,pauseTimer:null};element.addEventListener('error',()=>this.report('BGMを読み込めませんでした。通信を確認して「BGMを再生」を押してください'));
   this.tracks.set(name,track);return track;
@@ -38,7 +38,7 @@ export class AudioMixer{
  }
  async loadCue(name){
   if(this.buffers.has(name))return this.buffers.get(name);if(this.loading.has(name))return this.loading.get(name);
-  let promise=(async()=>{let response=await fetch(`assets/audio/${name}.mp3?v=48`);if(!response.ok)throw Error('cue fetch');let buffer=await this.context.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer})();
+  let promise=(async()=>{let response=await fetch(`assets/audio/${name}.mp3?v=49`);if(!response.ok)throw Error('cue fetch');let buffer=await this.context.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer})();
   this.loading.set(name,promise);try{return await promise}finally{this.loading.delete(name)}
  }
  async play(name='card'){
