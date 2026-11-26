@@ -1,0 +1,2 @@
+// Action count is independent from the hit count inside each attack.
+export function enemyActionRange(enemy){const legacy=enemy.demon?enemy.demonRules||{}:{},fallback=enemy.demon?{min:2,max:4}:{min:1,max:1};const bounded=(v,d)=>Number.isInteger(v)?Math.max(1,Math.min(8,v)):d;const actionsMin=bounded(enemy.actionsMin??legacy.actionsMin,fallback.min),actionsMax=Math.max(actionsMin,bounded(enemy.actionsMax??legacy.actionsMax,fallback.max));return{actionsMin,actionsMax}}

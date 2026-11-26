@@ -1,0 +1,4 @@
+{"version":"0.0.1","configurations":[
+{"name":"lantern","runtimeExecutable":"python","runtimeArgs":["server.py","8765"],"port":8765},
+{"name":"lantern-subpath","runtimeExecutable":"cmd","runtimeArgs":["/c","set LANTERN_PREFIX=/lantern-caravan&& python server.py 8766"],"port":8766}
+]}
