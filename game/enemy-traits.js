@@ -44,7 +44,7 @@ export function assignEnemyTraits(def,{boss=false}={}){
 }
 
 // 逃げる敵（宝を抱えた精）
-export const TREASURE_ENEMY={id:'treasure_sprite',kind:'treasure_sprite',artId:'eclipseorb',name:'宝抱えの灯精',chapter:-1,hp:24,atk:0,pattern:['guard'],ability:'旅人の落とした宝を抱えて夜を漂う。見つかるとすぐに逃げ出す。',fleeing:true,treasure:true,specialEnemy:true};
+export const TREASURE_ENEMY={id:'treasure_sprite',kind:'treasure_sprite',artId:'eclipseorb',name:'宝抱えの灯精',chapter:-1,hp:24,atk:0,pattern:['guard'],ability:'旅人の落とした宝を抱えて夜を漂う。見つかるとすぐに逃げ出す',fleeing:true,treasure:true,specialEnemy:true};
 export function treasureStats(chapter,loop=0){const c=Math.max(0,chapter);return{max:Math.round((26+c*9)*Math.pow(1.2,loop)),armor:2+Math.floor(c/3),hitCap:6+c,fleeTurns:3}}
 export function treasureReward(chapter){return{gold:70+chapter*25,potions:1}}
 export function treasureChance(s){return Math.min(.2,.1+Math.max(0,s.chapter)*.01)}

@@ -17,7 +17,7 @@ section{background:var(--panel);border:1px solid var(--line);border-radius:10px;
 <section id="failed" hidden><p class="error" id="error"></p><div class="actions"><a class="btn ghost" href="migrate.html">手動で移行する方法</a><a class="btn ghost" href="./">ゲームへ</a></div></section>
 </main>
 <script type="module">
-import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=49';
+import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=50';
 const OLD_ORIGINS=['https://lantern-caravan-yoru.fernycarat8.chatgpt.site'];
 if(location.hostname==='localhost')OLD_ORIGINS.push('http://localhost:8765'); // ローカル検証用
 const $=id=>document.getElementById(id),show=id=>{for(const s of ['waiting','confirm','done','failed'])$(s).hidden=s!==id};

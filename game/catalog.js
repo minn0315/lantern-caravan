@@ -1,18 +1,18 @@
-import {assignEnemyTraits,TREASURE_ENEMY} from './enemy-traits.js?v=49';
-import {KITS,LEGACY_SPECIAL_NAMES,kitSpecials,finalizeKitEffect} from './character-kits.js?v=49';
-import {roundHP} from './health.js?v=49';
-import {enemyFlavor} from './enemy-lore.js?v=49';
-import {designRelic} from './relic-design.js?v=49';
-import {DEMON_BOSS} from './demon-stage.js?v=49';
-import {simplifyRelic} from './simple-relics.js?v=49';
-import {attachUpgradePool} from './upgrade-pool.js?v=49';
-import {ADDITIONAL_RELICS,SPECIAL_RELICS} from './relic-expansion.js?v=49';
+import {assignEnemyTraits,TREASURE_ENEMY} from './enemy-traits.js?v=50';
+import {KITS,LEGACY_SPECIAL_NAMES,kitSpecials,finalizeKitEffect} from './character-kits.js?v=50';
+import {roundHP} from './health.js?v=50';
+import {enemyFlavor} from './enemy-lore.js?v=50';
+import {designRelic} from './relic-design.js?v=50';
+import {DEMON_BOSS} from './demon-stage.js?v=50';
+import {simplifyRelic} from './simple-relics.js?v=50';
+import {attachUpgradePool} from './upgrade-pool.js?v=50';
+import {ADDITIONAL_RELICS,SPECIAL_RELICS} from './relic-expansion.js?v=50';
 export {SPECIAL_RELICS};
 export const HEROES=[{id:'row',name:'ロウ',job:'灯の守り手',max:76,color:'#b8c59c',icon:'shield',actor:0,art:0,passive:'通常の盾カードの効果 +1',bonus:{block:1}},{id:'sena',name:'セナ',job:'星詠みの射手',max:56,color:'#c4b2e7',icon:'bow',actor:1,art:1,passive:'弱点のある敵への攻撃 +1',bonus:{weakAttack:1}},{id:'nico',name:'ニコ',job:'旅の錬金術師',max:60,color:'#e2ba86',icon:'flask',actor:2,art:2,passive:'回復カードの回復量 +1',bonus:{heal:1}}];
 export const COMPANIONS=[...HEROES,{id:'kai',name:'カイ',job:'旧都の衛士',max:86,color:'#a9bc9b',icon:'shield',actor:0,art:3,passive:'毎ターン自身に盾2',bonus:{selfTurnShield:2}},{id:'eda',name:'エダ',job:'灰刃の傭兵',max:66,color:'#b7b48e',icon:'sword',actor:0,art:4,passive:'自身の攻撃カードの威力 +2',bonus:{attack:2}},{id:'rika',name:'リカ',job:'湿地の猟師',max:62,color:'#c4afd3',icon:'bow',actor:1,art:5,passive:'自身が付与する毒 +2',bonus:{poison:2}},{id:'mio',name:'ミオ',job:'迷い星の占者',max:50,color:'#b2b8dc',icon:'star',actor:1,art:6,passive:'毎ターン最初の策略カードで1枚引く',bonus:{firstSkillDraw:1}},{id:'fin',name:'フィン',job:'巡礼の薬師',max:66,color:'#d8bf91',icon:'leaf',actor:2,art:7,passive:'回復カードの回復量 +3',bonus:{heal:3}},{id:'towa',name:'トワ',job:'硝子の調香師',max:54,color:'#d5b195',icon:'flask',actor:2,art:8,passive:'自身の全体攻撃 +3、毒 +1',bonus:{aoe:3,poison:1}}];
 
 // Twenty-one travelers with independent combat economies and passives.
-COMPANIONS.push({"id": "orlo", "name": "オルロ", "job": "銀貨の剣商", "actor": 0, "max": 64, "icon": "coin", "color": "#c7aa72", "art": 9, "bonus": {"cardGold": 2}, "passive": "自身のカード使用後、銀貨2枚を得る。", "theme": "gold"});
+COMPANIONS.push({"id": "orlo", "name": "オルロ", "job": "銀貨の剣商", "actor": 0, "max": 64, "icon": "coin", "color": "#c7aa72", "art": 9, "bonus": {"cardGold": 2}, "passive": "自身のカード使用後に銀貨2枚を得る。", "theme": "gold"});
 COMPANIONS.push({"id": "luca", "name": "ルカ", "job": "六面の賭博師", "actor": 1, "max": 58, "icon": "star", "color": "#b4afcc", "art": 10, "bonus": {"diceAttack": 1}, "passive": "サイコロを使う攻撃カードのダメージ+1。", "theme": "dice"});
 COMPANIONS.push({"id": "bram", "name": "ブラム", "job": "城壁の石工", "actor": 0, "max": 88, "icon": "shield", "color": "#c7aa72", "art": 11, "bonus": {"selfTurnShield": 4}, "passive": "毎ターン自身に盾4。盾を残して攻める。", "theme": "armor"});
 COMPANIONS.push({"id": "shion", "name": "シオン", "job": "灰書の綴り手", "actor": 2, "max": 52, "icon": "book", "color": "#a3ba9a", "art": 12, "bonus": {"exhaustDraw": 1}, "passive": "消滅カードを使うたび1枚引く。", "theme": "exhaust"});
@@ -25,15 +25,17 @@ COMPANIONS.push({"id": "saku", "name": "サク", "job": "拾遺の盗賊", "acto
 COMPANIONS.push({"id": "iris", "name": "イリス", "job": "緋眼の剣客", "actor": 1, "max": 58, "icon": "eye", "color": "#b4afcc", "art": 19, "bonus": {"weakAttack": 3}, "passive": "弱点のある敵への攻撃+3。", "theme": "weak"});
 COMPANIONS.push({"id": "noa", "name": "ノア", "job": "冬告げの鐘守", "actor": 2, "max": 62, "icon": "bell", "color": "#a3ba9a", "art": 20, "bonus": {"stunnedAttack": 5}, "passive": "足止め中の敵への攻撃+5。", "theme": "frost"});
 COMPANIONS.push({"id": "ren", "name": "レン", "job": "雷鼓の奏者", "actor": 0, "max": 68, "icon": "star", "color": "#c7aa72", "art": 21, "bonus": {"chainAttack": 1}, "passive": "このターンの使用枚数ぶん攻撃威力+1（最大6）。", "theme": "chain"});
-COMPANIONS.push({"id": "lira", "name": "リラ", "job": "巡礼の吟遊詩人", "actor": 1, "max": 58, "icon": "sun", "color": "#b4afcc", "art": 22, "bonus": {"harmonyHeal": 2}, "passive": "自身のカード使用後、行動済み旅人数ぶんHP回復（最大4）。", "theme": "harmony"});
+COMPANIONS.push({"id": "lira", "name": "リラ", "job": "巡礼の吟遊詩人", "actor": 1, "max": 58, "icon": "sun", "color": "#b4afcc", "art": 22, "bonus": {"harmonyHeal": 2}, "passive": "自身のカード使用後に行動済み旅人数ぶんHP回復（最大4）。", "theme": "harmony"});
 COMPANIONS.push({"id": "zeke", "name": "ジーク", "job": "弔灯の墓守", "actor": 0, "max": 78, "icon": "moon", "color": "#c7aa72", "art": 23, "bonus": {"fallenAttack": 6}, "passive": "戦闘不能の仲間1人につき攻撃威力+6。", "theme": "fallen"});
 COMPANIONS.push({"id": "koto", "name": "コト", "job": "糸操りの人形師", "actor": 2, "max": 54, "icon": "eye", "color": "#a3ba9a", "art": 24, "bonus": {"firstSkillShield": 5}, "passive": "毎ターン最初の策略で自身に盾5。", "theme": "puppet"});
-COMPANIONS.push({"id": "fuga", "name": "フウガ", "job": "風渡りの修験者", "actor": 1, "max": 56, "icon": "leaf", "color": "#b4afcc", "art": 25, "bonus": {"zeroShield": 3}, "passive": "気力0のカード使用後、自身に盾3。", "theme": "wind"});
-COMPANIONS.push({"id": "hina", "name": "ヒナ", "job": "紅燈の祭司", "actor": 2, "max": 60, "icon": "flame", "color": "#a3ba9a", "art": 26, "bonus": {"selfHarmPower": 1}, "passive": "自身のHPを代償にするカード使用後、闘志+1。", "theme": "flame"});
+COMPANIONS.push({"id": "fuga", "name": "フウガ", "job": "風渡りの修験者", "actor": 1, "max": 56, "icon": "leaf", "color": "#b4afcc", "art": 25, "bonus": {"zeroShield": 3}, "passive": "気力0のカード使用後に自身に盾3。", "theme": "wind"});
+COMPANIONS.push({"id": "hina", "name": "ヒナ", "job": "紅燈の祭司", "actor": 2, "max": 60, "icon": "flame", "color": "#a3ba9a", "art": 26, "bonus": {"selfHarmPower": 1}, "passive": "自身のHPを代償にするカード使用後に闘志+1。", "theme": "flame"});
 COMPANIONS.push({"id": "sui", "name": "スイ", "job": "潮詠みの魔女", "actor": 2, "max": 64, "icon": "flask", "color": "#a3ba9a", "art": 27, "bonus": {"regenTurn": 1}, "passive": "毎ターン自身に再生1。再生と全体回復が得意。", "theme": "tide"});
 COMPANIONS.push({"id": "tetsu", "name": "テツ", "job": "旅路の鍛冶師", "actor": 0, "max": 82, "icon": "anvil", "color": "#c7aa72", "art": 28, "bonus": {"upgradeAttack": 2}, "passive": "強化済みカードの攻撃威力+2。", "theme": "forge"});
 COMPANIONS.push({"id": "mira", "name": "ミラ", "job": "鏡盾の騎士", "actor": 0, "max": 74, "icon": "shield", "color": "#c7aa72", "art": 29, "bonus": {"turnThorns": 2}, "passive": "毎ターン自身に反撃2。反撃量を攻撃に変える。", "theme": "mirror"});
 COMPANIONS.push({id:'aurora',name:'アウロラ',job:'黎明の継承者',max:92,color:'#e4c57c',icon:'sun',actor:2,art:30,hidden:true,theme:'aurora',passive:'毎ターン気力+1・自身に盾6。攻撃威力+6、回復量+4。',bonus:{energy:1,selfTurnShield:6,attack:6,heal:4}});
+// blackparty：通常の方法では仲間にならない旅人（プレイヤーには見えない括り）
+COMPANIONS.push({id:'maou',name:'まおう',job:'からっぽの王',actor:1,max:62,icon:'star',color:'#9fa8de',art:31,blackparty:true,bonus:{ownerRefund:1},passive:'ターン中、元の持ち主ごとに最初の1枚を使うと気力+1（毎ターンリセット）'});
 export const SPECIAL_CHAPTER={name:'無明の星骸',en:'THE ABYSSAL CONVERGENCE',desc:'五十の夜が重なるときだけ現れる、灯の届かない異界。',color:'#d197a5',beats:['夜の道に、存在しないはずの扉が開く。','時を越えた巡礼者の影。ここでは灯さえ喰らわれる。','古い宿場の灯だけが、かろうじて異界の侵食を退けている。','星の亡骸が目を開く。この世界に戻るには、主を越えるしかない。']};
 export const CHAPTERS=[
 {name:'ささやきの森',en:'THE WHISPERING WOODS',desc:'故郷を覆った夜を抜け、根の王が守る古道へ。',boss:'根を張る王',color:'#a6b991',beats:['村を発った。古い灯台へ続く道は、森に呑まれていた。','木々に刻まれた巡礼の印。先を歩いた誰かが、まだいる。','森の奥で、地面が脈を打つ。灯を奪った根の気配が近い。','古道の門が見えた。森の主を越えれば、霧の巡礼路へ出られる。']},
@@ -145,7 +147,22 @@ for(const h of COMPANIONS.filter(h=>h.theme)){
  STARTER_DECKS[h.id]=[0,0,0,1,1,2,2,4,5,8].map(n=>h.id+'_art_'+n);RECRUIT_DECKS[h.id]=[0,0,1,2,4,5].map(n=>h.id+'_art_'+n);
 }
 // One ultimate may be carried by the whole caravan. All are drawn last.
-for(const h of COMPANIONS){
+// まおう専用カード（入手できるかどうかも抽選）
+export const MAOU_STARTERS=['maou_s0','maou_s1','maou_s2','maou_s3','maou_s4'],MAOU_NORMALS=['maou_n0','maou_n1','maou_n2','maou_n3','maou_n4'];
+{const a=COMPANIONS.find(h=>h.id==='maou').actor,mk=(id,name,cost,effect,ic)=>{add(a,id,name,cost,effect,ic);cards[id].owner='maou'};
+ mk('maou_s0','借り物の剣',1,{damage:7},'sword');
+ mk('maou_s1','借り物の盾',1,{selfShield:8,target:'all'},'shield');
+ mk('maou_s2','からっぽの器',0,{draw:1,exhaust:true,target:'all'},'moon');
+ mk('maou_s3','ものまね',1,{damage:4,hits:2},'star');
+ mk('maou_s4','王様の気まぐれ',1,{heal:6,target:'hero'},'heart');
+ mk('maou_n0','強奪の手',1,{stealCard:1,exhaust:true,noUpgrade:true,target:'all'},'bag');
+ mk('maou_n1','寄せ集めの軍勢',2,{aoe:9,target:'all'},'flame');
+ mk('maou_n2','王座の守り',2,{allShield:8,target:'all'},'shield');
+ mk('maou_n3','臣下のまねごと',1,{damage:5,weak:1},'eye');
+ mk('maou_n4','気まぐれな施し',0,{energy:1,draw:1,exhaust:true,target:'all'},'star');
+ mk('maou_ultimate_0','秘奥・からっぽの玉座',2,{stealCard:3,energy:1,special:true,exhaust:true,target:'all'},'star');}
+STARTER_DECKS.maou=[...MAOU_STARTERS];RECRUIT_DECKS.maou=[...MAOU_STARTERS];
+for(const h of COMPANIONS.filter(h=>!h.blackparty)){
  const kit=KITS[h.id],themed=kit?kitSpecials(kit):null,names=kit?kit.specials:LEGACY_SPECIAL_NAMES[h.id];
  for(let k=0;k<10;k++){
   const id=h.id+'_ultimate_'+k;
@@ -183,16 +200,16 @@ for(const c of Object.values(cards))if(!c.status)attachUpgradePool(c);
 export const CARDS=Object.freeze(cards);
 export const NORMAL_RELICS=[];export const BOSS_RELICS=[];
 function relic(id,name,desc,icon,effects,drawback=''){let r={id,name,desc,icon,effects,drawback,tier:drawback?'boss':'normal'};(drawback?BOSS_RELICS:NORMAL_RELICS).push(r)}
-relic('ember','消えない熾火','各戦闘の最初のターン、気力+1。','flame',{firstEnergy:1});relic('root','旅人の根飾り','戦闘勝利時、全員のHPを4回復。','leaf',{winHeal:4});relic('star','星図のかけら','毎ターンの手札+1。','star',{draw:1});relic('bell','夜明けの鈴','連携するたび、全員のHPを3回復。','bell',{linkHeal:3});relic('fang','銀狼の牙','攻撃カードの威力+2。','sword',{attack:2});relic('shell','月白の護符','毎ターン全員に盾3。','shield',{shieldTurn:3});relic('flask','小さな蒸留器','野営地での灯油回復+8。','flask',{campFuel:8});relic('coin','巡礼の硬貨','戦闘の銀貨報酬+10。','coin',{goldFlat:10});
-relic('candle','門守の蝋燭','戦闘開始時、全員に盾6。','flame',{firstShield:6});relic('compass','帰路の羅針盤','野営で休むと、HP回復+7。','map',{campHeal:7});relic('quill','預言者の羽根','毎ターン最初の策略カードで1枚引く。','eye',{firstSkillDraw:1});relic('whetstone','古い砥石','1コストの攻撃カードの威力+2。','sword',{cheapAttack:2});relic('herb','結び薬草','回復カードの回復量+2。','leaf',{heal:2});relic('pitcher','陶器の薬壺','回復薬の回復量+10。取得時、回復薬+1。','flask',{potionHeal:10,pickupPotion:1});relic('ribbon','星紡ぎのリボン','最初のターン、手札+2。','star',{firstDraw:2});relic('salt','湿地の白塩','付与する毒+1。','flask',{poison:1});
-relic('lens','ひび割れた照準器','弱点のある敵へのダメージが、さらに+2。','eye',{weakBonus:2});relic('medal','名もなき勲章','全員の攻撃カードの威力+1。','sword',{attack:1});relic('rope','巡礼の結び紐','取得時、全員の最大HP+5、HP+5。','heart',{maxHP:5});relic('clover','四つ葉の銀細工','戦闘の銀貨報酬が25%増える。','leaf',{goldMult:.25});relic('fossil','琥珀の化石','そのターン3枚目以降の攻撃の威力+3。','star',{lateAttack:3});relic('charcoal','踊る炭片','全体攻撃の威力+3。','flame',{aoe:3});relic('ice','氷河の留め具','カードで得る盾+2。','shield',{block:2});relic('branch','抱擁の枝','連携で得る盾が、さらに+3。','leaf',{linkShield:3});
-relic('harp','三弦の小竪琴','連携で得る気力+1。','bell',{linkEnergy:1});relic('hourglass','砂漏れの時計','使わなかった気力を最大1、次ターンに持ち越す。','eye',{carryEnergy:1});relic('lanterncore','灯芯の核','マス移動時の灯油消費-1。','flame',{fuelCost:-1});relic('purse','商人の財布','ショップの価格が15%安くなる。','coin',{shopDiscount:.15});relic('rations','保存食の包み','野営地での灯油回復+10。','bag',{campFuel:10});relic('anvil','巡礼鍛冶の印','カード強化時、生存者全員のHPを5回復。','shield',{upgradeHeal:5});relic('amulet','身代わりの人形','各戦闘で一度だけ、倒れる仲間をHP12で復帰させる。','heart',{revive:12});relic('mask','討伐者の仮面','強敵勝利時、銀貨+20・全員のHP+6。','elite',{eliteGold:20,eliteHeal:6});
-relic('mapcase','折り畳み星図','未知のマスで、良い出来事が起きやすくなる。','map',{mysteryLuck:.2});relic('needle','毒銀の針','毎ターン最初に毒を付与するカードで1枚引く。','flask',{poisonDraw:1});relic('talisman','燃える札','毎ターン最初に消滅カードを使うと気力+1。','flame',{exhaustEnergy:1});relic('seed','眠らない種','毎ターン、生存者全員のHPを1回復。','leaf',{turnRegen:1});relic('magnet','夜明けの磁石','戦闘開始時、敵全員に弱点1。','star',{firstWeak:1});relic('book','行商の帳面','ショップのカード陳列数+1。','book',{shopStock:1});relic('crystal','空腹の結晶','気力0でターンを終えると、次の気力+1。','star',{emptyEnergy:1});relic('snail','宿り貝','仲間の盾を最大5、次ターンに持ち越す。','shield',{carryShield:5});
-relic('chalice','暁の聖杯','章クリア時のHP回復+10。','sun',{bossHeal:10});relic('ward','浄めの鈴緒','仲間が受ける毒・脆弱の量-1。','bell',{debuffWard:1});relic('vase','慈雨の水瓶','全体回復カードの回復量+3。','leaf',{allHeal:3});relic('shard','零光の欠片','0コストのカードを使うたび、ランダムな敵に3ダメージ。','star',{zeroPing:3});
+relic('ember','消えない熾火','各戦闘の最初のターンに気力+1。','flame',{firstEnergy:1});relic('root','旅人の根飾り','戦闘勝利時に全員のHPを4回復。','leaf',{winHeal:4});relic('star','星図のかけら','毎ターンの手札+1。','star',{draw:1});relic('bell','夜明けの鈴','連携するたびに全員のHPを3回復。','bell',{linkHeal:3});relic('fang','銀狼の牙','攻撃カードの威力+2。','sword',{attack:2});relic('shell','月白の護符','毎ターン全員に盾3。','shield',{shieldTurn:3});relic('flask','小さな蒸留器','野営地での灯油回復+8。','flask',{campFuel:8});relic('coin','巡礼の硬貨','戦闘の銀貨報酬+10。','coin',{goldFlat:10});
+relic('candle','門守の蝋燭','戦闘開始時に全員に盾6。','flame',{firstShield:6});relic('compass','帰路の羅針盤','野営で休むと、HP回復+7。','map',{campHeal:7});relic('quill','預言者の羽根','毎ターン最初の策略カードで1枚引く。','eye',{firstSkillDraw:1});relic('whetstone','古い砥石','1コストの攻撃カードの威力+2。','sword',{cheapAttack:2});relic('herb','結び薬草','回復カードの回復量+2。','leaf',{heal:2});relic('pitcher','陶器の薬壺','回復薬の回復量+10。取得時に回復薬+1。','flask',{potionHeal:10,pickupPotion:1});relic('ribbon','星紡ぎのリボン','最初のターンに手札+2。','star',{firstDraw:2});relic('salt','湿地の白塩','付与する毒+1。','flask',{poison:1});
+relic('lens','ひび割れた照準器','弱点のある敵へのダメージが、さらに+2。','eye',{weakBonus:2});relic('medal','名もなき勲章','全員の攻撃カードの威力+1。','sword',{attack:1});relic('rope','巡礼の結び紐','取得時に全員の最大HP+5、HP+5。','heart',{maxHP:5});relic('clover','四つ葉の銀細工','戦闘の銀貨報酬が25%増える。','leaf',{goldMult:.25});relic('fossil','琥珀の化石','そのターン3枚目以降の攻撃の威力+3。','star',{lateAttack:3});relic('charcoal','踊る炭片','全体攻撃の威力+3。','flame',{aoe:3});relic('ice','氷河の留め具','カードで得る盾+2。','shield',{block:2});relic('branch','抱擁の枝','連携で得る盾が、さらに+3。','leaf',{linkShield:3});
+relic('harp','三弦の小竪琴','連携で得る気力+1。','bell',{linkEnergy:1});relic('hourglass','砂漏れの時計','使わなかった気力を最大1、次ターンに持ち越す。','eye',{carryEnergy:1});relic('lanterncore','灯芯の核','マス移動時の灯油消費-1。','flame',{fuelCost:-1});relic('purse','商人の財布','ショップの価格が15%安くなる。','coin',{shopDiscount:.15});relic('rations','保存食の包み','野営地での灯油回復+10。','bag',{campFuel:10});relic('anvil','巡礼鍛冶の印','カード強化時に生存者全員のHPを5回復。','shield',{upgradeHeal:5});relic('amulet','身代わりの人形','各戦闘で一度だけ、倒れる仲間をHP12で復帰させる。','heart',{revive:12});relic('mask','討伐者の仮面','強敵勝利時に銀貨+20・全員のHP+6。','elite',{eliteGold:20,eliteHeal:6});
+relic('mapcase','折り畳み星図','未知のマスで、良い出来事が起きやすくなる。','map',{mysteryLuck:.2});relic('needle','毒銀の針','毎ターン最初に毒を付与するカードで1枚引く。','flask',{poisonDraw:1});relic('talisman','燃える札','毎ターン最初に消滅カードを使うと気力+1。','flame',{exhaustEnergy:1});relic('seed','眠らない種','毎ターン生存者全員のHPを1回復。','leaf',{turnRegen:1});relic('magnet','夜明けの磁石','戦闘開始時に敵全員に弱点1。','star',{firstWeak:1});relic('book','行商の帳面','ショップのカード陳列数+1。','book',{shopStock:1});relic('crystal','空腹の結晶','気力0でターンを終えると、次の気力+1。','star',{emptyEnergy:1});relic('snail','宿り貝','仲間の盾を最大5、次ターンに持ち越す。','shield',{carryShield:5});
+relic('chalice','暁の聖杯','章クリア時のHP回復+10。','sun',{bossHeal:10});relic('ward','浄めの鈴緒','仲間が受ける毒・脆弱の量-1。','bell',{debuffWard:1});relic('vase','慈雨の水瓶','全体回復カードの回復量+3。','leaf',{allHeal:3});relic('shard','零光の欠片','0コストのカードを使うたびにランダムな敵に3ダメージ。','star',{zeroPing:3});
 relic('bloodsun','血の日輪','毎ターンの気力+1。','sun',{energy:1,healMult:-.5},'回復カード・回復薬による回復量が半分。');relic('blackcrown','黒星の冠','毎ターンの手札+2。','boss',{draw:2,energy:-1},'毎ターンの気力-1。');relic('ironheart','鉄の心臓','毎ターン全員に盾5。','shield',{shieldTurn:5,draw:-1},'毎ターンの手札-1。');relic('hollowlantern','虚ろな大灯籠','毎ターンの気力+1。','flame',{energy:1,fuelCost:1},'マス移動時の灯油消費+1。');
-relic('goldcontract','黄金の契約','戦闘の銀貨報酬が2倍。','coin',{goldMult:1,enemyAtk:3},'すべての敵の攻撃力+3。');relic('sacrificeseal','赤誓の封蝋','攻撃カードの威力+5。','sword',{attack:5,attackSelfDamage:1},'攻撃カードを使うたび、その仲間のHP-1。');relic('frozenclock','凍った巡礼時計','毎ターンの手札+1、最初の手札はさらに+2。','eye',{draw:1,firstDraw:2,campHealDisabled:1},'野営で休んでもHPが回復しない。');relic('thorncrown','毒棘の冠','付与する毒+3。','leaf',{poison:3,heal:-3},'回復カードの回復量-3。');
-relic('fractureplate','砕けぬ甲冑','カードで得る盾+6。','shield',{block:6,attackCost:1},'攻撃カードの消費気力+1。');relic('wildstar','野生の星核','毎ターンの気力+1。','star',{energy:1,draw:-2},'毎ターンの手札-2。');relic('hungryidol','飢えた偶像','取得時、全員の最大HP+18、HP+18。','heart',{maxHP:18,nodeDamage:2},'マス移動時に全員のHP-2。');relic('deathbell','死告の三重鐘','連携で得る気力が、さらに+2。','bell',{linkEnergy:2,firstCardCostHP:3},'毎ターン最初のカードで、使用者のHP-3。');
-relic('oracleeye','深淵の観測眼','毎ターンの手札+2。','eye',{draw:2,enemyHP:.25},'敵の最大HPが25%増える。');relic('whiteash','白灰の心壺','戦闘勝利時、全員のHPを12回復。','leaf',{winHeal:12,noGold:1},'戦闘で銀貨を得られなくなる。');relic('eclipseblade','蝕の剣','攻撃カードの威力が35%増える。','sword',{attackMult:.35,cardHealDisabled:1},'回復カードによるHP回復ができない。');relic('pilgrimking','遍歴王の印','強化済みカードの消費気力-1。','boss',{upgradeCostOffset:-1,unupgradedCostOffset:1},'未強化カードの消費気力+1。');
+relic('goldcontract','黄金の契約','戦闘の銀貨報酬が2倍。','coin',{goldMult:1,enemyAtk:3},'すべての敵の攻撃力+3。');relic('sacrificeseal','赤誓の封蝋','攻撃カードの威力+5。','sword',{attack:5,attackSelfDamage:1},'攻撃カードを使うたびにその仲間のHP-1。');relic('frozenclock','凍った巡礼時計','毎ターンの手札+1、最初の手札はさらに+2。','eye',{draw:1,firstDraw:2,campHealDisabled:1},'野営で休んでもHPが回復しない。');relic('thorncrown','毒棘の冠','付与する毒+3。','leaf',{poison:3,heal:-3},'回復カードの回復量-3。');
+relic('fractureplate','砕けぬ甲冑','カードで得る盾+6。','shield',{block:6,attackCost:1},'攻撃カードの消費気力+1。');relic('wildstar','野生の星核','毎ターンの気力+1。','star',{energy:1,draw:-2},'毎ターンの手札-2。');relic('hungryidol','飢えた偶像','取得時に全員の最大HP+18、HP+18。','heart',{maxHP:18,nodeDamage:2},'マス移動時に全員のHP-2。');relic('deathbell','死告の三重鐘','連携で得る気力が、さらに+2。','bell',{linkEnergy:2,firstCardCostHP:3},'毎ターン最初のカードで、使用者のHP-3。');
+relic('oracleeye','深淵の観測眼','毎ターンの手札+2。','eye',{draw:2,enemyHP:.25},'敵の最大HPが25%増える。');relic('whiteash','白灰の心壺','戦闘勝利時に全員のHPを12回復。','leaf',{winHeal:12,noGold:1},'戦闘で銀貨を得られなくなる。');relic('eclipseblade','蝕の剣','攻撃カードの威力が35%増える。','sword',{attackMult:.35,cardHealDisabled:1},'回復カードによるHP回復ができない。');relic('pilgrimking','遍歴王の印','強化済みカードの消費気力-1。','boss',{upgradeCostOffset:-1,unupgradedCostOffset:1},'未強化カードの消費気力+1。');
 NORMAL_RELICS.push(...ADDITIONAL_RELICS.filter(r=>r.tier==='normal'));BOSS_RELICS.push(...ADDITIONAL_RELICS.filter(r=>r.tier==='boss'));
 export const RELICS=[...NORMAL_RELICS,...BOSS_RELICS,...SPECIAL_RELICS].map(designRelic);
 const enemyRows=[

@@ -351,3 +351,18 @@ html[data-motion="off"] .poison-impact>i{display:none}
 .password-result.warn{color:#a3412e}
 .password-result.ok{color:#2e6b34}
 .password-unlocked{padding-left:1.2em}
+.card-owner .origin-tag{font-style:normal;font-size:9px;margin-left:4px;padding:0 4px;border-radius:4px;background:rgba(255,255,255,.22);color:inherit;white-space:nowrap}
+.card-owner .origin-tag.used{opacity:.45;text-decoration:line-through}
+.battle-where b{color:#e9d9a8;font-weight:700;margin-right:2px}
+
+/* 設定画面（グループ表示） */
+.settings-groups{display:grid;gap:14px;margin:14px 0 6px}
+.settings-group{background:rgba(255,252,240,.55);border:1px solid #b8b18c;border-radius:12px;padding:4px 16px}
+.settings-group>h3{margin:12px 0 2px;font-size:12px;letter-spacing:.12em;color:#7a6a3e;font-weight:700}
+.settings-group .settings-row{padding:12px 0;border-bottom:1px dashed #c9c3a2;gap:14px}
+.settings-group .settings-row:last-child{border-bottom:0}
+.settings-group .settings-row b{font-size:14px;color:#2b2d22}
+.settings-group .settings-row small{font-size:11px;line-height:1.6;color:#6c6f55;margin-top:2px;max-width:none}
+.settings-controls{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex:none}
+.settings-controls .btn{min-width:84px}
+@media (max-width:560px){.settings-group{padding:2px 12px}.settings-group .settings-row{flex-wrap:nowrap}.settings-controls .btn{min-width:70px;padding:8px 10px}}

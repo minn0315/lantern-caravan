@@ -1,5 +1,5 @@
-import {endingInfo} from './endings.js?v=49';
-import {CHAPTERS,COMPANIONS,SPECIAL_CHAPTER} from './catalog.js?v=49';
+import {endingInfo} from './endings.js?v=50';
+import {CHAPTERS,COMPANIONS,SPECIAL_CHAPTER} from './catalog.js?v=50';
 export const STORY_KINDS=['intro','chapter','ending','defeat'];
 export const STORY_LENGTH=3;
 export function storyFrames(s,cutscene=s.cutscene){
@@ -7,7 +7,7 @@ export function storyFrames(s,cutscene=s.cutscene){
  const chapter=cutscene.chapter,special=!!s.endless&&s.legacySpecialChapter!==chapter&&(chapter+1)%50===0,region=n=>s.endless&&s.legacySpecialChapter!==n&&(n+1)%50===0?SPECIAL_CHAPTER:CHAPTERS[((n-(s.endless?Math.floor((n+1)/50):0)+(s.skippedAbyss||0))%16+16)%16],h=COMPANIONS.find(h=>h.id===(s.starterId||s.party[0])),name=h?.name||'旅人';
  if(cutscene.kind==='intro')return [
   {image:'village',tag:'序幕 / 消えた朝',title:'世界が、朝を忘れた。',text:'鐘が最後に鳴った夜、太陽は戻らなかった。村の門に残されたのは、消えない小さな灯がひとつ。'},
-  {image:'pilgrimage',tag:'旅立ち / 最初の旅人',title:`${name}は、灯を受け取った。`,text:name==='エダ'?'「道が閉ざされているなら、切り拓くまでさ。」灰刃を携え、一人の傭兵が夜へ踏み出す。':name==='セナ'?'「星が隠れていても、進む道は読める。」弓を背に、射手は静かな夜へ踏み出す。':name==='ニコ'?'「まだ灯がある。それなら、できることもある。」薬の鞄を抱え、錬金術師は夜へ踏み出す。':'「この灯を、朝まで運ぼう。」旅人は支度を整え、長い夜へ踏み出す。',traveler:true},
+  {image:'pilgrimage',tag:'旅立ち / 最初の旅人',title:`${name}は、灯を受け取った。`,text:name==='エダ'?'「道が閉ざされているなら切り拓くまでさ。」灰刃を携え、一人の傭兵が夜へ踏み出す。':name==='セナ'?'「星が隠れていても、進む道は読める。」弓を背に、射手は静かな夜へ踏み出す。':name==='ニコ'?'「まだ灯がある。それならできることもある。」薬の鞄を抱え、錬金術師は夜へ踏み出す。':'「この灯を、朝まで運ぼう。」旅人は支度を整え、長い夜へ踏み出す。',traveler:true},
   {image:'chapter',chapter:0,tag:'第一章 / ささやきの森',title:'君の足跡が、道になる。',text:'古い灯台へ続く巡礼路。その先に朝を取り戻す手がかりがある。道を選び、出会う仲間と灯をつないでいこう。'}
  ];
  if(cutscene.kind==='defeat')return [

@@ -1,12 +1,14 @@
 /** Offline localization. The Japanese catalog remains the canonical gameplay data.
  * Exact phrases precede parameterized effects and longest-first terms. Numbers are never rounded or rewritten.
  */
-import {CARDS,COMPANIONS,CHAPTERS,ENEMIES,BOSSES,RELICS} from './catalog.js?v=49';
+import {CARDS,COMPANIONS,CHAPTERS,ENEMIES,BOSSES,RELICS} from './catalog.js?v=50';
 export const LANGUAGES=Object.freeze([{id:'ja',code:'ja',label:'日本語'},{id:'en',code:'en',label:'English'},{id:'zh-CN',code:'zh-CN',label:'简体中文'}]);
 const dictionaries={en:new Map(),'zh-CN':new Map()};
 let termsCache={};
 const cache=new Map();
-export function registerTranslations(rows){for(const [ja,en,zh] of rows){if(en)dictionaries.en.set(ja,en);if(zh)dictionaries['zh-CN'].set(ja,zh)}termsCache={};cache.clear();}
+export function registerTranslations(rows){for(const [ja,en,zh] of rows){if(en)dictionaries.en.set(ja,en);if(zh)dictionaries['zh-CN'].set(ja,zh);
+ // 文末の「。」を省いた表記でも同じ訳が当たるようにする
+ if(typeof ja==='string'&&ja.length>1&&ja.endsWith('。')){const bare=ja.slice(0,-1);if(en&&!dictionaries.en.has(bare))dictionaries.en.set(bare,String(en).replace(/\.$/,''));if(zh&&!dictionaries['zh-CN'].has(bare))dictionaries['zh-CN'].set(bare,String(zh).replace(/。$/,''))}}termsCache={};cache.clear();}
 const rows=s=>s.trim().split('\n').filter(Boolean).map(line=>line.split('|'));
 registerTranslations(rows(`
 灯火のキャラバン|Lantern Caravan|灯火商队
@@ -49,7 +51,7 @@ registerTranslations(rows(`
 毎ターン最初の策略カードで1枚引く|Draw 1 card after your first Skill each turn.|每回合首次使用策略卡后抽1张牌。
 回復カードの回復量 +3|Healing cards restore +3 HP.|治疗卡的恢复量+3。
 自身の全体攻撃 +3、毒 +1|Your area attacks deal +3 damage; apply +1 Poison.|自身群体攻击伤害+3，施加的中毒+1。
-自身のカード使用後、銀貨2枚を得る。|Gain 2 silver after playing your own card.|使用自身的卡牌后获得2银币。
+自身のカード使用後に銀貨2枚を得る。|Gain 2 silver after playing your own card.|使用自身的卡牌后获得2银币。
 サイコロを使う攻撃カードのダメージ+1。|Damage +1 for attack cards that use dice.|使用骰子的攻击卡伤害+1。
 毎ターン自身に盾4。盾を残して攻める。|Gain 4 Shield each turn. Turn your defense into offense.|每回合自身获得4护盾。保留护盾，转守为攻。
 消滅カードを使うたび1枚引く。|Draw 1 card whenever you play an Exhaust card.|每次使用带有消耗的卡牌时抽1张牌。
@@ -62,11 +64,11 @@ HP半分以下のとき攻撃威力+4。|Attack damage +4 while at half HP or le
 弱点のある敵への攻撃+3。|Attack damage +3 against enemies with Exposed.|对带有破绽的敌人攻击伤害+3。
 足止め中の敵への攻撃+5。|Attack damage +5 against Stunned enemies.|对被定身的敌人攻击伤害+5。
 このターンの使用枚数ぶん攻撃威力+1（最大6）。|Attack damage +1 per card played this turn (max 6).|本回合每使用1张牌，攻击伤害+1（最多6）。
-自身のカード使用後、行動済み旅人数ぶんHP回復（最大4）。|After playing your own card, restore HP equal to the number of travelers who acted (max 4).|使用自身卡牌后，按已行动旅人数恢复HP（最多4）。
+自身のカード使用後に行動済み旅人数ぶんHP回復（最大4）。|After playing your own card, restore HP equal to the number of travelers who acted (max 4).|使用自身卡牌后，按已行动旅人数恢复HP（最多4）。
 戦闘不能の仲間1人につき攻撃威力+6。|Attack damage +6 per fallen ally.|每有1名倒下的同伴，攻击伤害+6。
 毎ターン最初の策略で自身に盾5。|Gain 5 Shield after your first Skill each turn.|每回合首次使用策略卡后自身获得5护盾。
-気力0のカード使用後、自身に盾3。|Gain 3 Shield after playing a 0-energy card.|使用0费用卡牌后自身获得3护盾。
-自身のHPを代償にするカード使用後、闘志+1。|Gain +1 Might after playing a card that costs your HP.|使用消耗自身HP的卡牌后，斗志+1。
+気力0のカード使用後に自身に盾3。|Gain 3 Shield after playing a 0-energy card.|使用0费用卡牌后自身获得3护盾。
+自身のHPを代償にするカード使用後に闘志+1。|Gain +1 Might after playing a card that costs your HP.|使用消耗自身HP的卡牌后，斗志+1。
 毎ターン自身に再生1。再生と全体回復が得意。|Gain 1 Regen each turn. Specializes in Regen and party healing.|每回合自身获得1再生。擅长再生与群体治疗。
 強化済みカードの攻撃威力+2。|Upgraded cards deal +2 attack damage.|已强化卡牌的攻击伤害+2。
 毎ターン自身に反撃2。反撃量を攻撃に変える。|Gain 2 Thorns each turn. Turn Thorns into attack damage.|每回合自身获得2反击。将反击值转化为攻击伤害。
@@ -1013,7 +1015,7 @@ export function translateHTML(html,language='ja'){
 export function localizedEntity(entity,language='ja'){return {...entity,...Object.fromEntries(['name','job','passive','desc','drawback','ability'].filter(k=>typeof entity[k]==='string').map(k=>[k,translateText(entity[k],language)]))}}
 // Parameterized relic prose is expanded to exact phrases from the live catalog.
 const numberTemplates=rows(`
-Nコストのカードを使うたび、ランダムな敵にNダメージ|Whenever you play a {1}-cost card, deal {2} damage to a random enemy|每次使用{1}费用卡牌时，对随机敌人造成{2}伤害
+Nコストのカードを使うたびにランダムな敵にNダメージ|Whenever you play a {1}-cost card, deal {2} damage to a random enemy|每次使用{1}费用卡牌时，对随机敌人造成{2}伤害
 Nコストの攻撃カードの威力+N|{1}-cost attack cards deal +{2} damage|{1}费用攻击卡伤害+{2}
 すべての敵の攻撃力+N|All enemies gain +{1} Attack|全体敌人攻击力+{1}
 そのターンN枚目以降の攻撃の威力+N|Attack damage +{2} from the {1}th card played each turn|每回合第{1}张及之后的攻击伤害+{2}
@@ -1025,18 +1027,18 @@ Nコストの攻撃カードの威力+N|{1}-cost attack cards deal +{2} damage|{
 カードの攻撃威力+N%|Card attack damage +{1}%|卡牌攻击伤害+{1}%
 カードの攻撃威力+N|Card attack damage +{1}|卡牌攻击伤害+{1}
 カード・生存者への回復薬のHP回復量-N%（端数切捨て）|Card and potion healing on living allies is reduced by {1}% (rounded down)|卡牌与药水对存活同伴的HP恢复量减少{1}%（向下取整）
-カード強化時、生存者全員のHPをN回復|Upgrading a card restores {1} HP to all living allies|强化卡牌时，为全体存活同伴恢复{1} HP
+カード強化時に生存者全員のHPをN回復|Upgrading a card restores {1} HP to all living allies|强化卡牌时，为全体存活同伴恢复{1} HP
 ショップのカード陳列数+N|Shops offer +{1} cards|商店卡牌陈列数量+{1}
 ショップの価格がN%安くなる|Shop prices are {1}% lower|商店价格降低{1}%
 ショップ価格の割引率+Nポイント（合計上限N%）|Shop discount +{1} percentage points (total cap {2}%)|商店折扣增加{1}个百分点（总上限{2}%）
 ターン中N枚目以降に使うカードの攻撃威力+N|Attack damage +{2} from the {1}th card played each turn|每回合第{1}张及之后的卡牌攻击伤害+{2}
-マス移動時、全員のHP-N|Everyone loses {1} HP when traveling to a location|移动到地点时全员HP-{1}
+マス移動時に全員のHP-N|Everyone loses {1} HP when traveling to a location|移动到地点时全员HP-{1}
 マス移動時に全員のHP-N|Everyone loses {1} HP when traveling to a location|移动到地点时全员HP-{1}
 マス移動時の灯油消費+N|Travel fuel cost +{1}|移动灯油消耗+{1}
 マス移動時の灯油消費+N（最低N）|Travel fuel cost +{1} (minimum {2})|移动灯油消耗+{1}（最低{2}）
 マス移動時の灯油消費-N|Travel fuel cost -{1}|移动灯油消耗-{1}
 マス移動時の灯油消費-N（最低N）|Travel fuel cost -{1} (minimum {2})|移动灯油消耗-{1}（最低{2}）
-三人連携時、生存者全員のHPをN回復|Caravan Link restores {1} HP to all living allies|三人联携时为全体存活同伴恢复{1} HP
+三人連携時に生存者全員のHPをN回復|Caravan Link restores {1} HP to all living allies|三人联携时为全体存活同伴恢复{1} HP
 三人連携時に得る気力+N|Caravan Link grants +{1} Energy|三人联携提供的能量+{1}
 三人連携時に得る盾+N|Caravan Link grants +{1} Shield|三人联携提供的护盾+{1}
 今後の加入者にも最大HP加算|Future recruits also gain the Max HP bonus|之后加入的同伴也获得最大HP加成
@@ -1047,16 +1049,16 @@ Nコストの攻撃カードの威力+N|{1}-cost attack cards deal +{2} damage|{
 全体回復カードの回復量+N|Area healing cards restore +{1} HP|群体治疗卡恢复量+{1}
 全体攻撃の威力+N|Area attack damage +{1}|群体攻击伤害+{1}
 全員の攻撃カードの威力+N|All travelers' attack cards deal +{1} damage|全员攻击卡伤害+{1}
-取得時、全員の最大HP+N、HP+N|On pickup, everyone gains {1} Max HP and {2} HP|获得时，全员最大HP+{1}、HP+{2}
-取得時、回復薬+N|On pickup, gain {1} healing potions|获得时，治疗药水+{1}
-取得時、回復薬+N（所持上限N個）|On pickup, gain {1} healing potions (carry limit {2})|获得时，治疗药水+{1}（持有上限{2}瓶）
-取得時、在籍者全員の最大HP+N、生存者のHP+N|On pickup, party Max HP +{1}; living allies restore {2} HP|获得时，全员最大HP+{1}，存活同伴HP+{2}
+取得時に全員の最大HP+N、HP+N|On pickup, everyone gains {1} Max HP and {2} HP|获得时，全员最大HP+{1}、HP+{2}
+取得時に回復薬+N|On pickup, gain {1} healing potions|获得时，治疗药水+{1}
+取得時に回復薬+N（所持上限N個）|On pickup, gain {1} healing potions (carry limit {2})|获得时，治疗药水+{1}（持有上限{2}瓶）
+取得時に在籍者全員の最大HP+N、生存者のHP+N|On pickup, party Max HP +{1}; living allies restore {2} HP|获得时，全员最大HP+{1}，存活同伴HP+{2}
 各戦闘で一度、被ダメージで倒れる仲間N人をHPNで復帰（最大HPまで）|Once per battle, revive {1} ally defeated by damage with {2} HP (up to Max HP)|每场战斗1次，使{1}名受到伤害而倒下的同伴以{2} HP复活（不超过最大HP）
 各戦闘で一度だけ、倒れる仲間をHPNで復帰させる|Once per battle, revive a fallen ally with {1} HP|每场战斗1次，使倒下同伴以{1} HP复活
-各戦闘のNの倍数ターン、手札+N|Draw {2} extra cards every {1} turns in each battle|每场战斗中每隔{1}回合，手牌+{2}
-各戦闘の最初のターン、手札+N|Draw {1} extra cards on the first turn of each battle|每场战斗首回合手牌+{1}
-各戦闘の最初のターン、気力+N|Gain +{1} Energy on the first turn of each battle|每场战斗首回合能量+{1}
-各戦闘の最初のターン、生存者全員に盾N|All living allies gain {1} Shield on the first turn of each battle|每场战斗首回合全体存活同伴获得{1}护盾
+各戦闘のNの倍数ターンに手札+N|Draw {2} extra cards every {1} turns in each battle|每场战斗中每隔{1}回合，手牌+{2}
+各戦闘の最初のターンに手札+N|Draw {1} extra cards on the first turn of each battle|每场战斗首回合手牌+{1}
+各戦闘の最初のターンに気力+N|Gain +{1} Energy on the first turn of each battle|每场战斗首回合能量+{1}
+各戦闘の最初のターンに生存者全員に盾N|All living allies gain {1} Shield on the first turn of each battle|每场战斗首回合全体存活同伴获得{1}护盾
 回復カードによるHP回復ができない|Healing cards cannot restore HP|无法通过治疗卡恢复HP
 回復カードの回復量+N|Healing cards restore +{1} HP|治疗卡恢复量+{1}
 回復カードの回復量-N|Healing cards restore {1} less HP|治疗卡恢复量-{1}
@@ -1066,8 +1068,9 @@ Nコストの攻撃カードの威力+N|{1}-cost attack cards deal +{2} damage|{
 弱点を消費して与えるダメージが追加で+N|Damage that consumes Exposed gains +{1} damage|消耗破绽时造成的伤害额外+{1}
 強化済みカードの消費気力-N|Upgraded cards cost {1} less Energy|已强化卡牌能量费用-{1}
 強化済みカードの消費気力-N（最低N）|Upgraded cards cost {1} less Energy (minimum {2})|已强化卡牌能量费用-{1}（最低{2}）
-強敵勝利時、生存者全員のHPを追加でN回復|Elite victories restore {1} extra HP to all living allies|战胜精英后全体存活同伴额外恢复{1} HP
-強敵勝利時、銀貨+N・全員のHP+N|Elite victories grant {1} silver and restore {2} HP to everyone|战胜精英后银币+{1}，全员HP+{2}
+強敵勝利時に生存者全員のHPを追加でN回復|Elite victories restore {1} extra HP to all living allies|战胜精英后全体存活同伴额外恢复{1} HP
+強敵勝利時に銀貨+N|Elite victories grant {1} silver|战胜精英后获得{1}银币
+強敵勝利時に銀貨+N・全員のHP+N|Elite victories grant {1} silver and restore {2} HP to everyone|战胜精英后银币+{1}，全员HP+{2}
 強敵戦の基礎銀貨報酬+N|Base silver reward from elite battles +{1}|精英战基础银币奖励+{1}
 戦闘で銀貨を得られなくなる|Battles no longer award silver|战斗不再提供银币
 戦闘の基礎銀貨報酬+N|Base battle silver reward +{1}|战斗基础银币奖励+{1}
@@ -1075,26 +1078,26 @@ Nコストの攻撃カードの威力+N|{1}-cost attack cards deal +{2} damage|{
 戦闘の銀貨報酬+N%|Battle silver reward +{1}%|战斗银币奖励+{1}%
 戦闘の銀貨報酬がN%増える|Battle silver reward increases by {1}%|战斗银币奖励增加{1}%
 戦闘の銀貨報酬がN倍|Battle silver rewards ×{1}|战斗银币奖励×{1}
-戦闘勝利時、全員のHPをN回復|After battle victory, everyone restores {1} HP|战斗胜利后全员恢复{1} HP
-戦闘勝利時、生存者全員のHPをN回復|After battle victory, all living allies restore {1} HP|战斗胜利后全体存活同伴恢复{1} HP
-戦闘開始時、全員に盾N|Everyone starts each battle with {1} Shield|战斗开始时全员获得{1}护盾
-戦闘開始時、敵全員に弱点N|Apply {1} Exposed to all enemies at battle start|战斗开始时全体敌人获得{1}破绽
+戦闘勝利時に全員のHPをN回復|After battle victory, everyone restores {1} HP|战斗胜利后全员恢复{1} HP
+戦闘勝利時に生存者全員のHPをN回復|After battle victory, all living allies restore {1} HP|战斗胜利后全体存活同伴恢复{1} HP
+戦闘開始時に全員に盾N|Everyone starts each battle with {1} Shield|战斗开始时全员获得{1}护盾
+戦闘開始時に敵全員に弱点N|Apply {1} Exposed to all enemies at battle start|战斗开始时全体敌人获得{1}破绽
 攻撃カードの威力+N|Attack card damage +{1}|攻击卡伤害+{1}
 攻撃カードの威力がN%増える|Attack card damage increases by {1}%|攻击卡伤害增加{1}%
 攻撃カードの消費気力+N|Attack cards cost +{1} Energy|攻击卡能量费用+{1}
-攻撃カードを使うたび、その仲間のHP-N|Each attack card played costs its user {1} HP|每次使用攻击卡，使用者HP-{1}
-攻撃カード使用時、使用者のHP-N（盾を無視）|Playing an attack card costs the user {1} HP (ignores Shield)|使用攻击卡时使用者HP-{1}（无视护盾）
+攻撃カードを使うたびにその仲間のHP-N|Each attack card played costs its user {1} HP|每次使用攻击卡，使用者HP-{1}
+攻撃カード使用時に使用者のHP-N（盾を無視）|Playing an attack card costs the user {1} HP (ignores Shield)|使用攻击卡时使用者HP-{1}（无视护盾）
 敵から受ける毒・脆弱の付与量-N（最低N）|Receive {1} less Poison and Vulnerable from enemies (minimum {2})|受到敌人施加的中毒与易伤层数-{1}（最低{2}）
 敵の最大HP+N%|Enemy Max HP +{1}%|敌人最大HP+{1}%
 敵の最大HPがN%増える|Enemy Max HP increases by {1}%|敌人最大HP增加{1}%
 敵全員の攻撃力+N|All enemies gain +{1} Attack|全体敌人攻击力+{1}
-最初のターン、手札+N|Draw {1} extra cards on the first turn|首回合手牌+{1}
+最初のターンに手札+N|Draw {1} extra cards on the first turn|首回合手牌+{1}
 未使用の気力を最大N、次ターンへ持ち越す|Carry over up to {1} unused Energy to the next turn|最多保留{1}剩余能量至下回合
 未強化カードの消費気力+N|Unupgraded cards cost +{1} Energy|未强化卡牌能量费用+{1}
 未知のマスで、良い出来事が起きやすくなる|Good outcomes are more likely at unknown locations|未知地点更易发生好事
 未知のマスの良い出来事の確率+Nポイント（上限N%）|Good outcome chance at unknown locations +{1} percentage points (cap {2}%)|未知地点好事概率+{1}个百分点（上限{2}%）
-毎ターン、生存者全員に盾N|All living allies gain {1} Shield each turn|每回合全体存活同伴获得{1}护盾
-毎ターン、生存者全員のHPをN回復|Restore {1} HP to all living allies each turn|每回合全体存活同伴恢复{1} HP
+毎ターン生存者全員に盾N|All living allies gain {1} Shield each turn|每回合全体存活同伴获得{1}护盾
+毎ターン生存者全員のHPをN回復|Restore {1} HP to all living allies each turn|每回合全体存活同伴恢复{1} HP
 毎ターンの手札+N|Draw {1} extra cards each turn|每回合手牌+{1}
 毎ターンの手札+N、最初の手札はさらに+N|Draw {1} extra cards each turn, plus {2} more on the first turn|每回合手牌+{1}，首回合再额外+{2}
 毎ターンの手札+N（最低N枚）|Draw {1} extra cards each turn (minimum {2} cards)|每回合手牌+{1}（最低{2}张）
@@ -1107,20 +1110,20 @@ Nコストの攻撃カードの威力+N|{1}-cost attack cards deal +{2} damage|{
 毎ターン最初に毒を付与するカードでN枚引く|Draw {1} cards after the first Poison-applying card each turn|每回合首次使用施加中毒的卡牌后抽{1}张牌
 毎ターン最初に消滅カードを使うと気力+N|Gain {1} Energy after the first Exhaust card each turn|每回合首次使用消耗卡后能量+{1}
 毎ターン最初のカードで、使用者のHP-N|The first card each turn costs its user {1} HP|每回合首次出牌时使用者HP-{1}
-毎ターン最初のカード使用時、使用者のHP-N（盾を無視）|The first card each turn costs its user {1} HP (ignores Shield)|每回合首次出牌时使用者HP-{1}（无视护盾）
-毎ターン最初の毒付与・毒増幅カード使用時、N枚引く|Draw {1} cards after the first Poison-applying or multiplying card each turn|每回合首次使用施毒或增毒卡时抽{1}张牌
-毎ターン最初の消滅カード使用時、気力+N|Gain {1} Energy after the first Exhaust card each turn|每回合首次使用消耗卡时能量+{1}
+毎ターン最初のカード使用時に使用者のHP-N（盾を無視）|The first card each turn costs its user {1} HP (ignores Shield)|每回合首次出牌时使用者HP-{1}（无视护盾）
+毎ターン最初の毒付与・毒増幅カード使用時にN枚引く|Draw {1} cards after the first Poison-applying or multiplying card each turn|每回合首次使用施毒或增毒卡时抽{1}张牌
+毎ターン最初の消滅カード使用時に気力+N|Gain {1} Energy after the first Exhaust card each turn|每回合首次使用消耗卡时能量+{1}
 毎ターン最初の策略カードでN枚引く|Draw {1} cards after the first Skill each turn|每回合首次使用策略卡后抽{1}张牌
-毎ターン最初の策略カード使用時、N枚引く|Draw {1} cards after the first Skill each turn|每回合首次使用策略卡时抽{1}张牌
+毎ターン最初の策略カード使用時にN枚引く|Draw {1} cards after the first Skill each turn|每回合首次使用策略卡时抽{1}张牌
 気力Nでターンを終えると、次の気力+N|End with {1} Energy to gain +{2} Energy next turn|以{1}能量结束回合时，下回合能量+{2}
 気力Nでターンを終えると、次ターンの気力+N|End with {1} Energy to gain +{2} Energy next turn|以{1}能量结束回合时，下回合能量+{2}
 消費気力Nのカードの攻撃威力+N|{1}-cost cards deal +{2} attack damage|{1}费用卡牌攻击伤害+{2}
-消費気力Nのカード使用時、生存中の敵N体にランダムでNダメージ|Playing a {1}-cost card deals {3} damage to {2} random living enemy|使用{1}费用卡牌时，对{2}名随机存活敌人造成{3}伤害
+消費気力Nのカード使用時に生存中の敵N体にランダムでNダメージ|Playing a {1}-cost card deals {3} damage to {2} random living enemy|使用{1}费用卡牌时，对{2}名随机存活敌人造成{3}伤害
 生存者への回復薬のHP回復量+N|Healing potions restore +{1} HP to living allies|药水对存活同伴的恢复量+{1}
 盾を最大N、次ターンへ持ち越す|Carry over up to {1} Shield to the next turn|最多保留{1}护盾至下回合
-章クリア時、生存者のHP回復量+N|Living allies restore {1} extra HP after clearing a chapter|通关章节时存活同伴额外恢复{1} HP
+章クリア時に生存者のHP回復量+N|Living allies restore {1} extra HP after clearing a chapter|通关章节时存活同伴额外恢复{1} HP
 章クリア時のHP回復+N|Restore {1} extra HP after clearing a chapter|通关章节时HP恢复量+{1}
-連携するたび、全員のHPをN回復|Each Link restores {1} HP to everyone|每次联携全员恢复{1} HP
+連携するたびに全員のHPをN回復|Each Link restores {1} HP to everyone|每次联携全员恢复{1} HP
 連携で得る気力+N|Link grants +{1} Energy|联携提供的能量+{1}
 連携で得る気力が、さらに+N|Link grants +{1} extra Energy|联携额外提供{1}能量
 連携で得る盾が、さらに+N|Link grants +{1} extra Shield|联携额外提供{1}护盾
@@ -1193,9 +1196,9 @@ HP半分で攻撃力が上がる。|Attack rises at half HP.|HP降至一半时�
 第一章 / ささやきの森|Chapter One / The Whispering Woods|第一章／低语森林
 君の足跡が、道になる。|Your Footsteps Become the Road.|你的足迹，将成为道路。
 古い灯台へ続く巡礼路。その先に朝を取り戻す手がかりがある。道を選び、出会う仲間と灯をつないでいこう。|The pilgrim road leads to an old lighthouse, and a clue to restoring morning. Choose your path and carry the flame with the travelers you meet.|巡礼之路通向古老灯塔，那里有找回清晨的线索。选择道路，与途中相遇的同伴一起传递灯火。
-「道が閉ざされているなら、切り拓くまでさ。」灰刃を携え、一人の傭兵が夜へ踏み出す。|“If the road is closed, I'll cut one open.” Carrying her ashblade, a lone mercenary steps into the night.|「道路若被封住，就把它劈开。」一位佣兵携着灰刃，独自踏入长夜。
+「道が閉ざされているなら切り拓くまでさ。」灰刃を携え、一人の傭兵が夜へ踏み出す。|“If the road is closed, I'll cut one open.” Carrying her ashblade, a lone mercenary steps into the night.|「道路若被封住，就把它劈开。」一位佣兵携着灰刃，独自踏入长夜。
 「星が隠れていても、進む道は読める。」弓を背に、射手は静かな夜へ踏み出す。|“Even when the stars are hidden, I can read the way.” Bow on her back, the archer steps into the quiet night.|「即使星辰隐藏，我也能读出前进的路。」射手背着弓，步入寂静的夜。
-「まだ灯がある。それなら、できることもある。」薬の鞄を抱え、錬金術師は夜へ踏み出す。|“There's still a flame. That means there's still something I can do.” With a medicine bag in hand, the alchemist steps into the night.|「灯火还在，那就还有能做的事。」炼金术师抱起药袋，踏入长夜。
+「まだ灯がある。それならできることもある。」薬の鞄を抱え、錬金術師は夜へ踏み出す。|“There's still a flame. That means there's still something I can do.” With a medicine bag in hand, the alchemist steps into the night.|「灯火还在，那就还有能做的事。」炼金术师抱起药袋，踏入长夜。
 「この灯を、朝まで運ぼう。」旅人は支度を整え、長い夜へ踏み出す。|“Let's carry this flame until morning.” The traveler prepares and steps into the long night.|「把这盏灯，送到清晨吧。」旅人整装完毕，踏入漫漫长夜。
 ひとつ、夜を越えた。|One Night Behind Us.|又越过了一夜。
 新たな道 / 次の章の主|A New Road / The Next Sovereign|新的道路／下一位领主
@@ -1215,7 +1218,7 @@ HP半分で攻撃力が上がる。|Attack rises at half HP.|HP降至一半时�
 星の亡骸が目を開く。この世界に戻るには、主を越えるしかない。|The corpse of a star opens its eyes. To return, you must overcome its sovereign.|星之亡骸睁开双眼。若想回到原来的世界，唯有击败领主。
 `));
 rules.unshift([/合計6以上で2枚、それ以外は1枚追加で引く/g,()=>`Draw 2 extra cards if the total is at least 6; otherwise draw 1.`,()=>`点数总和至少为6时额外抽2张，否则抽1张。`]);
-rule(/(.+)は、灯を受け取った。/g,(_,name)=>`${translateText(name,'en')} Received the Flame.`,(_,name)=>`${translateText(name,'zh-CN')}接过了灯火。`);
+rule(/(.+)は、灯を受け取った。?/g,(_,name)=>`${translateText(name,'en')} Received the Flame.`,(_,name)=>`${translateText(name,'zh-CN')}接过了灯火。`);
 rule(/を覆っていた気配が、背後へ遠ざかる。キャラバンの灯はまだ燃えている。/g,()=>` fades behind you. The caravan's flame still burns.`,()=>`的阴影渐渐远去。商队的灯火仍在燃烧。`);
 registerTranslations(rows(`
 故郷を覆った夜を抜け、根の王が守る古道へ。|Leave the night over your homeland and follow the old road guarded by the Root King.|穿过笼罩故乡的长夜，前往根王守护的古道。
@@ -1439,7 +1442,7 @@ registerTranslations(rows(`
 仲間を選択しました。敵も選び、発動してください。|Ally selected. Choose an enemy, then play the card.|已选择同伴。再选择敌人后发动。
 敵を選択しました。仲間も選び、発動してください。|Enemy selected. Choose an ally, then play the card.|已选择敌人。再选择同伴后发动。
 もう一方の対象を選び、発動してください。|Choose the other target, then play the card.|请选择另一目标后发动。
-敵か仲間へドロップした後、もう一方を選んで発動|Drop onto an enemy or ally, then select the other target to play|拖至敌人或同伴后，选择另一目标发动
+敵か仲間へドロップした後にもう一方を選んで発動|Drop onto an enemy or ally, then select the other target to play|拖至敌人或同伴后，选择另一目标发动
 仲間まで動かして離す · 対象の外で離すとキャンセル|Release over an ally · Release outside a target to cancel|拖至同伴后松开・在目标外松开可取消
 戦場まで動かして離すと発動 · 手札へ戻すとキャンセル|Release over the battlefield to play · Return to your hand to cancel|拖至战场后松开发动・拖回手牌可取消
 敵まで動かして離す · 対象の外で離すとキャンセル|Release over an enemy · Release outside a target to cancel|拖至敌人后松开・在目标外松开可取消
@@ -1471,7 +1474,7 @@ const personPattern=COMPANIONS.map(h=>h.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&
 rules.unshift([new RegExp('('+personPattern+')と出発する','g'),(_,who)=>`Depart with ${translateText(who,'en')}`,(_,who)=>`与${translateText(who,'zh-CN')}出发`]);
 rules.unshift([new RegExp('('+personPattern+')の(攻撃|守備|回復|策略)カード','g'),(_,who,type)=>`${translateText(who,'en')}'s ${translateText(type,'en')} card`,(_,who,type)=>`${translateText(who,'zh-CN')}的${translateText(type,'zh-CN')}卡`]);
 rules.unshift([new RegExp('('+personPattern+')に(\\d+)ダメージ','g'),(_,who,n)=>`${n} damage to ${translateText(who,'en')}`,(_,who,n)=>`对${translateText(who,'zh-CN')}造成${n}伤害`]);
-import {GLOSSARY} from './glossary.js?v=49';
+import {GLOSSARY} from './glossary.js?v=50';
 const glossaryDetails=rows(`
 hp|Max HP is your healing limit. HP carries into later battles. The journey ends when everyone reaches 0 HP.|最大HP是可恢复的上限。HP会继承至后续战斗。全员HP归零时旅程结束。
 fallen|Potions and camp rest revive with 18 HP; defeating a boss revives with 45% Max HP. Ordinary healing cannot target fallen allies; cards must explicitly allow revival.|药水与营地休息均以18 HP复活；击败首领后以45%最大HP复活。普通治疗卡无法治疗倒下者，只有带复活效果的卡牌能以其为目标。
@@ -1604,11 +1607,11 @@ HPが0になると戦闘不能。|At 0 HP, a traveler falls.|HP归零时无法�
 ダメージを数値分だけ防ぎます。|Blocks damage equal to its value.|按数值抵挡伤害。
 持ち主の攻撃カードの威力を増やします。|Increases the owner's attack card damage.|提高持有者攻击卡的伤害。
 盾を無視してHPを減らす継続効果。|Ongoing HP loss that ignores Shield.|无视护盾持续减少HP。
-攻撃を受けたとき、ダメージ+4。|Take +4 damage when hit by an attack.|受到攻击时伤害+4。
+攻撃を受けたときダメージ+4。|Take +4 damage when hit by an attack.|受到攻击时伤害+4。
 敵の攻撃1ヒットにつき、被ダメージ+3。|Take +3 damage per enemy attack hit.|敌方攻击每次命中时受到伤害+3。
 通常敵の次の行動を止めます。|Stops a normal enemy's next action.|阻止普通敌人的下次行动。
 自分のターン開始時にHPを回復。|Restores HP at the start of your turn.|在你的回合开始时恢复HP。
-攻撃を受けるたび、攻撃者へ直接ダメージ。|Deals direct damage to an attacker after each hit.|每次受到攻击时，直接伤害攻击者。
+攻撃を受けるたびに攻撃者へ直接ダメージ。|Deals direct damage to an attacker after each hit.|每次受到攻击时，直接伤害攻击者。
 対象の毒と脆弱を取り除きます。|Removes Poison and Vulnerable from the target.|移除目标的中毒与易伤。
 敵の単体攻撃の対象を、使用者へ変更。|Redirects enemy single-target attacks to the user.|将敌方单体攻击转向使用者。
 盾を越えて攻撃する効果。|Attacks through or removes Shield.|越过或移除护盾的攻击效果。
@@ -1704,7 +1707,7 @@ registerTranslations(rows(`
 地図アイコンの説明|Map Legend|地图图例
 `));
 
-registerTranslations([["最後の灯を託され、夜の道へ踏み出した守り手。","Entrusted with the last lantern, a guardian steps into the night.","受托守护最后的灯火，踏入漫漫夜路的守护者。"],["星の消えた夜にも、弓を引く指は行き先を忘れない。","Even without stars, the fingers drawing the bow remember the way.","纵使繁星消失，拉弓的手仍记得前路。"],["旅の鞄には薬瓶と、まだ誰も知らない処方箋。","A traveling bag holds medicine bottles and recipes no one has yet discovered.","行囊中装着药瓶，以及尚无人知晓的药方。"],["朽ちた門を離れた衛士。その盾には、帰りを待つ街の紋が残る。","A guard leaves a ruined gate, carrying the crest of a city awaiting his return.","离开残破城门的卫士，盾上仍留着故城的纹章。"],["灰の街で刃を磨き、失われた朝を探す旅人。","A blade honed in the city of ash, carried in search of a lost dawn.","在灰烬之城磨砺刀锋，寻找失落清晨的旅人。"],["霧の向こうで獲物を追い、誰より静かに仲間の帰路を守る。","A quiet hunter follows the mist and watches over the road home.","循着雾追踪猎物，静静守护同伴的归途。"],["迷った星の名を数えながら、まだ空にない明日を占う。","Counting lost stars, a seer divines a tomorrow not yet written in the sky.","细数迷失的星辰，占卜尚未写入天空的明日。"],["巡礼路に置かれた薬袋には、いつも誰かのための一瓶がある。","A medicine pouch beside the pilgrim road always holds a bottle for someone else.","巡礼路旁的药袋中，总留着为他人准备的一瓶药。"],["小さな硝子瓶に、消えてしまった故郷の香りを集めている。","Small glass bottles preserve the scent of a homeland that vanished.","将消逝故乡的气息，收集在小小的玻璃瓶中。"],["失った店を建て直す日まで、銀貨の音だけを道標に剣を振る。","Until the lost shop is rebuilt, the sound of silver guides his sword.","在重建失去的店铺之前，以银币的响声为路标挥剑。"],["六つの目に、六つの明日。どれが出ても笑えるように、賽を握る。","Six faces, six tomorrows. The dice are held with a smile ready for any result.","六面骰子，六种明日。握住骰子，微笑着迎接任何点数。"],["崩れた城壁の石を一つ携え、次の誰かの居場所を築こうとしている。","A stone from a fallen wall is carried toward a new shelter for someone else.","携着坍塌城墙的一块石头，为后来者筑起新的居所。"],["焼け残った紙に、夜の向こうへ消えた人々の名を綴る。","On pages spared by fire, a scribe records the names lost beyond the night.","在劫后残存的纸页上，写下消失于长夜的人们之名。"],["白刃に映るのは敵の姿ではなく、果たせなかったひとつの約束。","A white blade reflects an unfulfilled promise rather than an enemy.","白刃映出的并非敌人，而是未能兑现的约定。"],["誰も近づかない毒の庭で、最初に咲いた花を覚えている。","In a garden others fear, the first flower to bloom is never forgotten.","在无人敢接近的毒园中，始终记得第一朵盛开的花。"],["灯が尽きた夜を二度と見たくなくて、壊れた機関を直し続ける。","Broken engines are repaired so no one must see another night without light.","不停修复破损机关，只愿无人再度面对灯火耗尽的夜。"],["散らばった紙片をつなげば、失われた物語の結末が読めるという。","Join the scattered scraps, and perhaps the ending of a lost tale can be read.","据说拼起散落纸片，就能读到失落故事的结局。"],["冷たい手を温めるために旅へ出た。今もその祈りは変わらない。","The journey began to warm a cold hand. That prayer has never changed.","为温暖冰冷的双手踏上旅途，那份祈愿从未改变。"],["落とし物を拾うたび、持ち主の帰り道を少しだけ探してしまう。","Every lost object invites a search for the road its owner might take home.","每拾起一件失物，总会寻找失主可能的归途。"],["緋色の瞳は、傷の奥に隠された、生き延びるための道を見つける。","Scarlet eyes find a path to survival hidden within old wounds.","绯色双眼能从伤痕深处，发现生存的道路。"],["雪に埋もれた里の鐘を、春の来ない巡礼路へ運んでいる。","A bell from a snowbound village travels a road that has forgotten spring.","带着雪埋故乡的钟，行走在春天不再到来的路上。"],["夜に響く太鼓の音。その続きを聞くために、仲間はもう一歩進める。","A drumbeat in the night gives companions the courage for one more step.","夜中响起的鼓声，鼓舞同伴再向前一步。"],["忘れられた歌を口ずさむ。誰かがその続きを覚えていると信じて。","Forgotten songs are sung in the hope that someone remembers the next verse.","轻唱被遗忘的歌，相信仍有人记得后续的旋律。"],["墓標のない場所に灯を置き、夜が静まるまでそばに立つ。","A lantern is left where no gravestone stands, watched until the night grows still.","在没有墓碑的地方留下灯火，静守至长夜安息。"],["切れた糸を結び直す指は、人と人との縁にも同じように優しい。","Fingers that mend broken strings are just as gentle with the bonds between people.","修补断线的手，对人与人之间的羁绊也同样温柔。"],["風の音に故郷の声を探し、足跡を残さず長い夜を越えてきた。","Searching the wind for a familiar voice, a wanderer crosses the night without footprints.","在风声中寻找故乡的声音，不留足迹地越过长夜。"],["灰になっても消えない火を守る。その熱だけが、帰る場所を知っている。","A flame that survives even ash remembers the way home.","守护化作灰烬也不会熄灭的火，唯有其温度记得归途。"],["波のない岸辺で祈った日から、遠い潮騒が耳を離れない。","Since a prayer on a shore without waves, distant tides have never fallen silent.","自从在无浪岸边祈祷，遥远潮声便再未离开耳畔。"],["旅人がまた歩けるように、夜ごと炉に小さな火を入れる。","Each night a small fire is lit in the forge so travelers may walk again.","每夜在炉中点起小火，只愿旅人能再次前行。"],["割れた鏡の中にも、守りたい誰かの姿はまだ映っている。","Even a broken mirror can still reflect someone worth protecting.","破碎的镜中，仍映着值得守护的身影。"],["長い夜の果てで、誰かが守り続けた黎明を継ぐ者。","Beyond the long night, a traveler inherits the dawn someone kept alive.","在漫漫长夜尽头，继承他人始终守护的黎明。"]]);
+registerTranslations([["最後の灯を託され、夜の道へ踏み出した守り手。","Entrusted with the last lantern, a guardian steps into the night.","受托守护最后的灯火，踏入漫漫夜路的守护者。"],["星の消えた夜にも、弓を引く指は行き先を忘れない。","Even without stars, the fingers drawing the bow remember the way.","纵使繁星消失，拉弓的手仍记得前路。"],["旅の鞄には薬瓶と、まだ誰も知らない処方箋。","A traveling bag holds medicine bottles and recipes no one has yet discovered.","行囊中装着药瓶，以及尚无人知晓的药方。"],["朽ちた門を離れた衛士。その盾には、帰りを待つ街の紋が残る。","A guard leaves a ruined gate, carrying the crest of a city awaiting his return.","离开残破城门的卫士，盾上仍留着故城的纹章。"],["灰の街で刃を磨き、失われた朝を探す旅人。","A blade honed in the city of ash, carried in search of a lost dawn.","在灰烬之城磨砺刀锋，寻找失落清晨的旅人。"],["霧の向こうで獲物を追い、誰より静かに仲間の帰路を守る。","A quiet hunter follows the mist and watches over the road home.","循着雾追踪猎物，静静守护同伴的归途。"],["迷った星の名を数えながら、まだ空にない明日を占う。","Counting lost stars, a seer divines a tomorrow not yet written in the sky.","细数迷失的星辰，占卜尚未写入天空的明日。"],["巡礼路に置かれた薬袋には、いつも誰かのための一瓶がある。","A medicine pouch beside the pilgrim road always holds a bottle for someone else.","巡礼路旁的药袋中，总留着为他人准备的一瓶药。"],["小さな硝子瓶に、消えてしまった故郷の香りを集めている。","Small glass bottles preserve the scent of a homeland that vanished.","将消逝故乡的气息，收集在小小的玻璃瓶中。"],["失った店を建て直す日まで、銀貨の音だけを道標に剣を振る。","Until the lost shop is rebuilt, the sound of silver guides his sword.","在重建失去的店铺之前，以银币的响声为路标挥剑。"],["六つの目に、六つの明日。どれが出ても笑えるように、賽を握る。","Six faces, six tomorrows. The dice are held with a smile ready for any result.","六面骰子，六种明日。握住骰子，微笑着迎接任何点数。"],["崩れた城壁の石を一つ携え、次の誰かの居場所を築こうとしている。","A stone from a fallen wall is carried toward a new shelter for someone else.","携着坍塌城墙的一块石头，为后来者筑起新的居所。"],["焼け残った紙に、夜の向こうへ消えた人々の名を綴る。","On pages spared by fire, a scribe records the names lost beyond the night.","在劫后残存的纸页上，写下消失于长夜的人们之名。"],["白刃に映るのは敵の姿ではなく、果たせなかったひとつの約束。","A white blade reflects an unfulfilled promise rather than an enemy.","白刃映出的并非敌人，而是未能兑现的约定。"],["誰も近づかない毒の庭で、最初に咲いた花を覚えている。","In a garden others fear, the first flower to bloom is never forgotten.","在无人敢接近的毒园中，始终记得第一朵盛开的花。"],["灯が尽きた夜を二度と見たくなくて、壊れた機関を直し続ける。","Broken engines are repaired so no one must see another night without light.","不停修复破损机关，只愿无人再度面对灯火耗尽的夜。"],["散らばった紙片をつなげば、失われた物語の結末が読めるという。","Join the scattered scraps, and perhaps the ending of a lost tale can be read.","据说拼起散落纸片，就能读到失落故事的结局。"],["冷たい手を温めるために旅へ出た。今もその祈りは変わらない。","The journey began to warm a cold hand. That prayer has never changed.","为温暖冰冷的双手踏上旅途，那份祈愿从未改变。"],["落とし物を拾うたびに持ち主の帰り道を少しだけ探してしまう。","Every lost object invites a search for the road its owner might take home.","每拾起一件失物，总会寻找失主可能的归途。"],["緋色の瞳は、傷の奥に隠された、生き延びるための道を見つける。","Scarlet eyes find a path to survival hidden within old wounds.","绯色双眼能从伤痕深处，发现生存的道路。"],["雪に埋もれた里の鐘を、春の来ない巡礼路へ運んでいる。","A bell from a snowbound village travels a road that has forgotten spring.","带着雪埋故乡的钟，行走在春天不再到来的路上。"],["夜に響く太鼓の音。その続きを聞くために、仲間はもう一歩進める。","A drumbeat in the night gives companions the courage for one more step.","夜中响起的鼓声，鼓舞同伴再向前一步。"],["忘れられた歌を口ずさむ。誰かがその続きを覚えていると信じて。","Forgotten songs are sung in the hope that someone remembers the next verse.","轻唱被遗忘的歌，相信仍有人记得后续的旋律。"],["墓標のない場所に灯を置き、夜が静まるまでそばに立つ。","A lantern is left where no gravestone stands, watched until the night grows still.","在没有墓碑的地方留下灯火，静守至长夜安息。"],["切れた糸を結び直す指は、人と人との縁にも同じように優しい。","Fingers that mend broken strings are just as gentle with the bonds between people.","修补断线的手，对人与人之间的羁绊也同样温柔。"],["風の音に故郷の声を探し、足跡を残さず長い夜を越えてきた。","Searching the wind for a familiar voice, a wanderer crosses the night without footprints.","在风声中寻找故乡的声音，不留足迹地越过长夜。"],["灰になっても消えない火を守る。その熱だけが、帰る場所を知っている。","A flame that survives even ash remembers the way home.","守护化作灰烬也不会熄灭的火，唯有其温度记得归途。"],["波のない岸辺で祈った日から、遠い潮騒が耳を離れない。","Since a prayer on a shore without waves, distant tides have never fallen silent.","自从在无浪岸边祈祷，遥远潮声便再未离开耳畔。"],["旅人がまた歩けるように、夜ごと炉に小さな火を入れる。","Each night a small fire is lit in the forge so travelers may walk again.","每夜在炉中点起小火，只愿旅人能再次前行。"],["割れた鏡の中にも、守りたい誰かの姿はまだ映っている。","Even a broken mirror can still reflect someone worth protecting.","破碎的镜中，仍映着值得守护的身影。"],["長い夜の果てで、誰かが守り続けた黎明を継ぐ者。","Beyond the long night, a traveler inherits the dawn someone kept alive.","在漫漫长夜尽头，继承他人始终守护的黎明。"]]);
 
 registerTranslations([['外部の音楽・動画とゲーム音声を同時に再生します。端末やブラウザによっては同時再生できない場合があります。','Mix game audio with external music and videos. Simultaneous playback may not be supported on every device or browser.','同时播放外部音乐、视频与游戏音频。部分设备或浏览器可能不支持同时播放。']]);
 
@@ -1716,3 +1719,5 @@ registerTranslations([
  ['現在のレリック効果を反映した回復後のHPを下に表示します。戦闘不能の仲間には使用できません。','The HP after healing below includes current relic effects. Potions cannot be used on fallen allies.','下方恢复后的HP已计入当前遗物效果。无法对倒下的同伴使用恢复药。'],
  ['戦闘不能（回復薬は使用不可）','Fallen (cannot use a potion)','战斗不能（无法使用恢复药）'],['生存中の仲間のHPを、気力を使わず24回復。','Restores 24 HP to a living ally without spending Energy.','不消耗能量，为存活同伴恢复24 HP。'],['戦闘不能・満タンの仲間と空席には使用できません。','Cannot be used on fallen allies, allies at full HP, or empty slots.','无法对倒下、满血的同伴或空位使用。'],['回復薬と通常の回復カードは戦闘不能を治せず、','Potions and normal healing cards cannot revive fallen allies; ','恢复药与普通治疗卡无法复活倒下的同伴，']
 ]);
+
+registerTranslations([['まおう','Maou','魔王酱'],['からっぽの王','Hollow King','空虚之王'],['ターン中、元の持ち主ごとに最初の1枚を使うと気力+1（毎ターンリセット）','Each turn, the first card you play from each original owner restores 1 Energy (resets every turn)','每回合中，每位原持有者的第一张牌恢复1点能量（每回合重置）'],['パスワード','Password','密码'],['パスワードを入力','Enter Password','输入密码'],['パスワードが違います。','Wrong password.','密码错误。'],['決定','OK','确定']]);

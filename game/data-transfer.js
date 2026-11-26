@@ -1,7 +1,7 @@
 // 全データ（セーブ・手動記録・実績・解放状況・図鑑・隠し要素・設定・デバッグ版データ）の書き出し／読み込み
-import {mergeProgress,emptyProgress} from './progress.js?v=49';
-import {decodeSave} from './saves.js?v=49';
-import {normalizeHiddenProgress} from './hidden-traveler.js?v=49';
+import {mergeProgress,emptyProgress} from './progress.js?v=50';
+import {decodeSave} from './saves.js?v=50';
+import {normalizeHiddenProgress} from './hidden-traveler.js?v=50';
 
 export const BACKUP_FORMAT='lantern-backup';
 const PROGRESS_KEYS=['lantern-caravan-progress-v1','lantern-debug:lantern-caravan-progress-v1'];
@@ -18,10 +18,10 @@ export function encodeBackup(storage){return JSON.stringify(collectBackup(storag
 
 // 旧サイトのブックマークレット・本サイトの書き出し・コピーしたテキストのどれでも受け付ける
 export function parseBackup(text){
- let raw;try{raw=JSON.parse(String(text).trim())}catch{throw Error('引き継ぎデータを読み取れませんでした。ファイルまたは貼り付けた内容を確認してください。')}
- if(!raw||raw.format!==BACKUP_FORMAT||!raw.data||typeof raw.data!=='object'||Array.isArray(raw.data))throw Error('灯火のキャラバンの引き継ぎデータではありません。');
+ let raw;try{raw=JSON.parse(String(text).trim())}catch{throw Error('引き継ぎデータを読み取れませんでした。ファイルまたは貼り付けた内容を確認してください')}
+ if(!raw||raw.format!==BACKUP_FORMAT||!raw.data||typeof raw.data!=='object'||Array.isArray(raw.data))throw Error('灯火のキャラバンの引き継ぎデータではありません');
  const data={};for(const[key,value]of Object.entries(raw.data))if(isGameKey(key)&&typeof value==='string'&&value.length<20_000_000)data[key]=value;
- if(!Object.keys(data).length)throw Error('引き継ぐデータが入っていません。旧サイトで一度遊んだブラウザで書き出してください。');
+ if(!Object.keys(data).length)throw Error('引き継ぐデータが入っていません。旧サイトで一度遊んだブラウザで書き出してください');
  return{...raw,data};
 }
 

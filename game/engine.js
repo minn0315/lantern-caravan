@@ -1,21 +1,21 @@
-import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=49';
-import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=49';
-import {enemyActionRange} from './enemy-actions.js?v=49';
-import {roundHP,normalizeHealth} from './health.js?v=49';
-import {stampFreshBalance} from './balance-runtime.js?v=49';
-import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=49';
+import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=50';
+import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=50';
+import {enemyActionRange} from './enemy-actions.js?v=50';
+import {roundHP,normalizeHealth} from './health.js?v=50';
+import {stampFreshBalance} from './balance-runtime.js?v=50';
+import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=50';
 export {debugGod,maintainDebugGod};
-import {endingInfo} from './endings.js?v=49';
-import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=49';
-import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=49';
-import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=49';
-import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=49';
-import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=49';
+import {endingInfo} from './endings.js?v=50';
+import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=50';
+import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=50';
+import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=50';
+import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=50';
+import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=50';
 export {GODDESS_GIFTS};
-import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=49';
-import {STORY_KINDS,STORY_LENGTH} from './story.js?v=49';
-export {storyFrames} from './story.js?v=49';
-import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS} from './catalog.js?v=49';
+import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=50';
+import {STORY_KINDS,STORY_LENGTH} from './story.js?v=50';
+export {storyFrames} from './story.js?v=50';
+import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS,MAOU_STARTERS,MAOU_NORMALS} from './catalog.js?v=50';
 export {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS};
 export const MAX_UPGRADES=3;
 export const isSpecialStage=s=>!s.demon?.active&&!!s.endless&&s.legacySpecialChapter!==s.chapter&&(s.chapter+1)%50===0;
@@ -41,7 +41,7 @@ export function storyBeat(s){return chapterInfo(s).beats[Math.min(3,Math.floor(M
 const baseHero=h=>({hp:h.max,max:h.max,shield:0,power:0,poison:0,vulnerable:0,regen:0,thorns:0});
 export function fresh(seed=randomSeed(),doctrine='ember',hard=false,starter='eda',endless=false){
  if(!COMPANIONS.some(h=>h.id===starter))starter='eda';
- hard=hard||endless;let s={version:4,worldRevision:2,endless,seed:seed>>>0,initialSeed:seed>>>0,rngState:seedWords(seed),hard,started:Date.now(),elapsed:0,chapter:0,step:-1,lane:1,gold:75,fuel:100,potions:3,deck:STARTER_DECKS[starter].map((id,uid)=>({id,up:0,branches:[],uid})),nextUid:10,relics:[doctrine],relicCycles:{normal:{seen:[],cycle:1},boss:{seen:[],cycle:1}},starterId:starter,maxBonus:0,departed:[],party:[starter,null,null],heroes:[baseHero(COMPANIONS.find(h=>h.id===starter)),baseHero({max:0}),baseHero({max:0})],phase:'map',battle:null,log:[],visited:[],wins:0,cardBag:[],journal:[],notice:'',route:[],edges:[],routeX:[]};s.route=makeRoute(s);s.bossId=pick(s,BOSSES.filter(b=>b.chapter===0)).id;s.journal.push(storyBeat(s));return stampFreshBalance(s);
+ hard=hard||endless;let s={version:4,worldRevision:2,endless,seed:seed>>>0,initialSeed:seed>>>0,rngState:seedWords(seed),hard,started:Date.now(),elapsed:0,chapter:0,step:-1,lane:1,gold:75,fuel:100,potions:3,deck:STARTER_DECKS[starter].map((id,uid)=>({id,up:0,branches:[],uid})),nextUid:10,relics:[doctrine],relicCycles:{normal:{seen:[],cycle:1},boss:{seen:[],cycle:1}},starterId:starter,maxBonus:0,departed:[],party:[starter,null,null],heroes:[baseHero(COMPANIONS.find(h=>h.id===starter)),baseHero({max:0}),baseHero({max:0})],phase:'map',battle:null,log:[],visited:[],wins:0,cardBag:[],journal:[],notice:'',route:[],edges:[],routeX:[]};if(isBlack(starter)){s.deck=randomBorrowedDeck(s,starter,10).map((c,uid)=>({...c,uid}))}s.route=makeRoute(s);s.bossId=pick(s,BOSSES.filter(b=>b.chapter===0)).id;s.journal.push(storyBeat(s));return stampFreshBalance(s);
 }
 export function freshTeam(seed=randomSeed(),doctrine='ember',hard=false){let s=fresh(seed,doctrine,hard,'row');s.starterId=null;s.party=HEROES.map(h=>h.id);s.heroes=HEROES.map(baseHero);s.deck=['slash','slash','guard','guard','bash','rally','arrow','arrow','mark','rain','focus','spark','spark','heal','tonic','smoke'].map((id,uid)=>({id,up:0,branches:[],uid}));s.nextUid=16;return stampFreshBalance(s)}
 export function canResumeRun(s){return !!s&&s.phase!=='lost'}
@@ -115,13 +115,20 @@ export function addRelic(s,id){let r=RELICS.find(r=>r.id===id);if(!r||has(s,id))
 export function addPotions(s,n){const before=Math.min(3,s.potions);s.potions=Math.min(3,Math.max(0,before+n));return s.potions-before}
 export function shuffleDraw(s,cards){const mixed=shuffle(s,cards);return [...mixed.filter(c=>CARDS[c.id].special),...mixed.filter(c=>!CARDS[c.id].special)]}
 export function offeredCard(s,id){return JSON.parse(JSON.stringify(s.offeredCards?.[id]||{id,up:0,branches:[]}))}
-export function acquireCard(s,id){if(!CARDS[id]||CARDS[id].status)return false;let card=offeredCard(s,id),uid=allocateCardUid(s);if(CARDS[id].special)s.deck=s.deck.filter(c=>!CARDS[c.id].special);s.deck.push({...card,...(!s.party.includes(CARDS[id].owner)?{owner:s.party[CARDS[id].actor]}:{}),uid});return true}
+export function acquireCard(s,id){if(!CARDS[id]||CARDS[id].status)return false;let card=offeredCard(s,id),uid=allocateCardUid(s);if(CARDS[id].special)s.deck=s.deck.filter(c=>!CARDS[c.id].special);s.deck.push({...card,...(!card.owner&&!s.party.includes(CARDS[id].owner)?{owner:s.party[CARDS[id].actor]}:{}),uid});return true}
 export function buyCard(s,index){let id=s.stock?.[index],price=shopPrice(s,40);if(s.phase!=='shop'||!id||s.gold<price)return false;s.gold-=price;acquireCard(s,id);s.stock.splice(index,1);maintainDebugGod(s);return true}
 export function cardOwner(card){return card.owner||CARDS[card.id]?.owner}
-export function offerCards(s,count=3){let eligible=Object.keys(CARDS).filter(id=>!CARDS[id].status&&!CARDS[id].special&&s.party.includes(CARDS[id].owner)),special=Object.keys(CARDS).filter(id=>CARDS[id].special&&s.party.includes(CARDS[id].owner)),result=[];s.offeredCards={};s.cardBag=(s.cardBag||[]).filter(id=>eligible.includes(id));while(result.length<Math.min(count,eligible.length)){let id;if(special.length&&rng(s)<.045)id=pick(s,special.filter(id=>!result.includes(id)));else{if(!s.cardBag.length)s.cardBag=shuffle(s,eligible);id=s.cardBag.pop()}if(!id||result.includes(id))continue;result.push(id);const card={id,up:0,branches:[]};if(!CARDS[id].special&&rng(s)<.065){const amount=rng(s)<.2?2:1;card.rarity='upgraded';for(let i=0;i<amount;i++){const safe=safeUpgradeVariants(card,s);card.branches.push(pick(s,safe).id);card.up++}}s.offeredCards[id]=card}return result}
+// まおう（blackparty）：全旅人のカードを「借り物」として使う
+const isBlack=id=>!!COMPANIONS.find(h=>h.id===id)?.blackparty;
+const borrowableOwner=id=>{const h=COMPANIONS.find(h=>h.id===id);return !!h&&!h.hidden&&!h.blackparty};
+export function originOwner(card){return CARDS[card.id]?.owner}
+function borrowPool(kind){if(kind==='starter')return[...new Set(COMPANIONS.filter(h=>borrowableOwner(h.id)).flatMap(h=>STARTER_DECKS[h.id]||[])),...MAOU_STARTERS];return[...Object.keys(CARDS).filter(id=>!CARDS[id].status&&!CARDS[id].special&&borrowableOwner(CARDS[id].owner)),...MAOU_NORMALS]}
+export function randomBorrowedDeck(s,holder,count,kind='starter'){const pool=borrowPool(kind);return Array.from({length:count},()=>({id:pick(s,pool),up:0,branches:[],owner:holder}))}
+export function offerCards(s,count=3){let eligible=Object.keys(CARDS).filter(id=>!CARDS[id].status&&!CARDS[id].special&&s.party.includes(CARDS[id].owner)),special=Object.keys(CARDS).filter(id=>CARDS[id].special&&s.party.includes(CARDS[id].owner)),result=[];s.offeredCards={};s.cardBag=(s.cardBag||[]).filter(id=>eligible.includes(id));const black=s.party.filter(id=>id&&isBlack(id)),members=s.party.filter(Boolean).length||1,borrow=black.length?borrowPool('normal'):[];let guard=0;while(result.length<Math.min(count,eligible.length+borrow.length)&&guard++<200){let id,holder=null;if(special.length&&rng(s)<.045)id=pick(s,special.filter(id=>!result.includes(id)));else if(black.length&&rng(s)<black.length/members){id=pick(s,borrow);holder=pick(s,black)}else{if(!s.cardBag.length)s.cardBag=shuffle(s,eligible);id=s.cardBag.pop()}if(!id||result.includes(id))continue;result.push(id);const card={id,up:0,branches:[],...(holder&&CARDS[id].owner!==holder?{owner:holder}:{})};if(!CARDS[id].special&&rng(s)<.065){const amount=rng(s)<.2?2:1;card.rarity='upgraded';for(let i=0;i<amount;i++){const safe=safeUpgradeVariants(card,s);card.branches.push(pick(s,safe).id);card.up++}}s.offeredCards[id]=card}return result}
 export function shopPrice(s,base){return Math.max(1,Math.round(base*(1-Math.min(.5,mods(s).shopDiscount||0))))}
 export function removePrice(s){return shopPrice(s,35+(s.shopRemovals||0)*25)}
 export function upgradeVariants(card){
+ if(CARDS[card.id]?.noUpgrade)return[];
  const values=cardValues(card),c=values.components?.[0]||values,base=CARDS[card.id],normal=EXPANDED_UPGRADE_IDS.map(id=>({id,weight:1}));
  const eligible={relief_debuff:(c.selfPoison||0)>0||(c.selfVulnerable||0)>0,relief_hp:(c.selfCost||0)>0,relief_cost:c.cost>base.cost,relief_effect:Object.keys(base).some(k=>!['actor','cost','selfCost'].includes(k)&&typeof base[k]==='number'&&base[k]>0&&typeof c[k]==='number'&&c[k]<base[k])};
  for(const [id,yes]of Object.entries(eligible))if(yes)normal.push({id,weight:5});return normal;
@@ -247,7 +254,7 @@ export function cardValues(card,s){
 function scaleCard(value,s){let c={...value};let actor=c.actor,h=s.heroes[actor],b=s.battle;const extra=(c.goldScale?Math.min(30,Math.floor(s.gold/c.goldScale)):0)+(c.armorRatio?Math.floor((h?.shield||0)*c.armorRatio):0)+(c.exhaustScale?(b?.exhaust.length||0)*c.exhaustScale:0)+(c.fuelScale?Math.floor(s.fuel/c.fuelScale):0)+(c.handScale?Math.max(0,(b?.hand.length||1)-1)*c.handScale:0)+(c.woundedScale?Math.floor(s.heroes.filter(x=>x.max).reduce((v,h)=>v+1-h.hp/h.max,0)*c.woundedScale):0)+(c.discardScale?Math.floor((b?.discard.length||0)*c.discardScale):0)+(c.chainScale?(b?.cardsPlayed||0)*c.chainScale:0)+(c.harmonyScale?(b?.actors.length||0)*c.harmonyScale:0)+(c.fallenScale?s.heroes.filter(h=>h.max&&!h.hp).length*c.fallenScale:0)+(c.upgradeScale?(c.upgradeLevel||0)*c.upgradeScale:0)+(c.thornsRatio?Math.floor((h?.thorns||0)*c.thornsRatio):0);if(c.damage)c.damage+=extra;if(c.aoe)c.aoe+=extra;return c;}
 function fusionLeafCount(card){return card.fusion?card.fusion.parts.reduce((n,p)=>n+fusionLeafCount(p),0):1}
 export function fusionPreview(s,firstUid,secondUid){
- if(!canTakeBlessing(s)||firstUid===secondUid)return null;const a=s.deck.find(c=>c.uid===firstUid),b=s.deck.find(c=>c.uid===secondUid);if(!a||!b||s.deck.filter(c=>c.uid===firstUid).length!==1||s.deck.filter(c=>c.uid===secondUid).length!==1||CARDS[a.id].special||CARDS[b.id].special||cardOwner(a)!==cardOwner(b)||fusionLeafCount(a)+fusionLeafCount(b)>4)return null;
+ if(!canTakeBlessing(s)||firstUid===secondUid)return null;const a=s.deck.find(c=>c.uid===firstUid),b=s.deck.find(c=>c.uid===secondUid);if(!a||!b||s.deck.filter(c=>c.uid===firstUid).length!==1||s.deck.filter(c=>c.uid===secondUid).length!==1||CARDS[a.id].special||CARDS[b.id].special||CARDS[a.id].noUpgrade||CARDS[b.id].noUpgrade||cardOwner(a)!==cardOwner(b)||fusionLeafCount(a)+fusionLeafCount(b)>4)return null;
  return{id:a.id,owner:cardOwner(a),uid:nextFreeCardUid(s),up:0,branches:[],potencies:[],fusion:{parts:JSON.parse(JSON.stringify([a,b]))}};
 }
 export function fuseCards(s,firstUid,secondUid){const card=fusionPreview(s,firstUid,secondUid);if(!card)return false;card.uid=allocateCardUid(s);s.deck=s.deck.filter(c=>c.uid!==firstUid&&c.uid!==secondUid);s.deck.push(card);takeBlessing(s,'同じ旅人のカードを合成');return true}
@@ -268,7 +275,7 @@ export function upgradeCard(s,uid,branch='power'){
  if(source==='cycle')finishCycle(s);else if(source==='blessing')takeBlessing(s,'不利益の増えないカード強化1回');else{s.phase=source==='shop'?'shop':'map';if(source==='shop'){s.shopUpgrades=(s.shopUpgrades||0)+1;delete s.shopForge}delete s.upgradeContext}return true;
 }
 export function shopForgePrice(s){return shopPrice(s,110+(s.shopUpgrades||0)*70)}
-export function startShopUpgrade(s){if(s.phase!=='shop'||s.gold<shopForgePrice(s))return false;const eligible=s.deck.filter(c=>c.up<3);if(!eligible.length)return false;s.shopForge={cards:shuffle(s,eligible).slice(0,3).map(c=>c.uid),price:shopForgePrice(s),roll:(s.shopUpgrades||0)+1};s.phase='shopupgrade';s.upgradeContext={source:'shop'};for(const uid of s.shopForge.cards)upgradeOffer(s,uid);return true}
+export function startShopUpgrade(s){if(s.phase!=='shop'||s.gold<shopForgePrice(s))return false;const eligible=s.deck.filter(c=>c.up<3&&!CARDS[c.id].noUpgrade);if(!eligible.length)return false;s.shopForge={cards:shuffle(s,eligible).slice(0,3).map(c=>c.uid),price:shopForgePrice(s),roll:(s.shopUpgrades||0)+1};s.phase='shopupgrade';s.upgradeContext={source:'shop'};for(const uid of s.shopForge.cards)upgradeOffer(s,uid);return true}
 export function requestUpgrade(s,source){if(source==='shop')return startShopUpgrade(s);if(source==='camp'&&s.phase!=='camp'||source==='forge'&&s.phase!=='forge')return false;s.upgradeContext={source};return true}
 const alive=s=>s.heroes.map((h,i)=>h.hp>0?i:-1).filter(i=>i>=0);
 export function addLog(s,text){s.log.unshift(text);s.log=s.log.slice(0,25)}
@@ -343,7 +350,7 @@ function planSingleIntent(s,e){
  return{kind,target:target??0,value,hits:['attack','heavy','sweep','venom','flurry'].includes(kind)?Math.max(kind==='flurry'?2:1,e.multiStrike||1):1,poison:kind==='venom'?2+Math.floor(s.chapter/2):0,factor};
 }
 export function beginTurn(s,timeline=null){
- let b=s.battle,m=mods(s);b.turn++;b.cardsPlayed=0;b.firstSkillUsed=false;b.poisonDrawUsed=false;b.exhaustEnergyUsed=false;b.memberSkillUsed=[];b.actors=[];b.memberShieldUsed=[];b.linked=false;b.selected=null;
+ let b=s.battle,m=mods(s);b.turn++;b.cardsPlayed=0;b.firstSkillUsed=false;b.poisonDrawUsed=false;b.exhaustEnergyUsed=false;b.memberSkillUsed=[];b.actors=[];b.memberShieldUsed=[];b.linked=false;b.selected=null;b.originsUsed=[];
  const companionEnergy=s.heroes.reduce((n,h,i)=>n+(h.hp?heroInfo(s,i).bonus.energy||0:0),0);let drain=b.enemies.some(e=>e.hp&&e.energyDrain&&b.turn%3===0)?1:0;b.energy=Math.max(1,(s.fuel===0?3:4)+companionEnergy+(m.energy||0)+(b.turn===1?(m.firstEnergy||0):0)+(b.nextEnergy||0)+(b.carryEnergy||0)-drain);b.nextEnergy=0;b.carryEnergy=0;
  s.heroes.forEach((h,i)=>{if(!h.hp)return;h.shield=Math.min(h.shield,m.carryShield||0)+(m.shieldTurn||0)+(b.turn===1?(m.firstShield||0):0)+(heroInfo(s,i).bonus.selfTurnShield||0);h.thorns=0;if(h.poison>0){const result=hurtHero(s,i,h.poison,true);h.poison--;if(timeline&&result.damage)timeline.push({kind:'poison',enemyIndex:0,heroIndex:i,amount:result.damage,blocked:0,label:heroInfo(s,i).name+'の毒ダメージ',heroes:s.heroes.map(h=>({...h})),enemies:b.enemies.map(e=>({...e,intent:{...e.intent}}))})}if(h.hp&&(h.regen||m.turnRegen)){healHero(s,i,(h.regen||0)+(m.turnRegen||0),false,'other');if(h.regen)h.regen--}});
  if(s.heroes.every(h=>!h.hp)){loseRun(s);return}
@@ -378,6 +385,8 @@ export function play(s,index,target,heroTarget){
  if(isSkill&&member.bonus.firstSkillDraw&&!b.memberSkillUsed.includes(c.actor)){b.memberSkillUsed.push(c.actor);draw(s,member.bonus.firstSkillDraw)}
  if(parts.some(p=>p.poison||p.allPoison||p.poisonMultiplier)&&!b.poisonDrawUsed&&m.poisonDraw){b.poisonDrawUsed=true;draw(s,m.poisonDraw)}
  if(c.exhaust&&!b.exhaustEnergyUsed&&m.exhaustEnergy){b.exhaustEnergyUsed=true;b.energy+=m.exhaustEnergy}
+ if(member.bonus.ownerRefund&&!c.status){const origin=originOwner(card);b.originsUsed??=[];if(origin&&!b.originsUsed.includes(origin)){b.originsUsed.push(origin);b.energy+=member.bonus.ownerRefund;addLog(s,`${member.name}：${COMPANIONS.find(h=>h.id===origin)?.name||'自分'}のカードを初めて使い、気力+${member.bonus.ownerRefund}`)}}
+ const steal=parts.reduce((n,p)=>n+(p.stealCard||0),0);if(steal)stealCards(s,card,c.actor,steal);
  if(c.cost===0&&m.zeroPing){let foe=pick(s,b.enemies.filter(e=>e.hp));if(foe)hitEnemy(s,foe,m.zeroPing)}
  let selfDamage=(c.components?0:c.selfCost||0)+(c.type==='攻撃'?(m.attackSelfDamage||0):0)+(b.cardsPlayed===0?(m.firstCardCostHP||0):0);if(selfDamage)hurtHero(s,c.actor,selfDamage,true);
  if(member.bonus.cardGold)s.gold+=member.bonus.cardGold;if(c.exhaust&&member.bonus.exhaustDraw)draw(s,member.bonus.exhaustDraw);if(c.cost===0)owner.shield+=member.bonus.zeroShield||0;if(c.selfCost&&member.bonus.selfHarmPower)owner.power+=member.bonus.selfHarmPower;if(member.bonus.harmonyHeal)healHero(s,c.actor,Math.min(4,b.actors.length*member.bonus.harmonyHeal));
@@ -386,6 +395,9 @@ export function play(s,index,target,heroTarget){
  if(b.actors.length===3&&!b.linked){b.linked=true;b.energy+=1+(m.linkEnergy||0);s.heroes.forEach((h,i)=>{if(!h.hp)return;h.shield+=6+(m.linkShield||0);healHero(s,i,m.linkHeal||0,false,'other')});addLog(s,'三人の連携！ 盾と気力を獲得。')}
  bossPhases(s);if(s.heroes.every(h=>!h.hp)){loseRun(s);return true}checkBattle(s);return true;
 }
+function stealCards(s,source,actor,count){const b=s.battle,holder=s.party[actor],allies=s.party.filter(id=>id&&id!==holder&&!isBlack(id));let pool=Object.keys(CARDS).filter(id=>!CARDS[id].status&&!CARDS[id].special&&allies.includes(CARDS[id].owner));if(!pool.length)pool=borrowPool('normal').filter(id=>!MAOU_NORMALS.includes(id));
+ for(let i=0;i<count;i++){const id=pick(s,pool),card={id,up:0,branches:[],owner:holder,uid:allocateCardUid(s)};s.deck.push(card);const copy={...card,branches:[]};if(b.hand.length<12)b.hand.push(copy);else b.discard.push(copy);addLog(s,`${heroInfo(s,actor).name}は「${CARDS[id].name}」を奪った`)}
+ if(CARDS[source.id].noUpgrade)s.deck=s.deck.filter(c=>c.uid!==source.uid)}
 function applyEffects(s,c,target,heroTarget,previewFace){c={...c};let b=s.battle,owner=s.heroes[c.actor],member=heroInfo(s,c.actor),m=mods(s),e=b.enemies[target],h=s.heroes[heroTarget],hadWeak=e?.weak>0;
  if(c.dice){let rolls=Array.from({length:c.dice},(_,i)=>{const rolled=previewFace||randomInt(s,6)+1;return previewFace?rolled:(s.pendingCast?.rolls?.[(b.diceRolls?.length||0)+i]??rolled)}),sum=rolls.reduce((a,b)=>a+b,0);b.diceRolls??=[];b.diceRolls.push(...rolls);c=resolveDiceEffects(c,sum);addLog(s,`${member.name}の出目：${rolls.join('・')}`)}
  if(c.goldGain)s.gold+=c.goldGain;
@@ -525,7 +537,7 @@ export function camp(s,choice,uid,branch='power'){
  else if(choice==='fuel')s.fuel=Math.min(100,s.fuel+35+(m.campFuel||0));else return false;
  claimNode(s,'camp');s.phase='map';delete s.upgradeContext;return true;
 }
-export function goddessEligible(s,card,gift){const c=cardValues(card,s);if(gift==='refund')return card.up>=1;if(card.up>=3)return false;if(['heal','allheal','regen'].includes(gift)&&mods(s).cardHealDisabled)return false;switch(gift){case'cost':return c.cost>0;case'permanent':return !!c.exhaust;case'mercy':return(c.selfCost||0)>0;case'relief':return(c.selfPoison||0)>0||(c.selfVulnerable||0)>0;case'pierce':return!!(c.damage||c.aoe)&&!c.ignoreShield;case'break':return!!(c.damage||c.aoe)&&!c.stripShield;case'hits':return!!(c.damage||c.aoe);case'damage':return!!(c.damage||c.aoe)&&(c.hits||1)<=3;case'cleanse':return!c.selfCleanse;default:return true}}
+export function goddessEligible(s,card,gift){if(CARDS[card.id]?.noUpgrade)return false;const c=cardValues(card,s);if(gift==='refund')return card.up>=1;if(card.up>=3)return false;if(['heal','allheal','regen'].includes(gift)&&mods(s).cardHealDisabled)return false;switch(gift){case'cost':return c.cost>0;case'permanent':return !!c.exhaust;case'mercy':return(c.selfCost||0)>0;case'relief':return(c.selfPoison||0)>0||(c.selfVulnerable||0)>0;case'pierce':return!!(c.damage||c.aoe)&&!c.ignoreShield;case'break':return!!(c.damage||c.aoe)&&!c.stripShield;case'hits':return!!(c.damage||c.aoe);case'damage':return!!(c.damage||c.aoe)&&(c.hits||1)<=3;case'cleanse':return!c.selfCleanse;default:return true}}
 export function startGoddess(s){const available=GODDESS_GIFTS.filter(g=>s.deck.some(c=>goddessEligible(s,c,g.id)));const offers=shuffle(s,GODDESS_GIFTS).slice(0,3);if(available.length&&!offers.some(g=>available.includes(g)))offers[0]=pick(s,available);s.goddess={offers:offers.map(g=>g.id),selected:null,variants:{}};s.phase='goddess';return true}
 export function chooseGoddessGift(s,id){if(s.phase!=='goddess'||!s.goddess.offers.includes(id)||!s.deck.some(c=>goddessEligible(s,c,id)))return false;s.goddess.selected=id;return true}
 export function goddessUpgradeOffer(s,uid){if(s.phase!=='goddess'||nodeClaimed(s,'goddess')||!s.goddess.selected)return null;const card=s.deck.find(c=>c.uid===uid),gift=s.goddess.selected;if(!card||!goddessEligible(s,card,gift))return null;if(gift==='refund'){const after=JSON.parse(JSON.stringify(card));after.ledger=upgradeLedger(card);const last=after.ledger.findLast(e=>e.paid);last.paid=false;after.up--;after.branches=after.ledger.filter(e=>e.paid).map(e=>e.id);after.potencies=after.ledger.filter(e=>e.paid).map(e=>e.potency);return{before:card,after,gift,variant:null}}
@@ -559,7 +571,7 @@ export function recruit(s,id,slot){
  s.nextUid=nextFreeCardUid(s);if(old){s.departed??=[];s.departed.push(old);s.deck=s.deck.filter(c=>cardOwner(c)!==old)}
  const max=member.max+(mods(s).maxHP||0)+(s.maxBonus||0);
  s.party[slot]=id;s.heroes[slot]={...baseHero(member),max,hp:Math.ceil(max*.8)};
- for(const card of RECRUIT_DECKS[id])s.deck.push({id:card,uid:allocateCardUid(s),up:0,branches:[]});
+ for(const card of member.blackparty?randomBorrowedDeck(s,id,6):RECRUIT_DECKS[id].map(id=>({id,up:0,branches:[]})))s.deck.push({...card,uid:allocateCardUid(s)});
  s.cardBag=[];s.phase='map';if(!old){s.joinedCount=(s.joinedCount||1)+1}s.journal.push(`${old?COMPANIONS.find(h=>h.id===old).name+'に別れを告げ、':''}${member.name}が隊商に加わった。`);return true;
 }
 export function pickEventCard(s,id){if(s.phase!=='cardpick'||id&&!s.cardOffer.includes(id))return false;if(id)acquireCard(s,id);s.phase='map';return true}
@@ -572,7 +584,7 @@ export function enforceHiddenTravelerAccess(s,profile){
 
  const hidden=s.party.flatMap((id,slot)=>COMPANIONS.find(h=>h.id===id)?.hidden?[{id,slot}]:[]);
  for(const {id,slot}of hidden){
-  const member=COMPANIONS.find(h=>h.id===id),pool=COMPANIONS.filter(h=>!h.hidden&&!s.party.includes(h.id)&&!s.departed.includes(h.id)),next=pool.find(h=>h.id==='nico')||pool.find(h=>h.actor===member.actor)||pool[0]||COMPANIONS.find(h=>!h.hidden&&!s.party.includes(h.id));
+  const member=COMPANIONS.find(h=>h.id===id),pool=COMPANIONS.filter(h=>!h.hidden&&!h.blackparty&&!s.party.includes(h.id)&&!s.departed.includes(h.id)),next=pool.find(h=>h.id==='nico')||pool.find(h=>h.actor===member.actor)||pool[0]||COMPANIONS.find(h=>!h.hidden&&!h.blackparty&&!s.party.includes(h.id));
   if(!next)continue;
   const cards=s.deck.filter(c=>cardOwner(c)===id),old=s.heroes[slot],wasStarter=s.starterId===id;s.hiddenTravelerArchive??=[];s.hiddenTravelerArchive.push({id,slot,hero:{...old},cards:JSON.parse(JSON.stringify(cards)),starter:wasStarter});
   const max=Math.max(.1,Math.min(5000,next.max+(mods(s).maxHP||0)+(s.maxBonus||0))),hp=old.hp>0?Math.max(.1,Math.min(max,roundHP(max*old.hp/old.max))):0;

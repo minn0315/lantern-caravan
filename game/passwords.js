@@ -6,7 +6,7 @@
 //   2. 下の PASSWORDS に { hash:'得たハッシュ', feature:'機能ID', label:'解放される内容（表示名）' } を追加
 //   3. ゲーム側で hasFeature(storage,'機能ID') を見て機能を有効にする
 export const PASSWORDS=[
- // 例：{hash:'…64桁…', feature:'golden-start', label:'旅立ちの銀貨+100'},
+ {hash:'e2c30a67510b677ccdd6a5c4b78deee5e90d71ff6e7667114168219b774a1071',feature:'maou',label:'まおうを最初の旅人に選べる'},
 ];
 const KEY='lantern-caravan-passwords-v1';
 export function normalizePassword(text){return String(text||'').normalize('NFKC').replace(/\s+/g,'').toUpperCase()}
