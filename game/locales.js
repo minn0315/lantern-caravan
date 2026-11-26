@@ -1,7 +1,7 @@
 /** Offline localization. The Japanese catalog remains the canonical gameplay data.
  * Exact phrases precede parameterized effects and longest-first terms. Numbers are never rounded or rewritten.
  */
-import {CARDS,COMPANIONS,CHAPTERS,ENEMIES,BOSSES,RELICS} from './catalog.js?v=44';
+import {CARDS,COMPANIONS,CHAPTERS,ENEMIES,BOSSES,RELICS} from './catalog.js?v=45';
 export const LANGUAGES=Object.freeze([{id:'ja',code:'ja',label:'日本語'},{id:'en',code:'en',label:'English'},{id:'zh-CN',code:'zh-CN',label:'简体中文'}]);
 const dictionaries={en:new Map(),'zh-CN':new Map()};
 let termsCache={};
@@ -1471,7 +1471,7 @@ const personPattern=COMPANIONS.map(h=>h.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&
 rules.unshift([new RegExp('('+personPattern+')と出発する','g'),(_,who)=>`Depart with ${translateText(who,'en')}`,(_,who)=>`与${translateText(who,'zh-CN')}出发`]);
 rules.unshift([new RegExp('('+personPattern+')の(攻撃|守備|回復|策略)カード','g'),(_,who,type)=>`${translateText(who,'en')}'s ${translateText(type,'en')} card`,(_,who,type)=>`${translateText(who,'zh-CN')}的${translateText(type,'zh-CN')}卡`]);
 rules.unshift([new RegExp('('+personPattern+')に(\\d+)ダメージ','g'),(_,who,n)=>`${n} damage to ${translateText(who,'en')}`,(_,who,n)=>`对${translateText(who,'zh-CN')}造成${n}伤害`]);
-import {GLOSSARY} from './glossary.js?v=44';
+import {GLOSSARY} from './glossary.js?v=45';
 const glossaryDetails=rows(`
 hp|Max HP is your healing limit. HP carries into later battles. The journey ends when everyone reaches 0 HP.|最大HP是可恢复的上限。HP会继承至后续战斗。全员HP归零时旅程结束。
 fallen|Potions and camp rest revive with 18 HP; defeating a boss revives with 45% Max HP. Ordinary healing cannot target fallen allies; cards must explicitly allow revival.|药水与营地休息均以18 HP复活；击败首领后以45%最大HP复活。普通治疗卡无法治疗倒下者，只有带复活效果的卡牌能以其为目标。

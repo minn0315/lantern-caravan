@@ -1,7 +1,7 @@
-import {enemyActionRange} from '../enemy-actions.js?v=44';
-import {BALANCE_GROUPS,CARD_FLAGS,PATTERNS,MOTIFS,fieldsFor,validateBalance,emptyBalance,describeRelic} from '../balance-schema.js?v=44';
-import {attachUpgradePool} from '../upgrade-pool.js?v=44';
-import {bossCombatProfile,bossCombatVFX} from '../boss-combat.js?v=44';
+import {enemyActionRange} from '../enemy-actions.js?v=45';
+import {BALANCE_GROUPS,CARD_FLAGS,PATTERNS,MOTIFS,fieldsFor,validateBalance,emptyBalance,describeRelic} from '../balance-schema.js?v=45';
+import {attachUpgradePool} from '../upgrade-pool.js?v=45';
+import {bossCombatProfile,bossCombatVFX} from '../boss-combat.js?v=45';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const KEY='lantern:balance-draft';let defaults,index,published,draft,revision=0,group='heroes',selected,branch='';
 const motifNames={vines:'蔓',thorns:'棘',fangs:'牙',bones:'骨',bells:'鐘',rings:'波紋',waves:'波',petals:'花弁',crown:'王冠',embers:'火の粉',chains:'鎖',blades:'刃',void:'虚空',stars:'星',spears:'槍',halo:'光輪',seeds:'種子',mirrors:'鏡',breath:'吐息',spiral:'螺旋',ice:'氷',antlers:'角',spores:'胞子',shell:'甲殻',sand:'砂',cage:'檻',gears:'歯車',blood:'血',pages:'書頁',feathers:'羽',eyes:'眼',stone:'岩',lightning:'雷',meteors:'流星',web:'蜘蛛の巣',clocks:'時計'};

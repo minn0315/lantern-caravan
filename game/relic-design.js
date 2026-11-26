@@ -1,4 +1,4 @@
-import {simplifyRelic,describeRelicEffect,relicEffectIsDrawback} from './simple-relics.js?v=44';
+import {simplifyRelic,describeRelicEffect,relicEffectIsDrawback} from './simple-relics.js?v=45';
 export const RELIC_RARITIES={common:{name:'コモン',weight:55},uncommon:{name:'アンコモン',weight:28},rare:{name:'レア',weight:14},legendary:{name:'レジェンド',weight:3}};
 const levels=['common','uncommon','rare','legendary'];
 // A boss reward changes how the deck plays; its price is always visible.

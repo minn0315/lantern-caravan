@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#191a16"><title>データ移行ガイド — 灯火のキャラバン</title>
+<style>
+:root{--bg:#191a16;--panel:#23241e;--line:#3d3d31;--ink:#ece3cc;--muted:#b7ad94;--accent:#c96a4a;--gold:#e1c785}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.75 "Noto Sans JP",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 16px 64px}h1{font:700 1.7rem/1.3 "Noto Serif JP",serif;margin:.2em 0 .4em}h2{font:700 1.15rem/1.4 "Noto Serif JP",serif;color:var(--gold);margin:0 0 .6em}
+.eyebrow{color:var(--muted);font-size:.8rem;letter-spacing:.12em}.lead{color:var(--muted)}
+section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 12px;margin:18px 0}
+ol{padding-left:1.3em;margin:.4em 0}li{margin:.35em 0}small{color:var(--muted)}
+.tool{display:inline-block;background:var(--accent);color:#fff;font-weight:700;padding:10px 16px;border-radius:8px;text-decoration:none;cursor:grab;border:2px dashed #f1b49d}
+button{font:inherit;background:#3a3b31;color:var(--ink);border:1px solid #5a5a48;border-radius:8px;padding:9px 14px;cursor:pointer}button:hover{background:#45463a}
+textarea{width:100%;min-height:84px;background:#141510;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:8px;font:12px/1.5 ui-monospace,monospace;word-break:break-all}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.note{border-left:3px solid var(--gold);padding:4px 12px;color:var(--muted);margin:12px 0}a{color:var(--gold)}code{background:#141510;padding:1px 5px;border-radius:4px}
+[hidden]{display:none!important}
+</style></head><body><main>
+<div class="eyebrow">DATA TRANSFER</div>
+<h1>旧サイトからのデータ移行</h1>
+<p class="lead">旧サイト（chatgpt.site）で遊んだ実績・旅人の解放状況・図鑑・隠し要素の進み具合・進行中の旅・手動記録・設定を、この新しいサイトへまとめて移します。遊んだ<b>端末・ブラウザごと</b>に1回ずつ行ってください。</p>
+
+<section>
+<h2>① 移行ツールを登録する</h2>
+<div class="tabs" role="tablist"><button role="tab" data-tab="pc" aria-selected="true">PC</button><button role="tab" data-tab="iphone" aria-selected="false">iPhone（Safari）</button><button role="tab" data-tab="android" aria-selected="false">Android（Chrome）</button></div>
+<div data-panel="pc"><ol><li>ブックマークバーを表示します（Chrome・Edge は <code>Ctrl</code>+<code>Shift</code>+<code>B</code>）。</li><li>下のボタンを<b>ブックマークバーへドラッグ</b>して登録します。</li></ol><p><a class="tool" id="tool-link" href="#">灯火のデータを持ち出す</a></p><small>ドラッグできない場合は、③のコードをコピーし、新しいブックマークのURL欄に貼り付けてください。</small></div>
+<div data-panel="iphone" hidden><ol><li>下の「コードをコピー」を押します。</li><li>このページを共有ボタン →「ブックマークを追加」で保存します。名前は「灯火移行」にします。</li><li>ブックマーク一覧で「灯火移行」を長押し →「編集」を開き、<b>URL欄を全部消してコピーしたコードを貼り付け</b>て保存します。</li></ol></div>
+<div data-panel="android" hidden><ol><li>下の「コードをコピー」を押します。</li><li>メニュー（︙）→ ☆ でこのページをブックマークし、「編集」を押します。</li><li>名前を「灯火移行」に変え、<b>URL欄を全部消してコピーしたコードを貼り付け</b>て保存します。</li></ol></div>
+<p><button id="copy-code">コードをコピー</button> <small id="copy-status"></small></p>
+</section>
+
+<section>
+<h2>② 旧サイトでツールを実行する</h2>
+<ol><li><a href="https://lantern-caravan-yoru.fernycarat8.chatgpt.site/" target="_blank" rel="noopener">旧サイト</a>を、いつも遊んでいたブラウザで開きます。</li>
+<li>開いたまま、登録した「灯火のデータを持ち出す」（スマホは「灯火移行」）を実行します。<br><small>PC：ブックマークバーで押す ／ iPhone：ブックマーク一覧から押す ／ Android：アドレスバーに「灯火移行」と入力し、候補に出たブックマークを押す</small></li>
+<li>「○件を書き出しました」と出れば成功です。ファイル <code>lantern-caravan-all-data.json</code> が保存され、同じ内容がコピーもされます。</li></ol>
+</section>
+
+<section>
+<h2>③ 新しいサイトで読み込む</h2>
+<ol><li><a href="./">新しいサイト</a>を開き、タイトルの「設定・音量・セーブ」→「データの引き継ぎ」→「開く」を押します。</li>
+<li>「ファイルを選ぶ」で保存したファイルを選ぶか、「コピーした内容を貼り付ける」に貼り付けて「読み込む」を押します。</li>
+<li>内容を確認して「引き継ぐ」を押すと完了です。</li></ol>
+<div class="note">実績・解放状況・図鑑は、新しいサイトですでに遊んだ記録と合わせて残ります（どちらかで達成していれば達成）。進行中の旅・手動記録・設定は旧サイトの内容に置き換わります。</div>
+<details><summary>移行ツールのコード（手動で登録する場合）</summary><textarea id="code" readonly></textarea></details>
+</section>
+</main>
+<script>
+const CODE="javascript:(()=>{try{const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('lantern')&&k!=='lantern:balance-draft')d[k]=localStorage.getItem(k)}const n=Object.keys(d).length;if(!n){alert('このページには灯火のキャラバンのデータがありません。旧サイトを開いた状態で実行してください。');return}const j=JSON.stringify({format:'lantern-backup',version:1,exportedAt:Date.now(),origin:location.origin,data:d});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='lantern-caravan-all-data.json';document.body.appendChild(a);a.click();a.remove();try{navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{})}catch(e){}alert('灯火のキャラバンのデータ'+n+'件を書き出しました。新しいサイトの「データの引き継ぎ」で読み込んでください。')}catch(e){alert('書き出しに失敗しました：'+e.message)}})()";
+document.getElementById('tool-link').href=CODE;
+document.getElementById('tool-link').addEventListener('click',e=>{e.preventDefault();alert('このボタンはブックマークバーへドラッグして登録してください。旧サイトを開いた状態で実行します。')});
+document.getElementById('code').value=CODE;
+document.getElementById('copy-code').addEventListener('click',async()=>{const s=document.getElementById('copy-status');try{await navigator.clipboard.writeText(CODE);s.textContent='コピーしました'}catch{const t=document.getElementById('code');t.closest('details').open=true;t.select();s.textContent='下の欄を長押しして全選択→コピーしてください'}});
+for(const tab of document.querySelectorAll('[data-tab]'))tab.addEventListener('click',()=>{for(const t of document.querySelectorAll('[data-tab]'))t.setAttribute('aria-selected',String(t===tab));for(const p of document.querySelectorAll('[data-panel]'))p.hidden=p.dataset.panel!==tab.dataset.tab});
+if(/iPhone|iPad/.test(navigator.userAgent))document.querySelector('[data-tab="iphone"]').click();else if(/Android/.test(navigator.userAgent))document.querySelector('[data-tab="android"]').click();
+</script>
+</body></html>

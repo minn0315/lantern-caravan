@@ -1,4 +1,4 @@
-import * as E from './engine.js?v=44';
+import * as E from './engine.js?v=45';
 
 // A lake blessing may change card effects, never the permanent inventory.
 // Compare only the same journey/node/party; intentional removals elsewhere are unaffected.

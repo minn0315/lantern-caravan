@@ -1,6 +1,6 @@
-import {mergeDiscoveries,recordDiscoveries} from './discoveries.js?v=44';
-import {hiddenTravelerUnlocked,allNormalTravelersCollected,normalizeHiddenProgress} from './hidden-traveler.js?v=44';
-import {COMPANIONS,STARTERS} from './catalog.js?v=44';
+import {mergeDiscoveries,recordDiscoveries} from './discoveries.js?v=45';
+import {hiddenTravelerUnlocked,allNormalTravelersCollected,normalizeHiddenProgress} from './hidden-traveler.js?v=45';
+import {COMPANIONS,STARTERS} from './catalog.js?v=45';
 export const STARTER_CLEAR_REQUIREMENT=5;
 export function availableStarters(p){return [...STARTERS,...COMPANIONS.filter(h=>!h.hidden&&!STARTERS.includes(h.id)&&(p.heroClears?.[h.id]||0)>=STARTER_CLEAR_REQUIREMENT).map(h=>h.id),...(hiddenTravelerUnlocked(p)?['aurora']:[])]}
 export function allNormalStartersUnlocked(p){const ids=availableStarters(p||{});return COMPANIONS.filter(h=>!h.hidden).every(h=>ids.includes(h.id))}

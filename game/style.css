@@ -289,3 +289,8 @@ img.character-art.traveler-aurora,img.traveler-portrait.traveler-aurora{scale:no
 html[data-motion="off"] .unit.is-poison-hit .unit-art,html[data-motion="off"] .unit.is-poison-hit .unit-art>.ink-sprite,html[data-motion="off"] .poison-impact>*{animation:none!important}
 html[data-motion="off"] .poison-impact>i{display:none}
 @media(prefers-reduced-motion:reduce){.unit.is-poison-hit .unit-art,.unit.is-poison-hit .unit-art>.ink-sprite,.poison-impact>*{animation:none!important}.poison-impact>i{display:none}}
+
+/* データの引き継ぎ */
+.backup-paste span{flex:1 1 auto;min-width:0}
+.backup-paste textarea{display:block;width:100%;margin-top:6px;min-height:64px;font:12px/1.5 ui-monospace,monospace;resize:vertical;box-sizing:border-box}
+.backup-summary{margin:.6em 0 1em;padding-left:1.2em;line-height:1.8}

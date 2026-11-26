@@ -1,5 +1,5 @@
-import {COMPANIONS,CARDS,RELICS,ENEMIES,BOSSES,STARTERS,STARTER_DECKS,RECRUIT_DECKS} from './catalog.js?v=44';
-import {hiddenTravelerUnlocked} from './hidden-traveler.js?v=44';
+import {COMPANIONS,CARDS,RELICS,ENEMIES,BOSSES,STARTERS,STARTER_DECKS,RECRUIT_DECKS} from './catalog.js?v=45';
+import {hiddenTravelerUnlocked} from './hidden-traveler.js?v=45';
 const entries={heroes:COMPANIONS,cards:Object.values(CARDS),relics:RELICS,enemies:ENEMIES,bosses:BOSSES};
 const ids=Object.fromEntries(Object.entries(entries).map(([group,items])=>[group,new Set(items.map(x=>x.id))]));
 export function mergeDiscoveries(...sources){return Object.fromEntries(Object.keys(entries).map(group=>[group,[...new Set(sources.flatMap(x=>Array.isArray(x?.[group])?x[group]:[]).filter(id=>ids[group].has(id)))]]))}
