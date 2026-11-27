@@ -1,6 +1,6 @@
 // 追加の翻訳（英語・中国語の見直し分と、韓国語の基本UI）
-import {registerTranslations,registerTemplates,translateText,templateFirst} from './locales.js?v=51';
-import {COMPANIONS} from './catalog.js?v=51';
+import {registerTranslations,registerTemplates,translateText,templateFirst} from './locales.js?v=52';
+import {COMPANIONS} from './catalog.js?v=52';
 const rows=s=>s.trim().split('\n').filter(Boolean).map(line=>line.split('|'));
 
 // 数値入りの定型文：N が数値、{1}{2}… が訳文での位置
@@ -170,6 +170,15 @@ registerTranslations(rows(`
 戦い方を練習する|Practice Combat|练习战斗|전투 연습
 図鑑|Compendium|图鉴|도감
 パスワード|Password|密码|비밀번호
+練習する|Practice|练习|연습
+旅の記録|Records|旅程记录|여정 기록
+設定・セーブ|Settings & Saves|设置与存档|설정·저장
+遊び方|How to Play|玩法|플레이 방법
+共有リンク|Share Link|分享链接|공유 링크
+実績|Achievements|成就|업적
+灰暁の巡礼|The Last Pilgrimage|灰晓巡礼|잿빛 새벽의 순례
+夜に沈んだ世界へ　最後の灯を|Carry the last light into a world sunk in night|向沉入黑夜的世界　送去最后的灯火|밤에 잠긴 세계로 마지막 등불을
+通常4ステージ／高難度16ステージ・自動保存|Normal: 4 stages / Hard: 16 stages · Autosave|普通4关／高难度16关・自动保存|일반 4스테이지 / 고난도 16스테이지 · 자동 저장
 設定・音量・セーブ|Settings / Audio / Save|设置 / 音量 / 存档|설정 · 음량 · 저장
 共有リンク|Share Link|分享链接|공유 링크
 遊び方|How to Play|玩法|플레이 방법
@@ -250,6 +259,6 @@ registerTranslations(rows(`
 `));
 
 // レリック説明を文ごとに訳し直して上書き（古い部分訳より優先）
-import {RELICS} from './catalog.js?v=51';
+import {RELICS} from './catalog.js?v=52';
 const hasKana=x=>/[ぁ-んァ-ヶ]/.test(x);
 for(const r of RELICS)for(const key of ['desc','drawback']){const text=r[key];if(!text)continue;const parts=String(text).split('。').map(x=>x.trim()).filter(Boolean);const en=parts.map(x=>templateFirst(x,'en')),zh=parts.map(x=>templateFirst(x,'zh-CN')),okEn=!en.some(hasKana),okZh=!zh.some(hasKana),bare=String(text).replace(/。$/,'');if(okEn||okZh)registerTranslations([[text,okEn?en.join('. ')+'.':undefined,okZh?zh.join('。')+'。':undefined],[bare,okEn?en.join('. '):undefined,okZh?zh.join('。'):undefined]])}

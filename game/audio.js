@@ -22,23 +22,61 @@ export class AudioMixer{
  setMuted(muted){this.settings.muted=!!muted;this.applyLevels();this.report(this.settings.muted?'消音中':this.unlocked?'BGM・効果音を再生できます':'画面を操作するとBGMが始まります')}
  setExternalPriority(enabled){this.settings.preserveExternal=!!enabled;this.applySessionPolicy();this.report(this.settings.muted?'消音中':this.unlocked?'BGM・効果音を再生できます':'画面を操作するとBGMが始まります')}
  setScene(scene){let next=[...MUSIC_TRACKS,'journey','battle'].includes(scene)?scene:'journey';if(this.scene===next)return;this.previousScene=this.scene;this.scene=next;this.syncMusic()}
+ // BGMは<audio loop>だとMP3の継ぎ目で途切れたり止まったりするため、
+ // 復号したデータを Web Audio で前後を重ねて（クロスフェード）途切れなく繰り返す
+ loadMusic(name){
+  this.musicBuffers??=new Map();
+  if(this.musicBuffers.has(name)){const hit=this.musicBuffers.get(name);this.musicBuffers.delete(name);this.musicBuffers.set(name,hit);return hit}
+  const promise=(async()=>{const response=await fetch(`assets/audio/${name}.mp3?v=52`);if(!response.ok)throw Error('bgm fetch');return await this.context.decodeAudioData(await response.arrayBuffer())})();
+  this.musicBuffers.set(name,promise);promise.catch(()=>this.musicBuffers.delete(name));
+  while(this.musicBuffers.size>4){const oldest=this.musicBuffers.keys().next().value;if(oldest===this.scene||oldest===name)break;this.musicBuffers.delete(oldest)}
+  return promise;
+ }
  createTrack(name){
   if(this.tracks.has(name))return this.tracks.get(name);
-  let element=new Audio(`assets/audio/${name}.mp3?v=51`);element.loop=true;element.preload='auto';
-  let source=this.context.createMediaElementSource(element),gain=this.context.createGain();gain.gain.value=0;source.connect(gain);gain.connect(this.music);
-  let track={element,gain,source,pauseTimer:null};element.addEventListener('error',()=>this.report('BGMを読み込めませんでした。通信を確認して「BGMを再生」を押してください'));
+  const gain=this.context.createGain();gain.gain.value=0;gain.connect(this.music);
+  const track={name,gain,buffer:null,voices:[],playing:false,timer:null,stopTimer:null,next:0,offset:0,generation:0};
   this.tracks.set(name,track);return track;
+ }
+ fadeCurve(up){const n=64,c=new Float32Array(n);for(let i=0;i<n;i++){const x=i/(n-1);c[i]=up?Math.sin(x*Math.PI/2):Math.cos(x*Math.PI/2)}return c}
+ scheduleSegment(track,when,offset){
+  const buffer=track.buffer,dur=buffer.duration,xf=Math.min(1.5,dur/8),length=dur-offset;
+  const source=this.context.createBufferSource(),fade=this.context.createGain();source.buffer=buffer;source.connect(fade);fade.connect(track.gain);
+  if(offset===0&&track.voices.length){fade.gain.setValueAtTime(0,when);fade.gain.setValueCurveAtTime(this.fadeCurve(true),when,xf)}else fade.gain.setValueAtTime(1,when);
+  fade.gain.setValueCurveAtTime(this.fadeCurve(false),when+length-xf,xf);
+  source.start(when,offset);source.stop(when+length+.05);
+  const voice={source,fade,start:when-offset};track.voices.push(voice);source.onended=()=>{track.voices=track.voices.filter(v=>v!==voice);try{fade.disconnect()}catch{}};
+  track.next=when+length-xf;
+ }
+ pump(track){
+  clearTimeout(track.timer);if(!track.playing||!track.buffer||!this.context)return;
+  const now=this.context.currentTime;if(track.next<now)track.next=now+.05;
+  while(track.next<now+4)this.scheduleSegment(track,track.next,0);
+  track.timer=setTimeout(()=>this.pump(track),1000);
+ }
+ async startTrack(track){
+  clearTimeout(track.stopTimer);if(track.playing)return;track.playing=true;const generation=++track.generation;
+  try{track.buffer??=await this.loadMusic(track.name)}catch{track.playing=false;this.report('BGMを読み込めませんでした　通信を確認して「BGMを再生」を押してください');return}
+  if(generation!==track.generation||!track.playing||!this.tracks.has(track.name))return;
+  if(track.voices.length){this.pump(track);return}
+  const dur=track.buffer.duration;let offset=track.offset%dur;if(dur-offset<Math.min(1.5,dur/8)*2+.5)offset=0;
+  track.next=this.context.currentTime+.05;this.scheduleSegment(track,track.next,offset);this.pump(track);
+ }
+ silenceTrack(track){
+  track.playing=false;track.generation++;clearTimeout(track.timer);
+  if(this.context&&track.buffer){const now=this.context.currentTime,live=track.voices.filter(v=>v.start<=now).pop();if(live)track.offset=(now-live.start)%track.buffer.duration}
+  for(const v of track.voices){try{v.source.onended=null;v.source.stop()}catch{}try{v.fade.disconnect()}catch{}}track.voices=[];
  }
  syncMusic(){
   if(!this.unlocked||this.hidden||!this.context)return;
   let target=this.createTrack(this.scene),now=this.context.currentTime;
-  for(let [name,track]of this.tracks){clearTimeout(track.pauseTimer);track.gain.gain.cancelScheduledValues(now);track.gain.gain.setTargetAtTime(name===this.scene?1:0,now,.25);if(name!==this.scene)track.pauseTimer=setTimeout(()=>{if(name!==this.scene)track.element.pause()},1000)}
-  if(this.tracks.size>4){for(const [name,track] of this.tracks){if(name===this.scene||name===this.previousScene)continue;clearTimeout(track.pauseTimer);track.element.pause();track.source.disconnect?.();track.gain.disconnect?.();track.element.src='';this.tracks.delete(name);if(this.tracks.size<=4)break}}
-  target.element.play().catch(()=>this.report('「BGMを再生」を押すと音楽を開始できます'));
+  for(let [name,track]of this.tracks){clearTimeout(track.stopTimer);track.gain.gain.cancelScheduledValues(now);track.gain.gain.setTargetAtTime(name===this.scene?1:0,now,.25);if(name!==this.scene)track.stopTimer=setTimeout(()=>{if(name!==this.scene)this.silenceTrack(track)},1500)}
+  if(this.tracks.size>4){for(const [name,track] of this.tracks){if(name===this.scene||name===this.previousScene)continue;clearTimeout(track.stopTimer);this.silenceTrack(track);try{track.gain.disconnect()}catch{}this.tracks.delete(name);if(this.tracks.size<=4)break}}
+  this.startTrack(target);
  }
  async loadCue(name){
   if(this.buffers.has(name))return this.buffers.get(name);if(this.loading.has(name))return this.loading.get(name);
-  let promise=(async()=>{let response=await fetch(`assets/audio/${name}.mp3?v=51`);if(!response.ok)throw Error('cue fetch');let buffer=await this.context.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer})();
+  let promise=(async()=>{let response=await fetch(`assets/audio/${name}.mp3?v=52`);if(!response.ok)throw Error('cue fetch');let buffer=await this.context.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer})();
   this.loading.set(name,promise);try{return await promise}finally{this.loading.delete(name)}
  }
  async play(name='card'){
@@ -49,5 +87,5 @@ export class AudioMixer{
    let source=this.context.createBufferSource();source.buffer=buffer;source.connect(this.effects);this.voices.add(source);source.onended=()=>this.voices.delete(source);source.start();
   }catch{this.report('一部の効果音を読み込めませんでした')}
  }
- async setHidden(hidden){this.hidden=hidden;if(!this.context)return;if(hidden){for(let track of this.tracks.values())track.element.pause();try{await this.context.suspend()}catch{}}else if(this.unlocked){try{this.applySessionPolicy();await this.context.resume();this.syncMusic()}catch{this.report('「BGMを再生」を押すと再開できます')}}}
+ async setHidden(hidden){this.hidden=hidden;if(!this.context)return;if(hidden){try{await this.context.suspend()}catch{}}else if(this.unlocked){try{this.applySessionPolicy();await this.context.resume();this.syncMusic()}catch{this.report('「BGMを再生」を押すと再開できます')}}}
 }

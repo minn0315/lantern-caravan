@@ -59,3 +59,25 @@ h1,h2,h3,.card-name,.story-caption h1{font-family:var(--serif);letter-spacing:.0
 .story-caption p{text-shadow:0 1px 8px rgba(0,0,0,.6)}
 
 @media (prefers-reduced-motion:reduce){.card,.btn{transition:none}.floating-number{animation-duration:.4s}}
+
+/* 図鑑の絞り込み行：折り返しても崩れない */
+.encyclopedia-filters{flex-wrap:wrap;row-gap:6px}
+.encyclopedia-filters label{white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.encyclopedia-filters select{font:inherit}
+[data-phone-screen="on"] .encyclopedia-filters{gap:6px 10px}
+[data-phone-screen="on"] .encyclopedia-filters label{font-size:12px}
+[data-phone-screen="on"] .encyclopedia-filters label:first-child:has(input[type="search"]){flex:1 1 100%}
+[data-phone-screen="on"] .encyclopedia-filters select{min-height:30px;padding:2px 4px}
+
+/* 1画面版の戦闘：ステージ名と地点が隠れないようにする */
+#app.compact-battle .battle-titlebar>strong{width:auto;flex:none;order:2}
+#app.compact-battle .battle-titlebar>.battle-where{flex:1 1 auto;min-width:0;order:1;color:#d8ccaa}
+
+/* 1画面版タイトル：旅人を並べ PC版と同じ顔ぶれに */
+.phone-title-company{display:flex;justify-content:center;align-items:flex-end;gap:2px;height:clamp(70px,16vh,150px);flex:none;margin:-6px 0 -4px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.phone-title-company>span{height:100%;aspect-ratio:3/4;display:flex;align-items:flex-end;justify-content:center}
+.phone-title-company>span>*{max-height:100%;max-width:100%;width:auto;height:100%;object-fit:contain}
+.phone-title-company>span:nth-child(2){height:112%;margin-bottom:-2px}
+.phone-title-actions .btn{background:linear-gradient(180deg,rgba(58,61,49,.94),rgba(40,43,34,.94))}
+.phone-title-actions .btn.primary{background:linear-gradient(180deg,#c0603f 0%,#9a4430 100%)}
+@media(max-height:620px){.phone-title-company{display:none}}

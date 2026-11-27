@@ -1,34 +1,34 @@
-import './locales-extra.js?v=51';
-import {impact,support,unitPoint,STYLE,SOUND_OF,setMotion,shake} from './fx.js?v=51';
-import {bindSynth,synth} from './sfx-synth.js?v=51';
-import {redeemPassword,unlockedLabels,unlockedFeatures} from './passwords.js?v=51';
-import {enemyTraits} from './enemy-traits.js?v=51';
-import {cardFaceHTML,legendHTML} from './card-badges.js?v=51';
-import {encodeBackup,parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=51';
-import {encyclopediaView,encyclopediaDetail} from './encyclopedia.js?v=51';
-import {normalizeHealth} from './health.js?v=51';
-import {applyBalance,reconcileBalance} from './balance-runtime.js?v=51';
-import {bossCombatProfile,bossCombatVFX} from './boss-combat.js?v=51';
-import {phoneScreens} from './phone-screens.js?v=51';
-import {compactViewport,syncViewport} from './mobile-layout.js?v=51';
-import {endingInfo,displayedStage} from './endings.js?v=51';
-import {DEBUG_MODE,debugStorage,debugPanel,readDebugForm,editDebugState} from './debug-tools.js?v=51';
-import {RELIC_RARITIES,relicScalingBonus} from './relic-design.js?v=51';
-import {cardEffectSides,cardEffectAnimations,displayCardName} from './card-presentation.js?v=51';
-import {annotateTerms,installTermHelp} from './term-help.js?v=51';
-import {localizedUpgradeName} from './upgrade-pool.js?v=51';
-import {ACTION_LABELS,DEFAULT_KEYS,DEFAULT_PAD,PAD_LABELS,keyName,normalizeBindings,rebind,keyAction,directionalTarget,GamepadNavigator} from './input-controls.js?v=51';
-import {bossDefeatProfile,defeatBurst} from './boss-defeat.js?v=51';
-import {LANGUAGES,translateText,translateHTML,registerTranslations} from './locales.js?v=51';
-import {ACHIEVEMENTS,ProgressRepository,recordProgress,availableStarters} from './progress.js?v=51';
-import {cardEntries,CARD_SORTS} from './card-view.js?v=51';
-import {GLOSSARY} from './glossary.js?v=51';
-import {installCardDrag} from './card-drag.js?v=51';
-import {AudioMixer,AUDIO_DEFAULTS,normalizeAudioSettings,musicScene} from './audio.js?v=51';
-import * as E from './engine.js?v=51';
-import {valid,SaveRepository,encodeSave,decodeSave} from './saves.js?v=51';
-import {icon,scene,portrait,enemyArt,characterArt,cardIllustration,atmosphere} from './art.js?v=51';
-import {cardLines,damagePreview,forecast,ROUTE_INFO,GUIDE,intentText,INTENT_NAMES} from './presentation.js?v=51';
+import './locales-extra.js?v=52';
+import {impact,support,unitPoint,STYLE,SOUND_OF,setMotion,shake} from './fx.js?v=52';
+import {bindSynth,synth} from './sfx-synth.js?v=52';
+import {redeemPassword,unlockedLabels,unlockedFeatures} from './passwords.js?v=52';
+import {enemyTraits} from './enemy-traits.js?v=52';
+import {cardFaceHTML,legendHTML} from './card-badges.js?v=52';
+import {encodeBackup,parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=52';
+import {encyclopediaView,encyclopediaDetail} from './encyclopedia.js?v=52';
+import {normalizeHealth} from './health.js?v=52';
+import {applyBalance,reconcileBalance} from './balance-runtime.js?v=52';
+import {bossCombatProfile,bossCombatVFX} from './boss-combat.js?v=52';
+import {phoneScreens} from './phone-screens.js?v=52';
+import {compactViewport,syncViewport} from './mobile-layout.js?v=52';
+import {endingInfo,displayedStage} from './endings.js?v=52';
+import {DEBUG_MODE,debugStorage,debugPanel,readDebugForm,editDebugState} from './debug-tools.js?v=52';
+import {RELIC_RARITIES,relicScalingBonus} from './relic-design.js?v=52';
+import {cardEffectSides,cardEffectAnimations,displayCardName} from './card-presentation.js?v=52';
+import {annotateTerms,installTermHelp} from './term-help.js?v=52';
+import {localizedUpgradeName} from './upgrade-pool.js?v=52';
+import {ACTION_LABELS,DEFAULT_KEYS,DEFAULT_PAD,PAD_LABELS,keyName,normalizeBindings,rebind,keyAction,directionalTarget,GamepadNavigator} from './input-controls.js?v=52';
+import {bossDefeatProfile,defeatBurst} from './boss-defeat.js?v=52';
+import {LANGUAGES,translateText,translateHTML,registerTranslations} from './locales.js?v=52';
+import {ACHIEVEMENTS,ProgressRepository,recordProgress,availableStarters} from './progress.js?v=52';
+import {cardEntries,CARD_SORTS} from './card-view.js?v=52';
+import {GLOSSARY} from './glossary.js?v=52';
+import {installCardDrag} from './card-drag.js?v=52';
+import {AudioMixer,AUDIO_DEFAULTS,normalizeAudioSettings,musicScene} from './audio.js?v=52';
+import * as E from './engine.js?v=52';
+import {valid,SaveRepository,encodeSave,decodeSave} from './saves.js?v=52';
+import {icon,scene,portrait,enemyArt,characterArt,cardIllustration,atmosphere} from './art.js?v=52';
+import {cardLines,damagePreview,forecast,ROUTE_INFO,GUIDE,intentText,INTENT_NAMES} from './presentation.js?v=52';
 
 const $=s=>document.querySelector(s);
 const KEY='lantern-caravan-save-v1',PREFS='lantern-caravan-prefs-v2';
@@ -533,7 +533,7 @@ if(!DEBUG_MODE&&state.hiddenTravelerRepair&&!state.hiddenTravelerRepair.notified
 
 function targetPreview(card,i){if(!card)return '';const c=E.cardValues(card,state);if(!['hero','dual'].includes(c.target))return'この仲間へ効果';const p=E.projectCardSupport(state,card,i),names={hp:'HP',shield:'盾',power:'闘志',regen:'再生',thorns:'反撃'},lines=Object.keys(names).filter(k=>p.low[k]||p.high[k]).map(k=>names[k]+' +'+p.low[k]+(p.low[k]!==p.high[k]?'〜'+p.high[k]:''));return lines.join(' / ')||((c.heal||c.allHeal)?'HP +0（全快または回復制限）':'この仲間へ効果')}
 
-function phoneTitleScreen(){return `<section class="phone-title"><div class="title-backdrop">${scene(started?E.biomeIndex(state):0,started&&E.isSpecialStage(state))}</div><div class="phone-title-heading"><span>THE LAST PILGRIMAGE</span><h1>灯火のキャラバン</h1><p>夜に沈んだ世界へ、最後の灯を</p></div><nav class="phone-title-actions">${canContinue()?'<button class="btn primary" data-action="continue">続きから</button>':''}<button class="btn primary" data-action="new">新しい旅</button><button class="btn" data-action="slots">旅の記録</button><button class="btn" data-action="practice">練習する</button><button class="btn" data-action="achievements">実績</button><button class="btn" data-action="encyclopedia">図鑑</button><button class="btn" data-action="settings">設定・セーブ</button><button class="btn" data-action="help">遊び方</button><button class="btn" data-action="share">共有リンク</button></nav><p class="phone-title-caption">${saveProblem?'保存データの確認が必要です　「旅の記録」を開いてください':'通常4ステージ／高難度16ステージ・自動保存'}</p></section>`}
+function phoneTitleScreen(){return `<section class="phone-title"><div class="title-backdrop">${scene(started?E.biomeIndex(state):0,started&&E.isSpecialStage(state))}</div><div class="phone-title-heading"><span>灰暁の巡礼 / THE LAST PILGRIMAGE</span><h1>灯火のキャラバン</h1><p>夜に沈んだ世界へ　最後の灯を</p></div><div class="phone-title-company" aria-hidden="true">${E.STARTERS.map(id=>`<span>${characterArt(E.COMPANIONS.find(h=>h.id===id).art)}</span>`).join('')}</div><nav class="phone-title-actions">${canContinue()?'<button class="btn primary" data-action="continue">続きから</button>':''}<button class="btn primary" data-action="new">新しい旅</button><button class="btn" data-action="slots">旅の記録</button><button class="btn" data-action="practice">練習する</button><button class="btn" data-action="achievements">実績</button><button class="btn" data-action="encyclopedia">図鑑</button><button class="btn" data-action="password">パスワード</button><button class="btn" data-action="settings">設定・セーブ</button><button class="btn" data-action="help">遊び方</button><button class="btn" data-action="share">共有リンク</button></nav><p class="phone-title-caption">${saveProblem?'保存データの確認が必要です　「旅の記録」を開いてください':'通常4ステージ／高難度16ステージ・自動保存'}</p></section>`}
 function titleScreen(){if(compactLayout())return phoneTitleScreen();return `<section class="title-screen expanded-title"><div class="title-backdrop">${scene(started?E.biomeIndex(state):0,started&&E.isSpecialStage(state))}</div><div class="title-copy"><span class="title-kicker">灰暁の巡礼 / THE LAST PILGRIMAGE</span><h1>灯火の<br>キャラバン</h1><p>森、沈む聖堂、灰の王都、夜明けの果て<br>ひとりで出発し仲間と失われた朝を取り戻す</p><nav class="title-menu">${canContinue()?`<button class="btn primary" data-action="continue">続きから ${icon('arrow',20)}</button><span class="continue-meta">第${displayedStage(state)}ステージ · ${state.step+1}/12地点<br>カード${state.deck.length}枚 / レリック${state.relics.length}個 / ${time()}</span>`:''}<button class="btn ${canContinue()?'':'primary'}" data-action="new">新しい旅</button><button class="btn" data-action="slots">旅の記録を選ぶ</button><button class="title-settings" data-action="practice">戦い方を練習する</button><button class="title-settings" data-action="achievements">実績 ${Object.keys(progress.unlocked).length}/${ACHIEVEMENTS.length}</button><button class="title-settings" data-action="encyclopedia">図鑑</button><button class="title-settings" data-action="password">パスワード</button><button class="title-settings" data-action="settings">設定・音量・セーブ</button><button class="title-settings" data-action="share">共有リンク</button></nav>${saveProblem?`<p class="save-error">${esc(saveProblem)}<br>元のセーブを自動で上書きしません　記録管理から復元できます</p>`:''}<small>カードと遺物を組み合わせ、あなただけの戦い方を</small></div><div class="title-company" aria-hidden="true">${E.STARTERS.map(id=>`<span>${characterArt(E.COMPANIONS.find(h=>h.id===id).art)}</span>`).join('')}</div><div class="title-sound">${icon('volume',16)}クリック・タップで音楽が始まります</div></section>`}
 function mapDecorations(){
  let marks='',biome=E.biomeIndex(state);

@@ -1,6 +1,6 @@
-import {normalizeHealth} from './health.js?v=51';
-import {attachUpgradePool} from './upgrade-pool.js?v=51';
-import {validateBalance,describeRelic,emptyBalance} from './balance-schema.js?v=51';
+import {normalizeHealth} from './health.js?v=52';
+import {attachUpgradePool} from './upgrade-pool.js?v=52';
+import {validateBalance,describeRelic,emptyBalance} from './balance-schema.js?v=52';
 let registry,index,original,revision=0;
 const clone=x=>JSON.parse(JSON.stringify(x));
 export function balanceIndex(groups){const result={effectMinimums:{}};for(const[g,values]of Object.entries(groups)){result[g]={};for(const item of Object.values(values)){result[g][item.id]=g==='cards'?{legacy:Object.keys(item.upgrades||{}).filter(k=>!/^(common|signature)_/.test(k))}:{demon:item.demon===true};if(g==='relics')for(const[k,v]of Object.entries(item.effects||{}))result.effectMinimums[k]=Math.min(result.effectMinimums[k]||0,v)}}return result}

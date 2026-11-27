@@ -12,22 +12,30 @@ section{background:var(--panel);border:1px solid var(--line);border-radius:10px;
 <div class="eyebrow">DATA TRANSFER</div>
 <h1>旧サイトからのデータ受け取り</h1>
 <section id="waiting"><p>旧サイトからデータを受け取っています…</p><p class="muted">この画面が続く場合は、旧サイトの画面に戻って「新しいサイトへデータを移す」をもう一度押してください。</p></section>
-<section id="confirm" hidden><p><b>この内容を引き継ぎますか？</b></p><ul id="summary"></ul><p class="muted">実績・解放状況・図鑑は、このサイトの記録と合わせて残ります（どちらかで達成していれば達成）。進行中の旅・手動記録・設定は旧サイトの内容に置き換わります。</p><div class="actions"><button class="primary" id="apply">引き継ぐ</button><a class="btn ghost" href="./">引き継がずにゲームへ</a></div></section>
-<section id="done" hidden><p><b>引き継ぎが完了しました。</b></p><p class="muted">まもなくゲームを開きます。</p><div class="actions"><a class="btn primary" href="./">ゲームを開く</a></div></section>
-<section id="failed" hidden><p class="error" id="error"></p><div class="actions"><a class="btn ghost" href="migrate.html">手動で移行する方法</a><a class="btn ghost" href="./">ゲームへ</a></div></section>
+<section id="confirm" hidden><p><b>この内容を引き継ぎますか？</b></p><ul id="summary"></ul><p class="muted">実績・解放状況・図鑑は、このサイトの記録と合わせて残ります（どちらかで達成していれば達成）。進行中の旅・手動記録・設定は旧サイトの内容に置き換わります。</p><div class="actions"><button class="primary" id="apply">引き継ぐ</button><a class="btn ghost go-game" href="./">引き継がずにゲームへ</a></div></section>
+<section id="done" hidden><p><b>引き継ぎが完了しました。</b></p><p class="muted">まもなくゲームを開きます。</p><div class="actions"><a class="btn primary go-game" href="./">ゲームを開く</a></div></section>
+<section id="failed" hidden><p class="error" id="error"></p><div class="actions"><a class="btn ghost" href="migrate.html">手動で移行する方法</a><a class="btn ghost go-game" href="./">ゲームへ</a></div></section>
 </main>
 <script type="module">
-import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=51';
+import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=52';
 const OLD_ORIGINS=['https://lantern-caravan-yoru.fernycarat8.chatgpt.site'];
 if(location.hostname==='localhost')OLD_ORIGINS.push('http://localhost:8765'); // ローカル検証用
+const BUILD='v=52';
+// 配信側に古い版が残っていても必ず最新版を開く：version.json を毎回別URLで確かめ、版番号つきURLへ移動する
+async function latestBuild(){try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(5000)});if(r.ok)return (await r.json()).build||''}catch{}return ''}
+async function gameUrl(){const b=await latestBuild();return './?build='+(b?b.replace('v=',''):'latest')+'&t='+Date.now().toString(36)}
+async function openGame(){location.replace(await gameUrl())}
+document.addEventListener('click',ev=>{const a=ev.target.closest?.('a.go-game');if(!a)return;ev.preventDefault();openGame()});
 const $=id=>document.getElementById(id),show=id=>{for(const s of ['waiting','confirm','done','failed'])$(s).hidden=s!==id};
 let backup=null,received=false;
 function receive(text){if(received)return;received=true;try{backup=parseBackup(text);const s=summarizeBackup(backup);$('summary').innerHTML=[`実績：${s.achievements}個`,`迎えた旅人：${s.travelers}人 ／ 通算勝利：${s.wins}`,`進行中の旅：${s.run?`第${s.run.chapter}ステージ・${s.run.step}地点目`:'なし'}`,`手動記録：${s.manualSlots}件 ／ 設定：${s.settings?'あり':'なし'} ／ デバッグ版：${s.debug?'あり':'なし'}`].map(t=>`<li>${t}</li>`).join('');show('confirm')}catch(e){$('error').textContent=e.message;show('failed')}}
-$('apply').addEventListener('click',()=>{try{applyBackup(backup,localStorage);show('done');setTimeout(()=>location.href='./',1500)}catch(e){$('error').textContent='引き継ぎに失敗しました：'+e.message;show('failed')}});
+$('apply').addEventListener('click',()=>{try{applyBackup(backup,localStorage);show('done');setTimeout(openGame,1500)}catch(e){$('error').textContent='引き継ぎに失敗しました：'+e.message;show('failed')}});
 // ① 旧サイトから別タブで開かれた場合：postMessage で受け取る（データ量の制限なし）
 addEventListener('message',ev=>{if(!OLD_ORIGINS.includes(ev.origin)||ev.data?.type!=='lantern-backup'||typeof ev.data.payload!=='string')return;ev.source?.postMessage?.({type:'lantern-migrate-received'},ev.origin);receive(ev.data.payload)});
 if(window.opener){const ping=()=>{if(received)return;for(const origin of OLD_ORIGINS){try{window.opener.postMessage({type:'lantern-migrate-ready'},origin)}catch{}}};ping();const timer=setInterval(()=>{if(received)clearInterval(timer);else ping()},400)}
 // ② 同じタブで移動してきた場合：URLの # 以降で受け取る（サーバーには送信されません）
+const self=await latestBuild();
+if(self&&self!==BUILD&&!new URLSearchParams(location.search).has('r')){location.replace('receive.html?r='+self.replace('v=','')+'-'+Date.now().toString(36)+location.hash);await new Promise(()=>{})}
 const hash=location.hash.startsWith('#data=')?location.hash.slice(6):'';
 async function unpack(packed){
  if(packed.startsWith('j.'))return decodeURIComponent(packed.slice(2));
