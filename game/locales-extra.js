@@ -1,6 +1,6 @@
 // 追加の翻訳（英語・中国語の見直し分と、韓国語の基本UI）
-import {registerTranslations,registerTemplates,translateText,templateFirst} from './locales.js?v=52';
-import {COMPANIONS} from './catalog.js?v=52';
+import {registerTranslations,registerTemplates,translateText,templateFirst} from './locales.js?v=53';
+import {COMPANIONS} from './catalog.js?v=53';
 const rows=s=>s.trim().split('\n').filter(Boolean).map(line=>line.split('|'));
 
 // 数値入りの定型文：N が数値、{1}{2}… が訳文での位置
@@ -259,6 +259,6 @@ registerTranslations(rows(`
 `));
 
 // レリック説明を文ごとに訳し直して上書き（古い部分訳より優先）
-import {RELICS} from './catalog.js?v=52';
+import {RELICS} from './catalog.js?v=53';
 const hasKana=x=>/[ぁ-んァ-ヶ]/.test(x);
 for(const r of RELICS)for(const key of ['desc','drawback']){const text=r[key];if(!text)continue;const parts=String(text).split('。').map(x=>x.trim()).filter(Boolean);const en=parts.map(x=>templateFirst(x,'en')),zh=parts.map(x=>templateFirst(x,'zh-CN')),okEn=!en.some(hasKana),okZh=!zh.some(hasKana),bare=String(text).replace(/。$/,'');if(okEn||okZh)registerTranslations([[text,okEn?en.join('. ')+'.':undefined,okZh?zh.join('。')+'。':undefined],[bare,okEn?en.join('. '):undefined,okZh?zh.join('。'):undefined]])}

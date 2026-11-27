@@ -1,21 +1,21 @@
-import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=52';
-import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=52';
-import {enemyActionRange} from './enemy-actions.js?v=52';
-import {roundHP,normalizeHealth} from './health.js?v=52';
-import {stampFreshBalance} from './balance-runtime.js?v=52';
-import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=52';
+import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=53';
+import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=53';
+import {enemyActionRange} from './enemy-actions.js?v=53';
+import {roundHP,normalizeHealth} from './health.js?v=53';
+import {stampFreshBalance} from './balance-runtime.js?v=53';
+import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=53';
 export {debugGod,maintainDebugGod};
-import {endingInfo} from './endings.js?v=52';
-import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=52';
-import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=52';
-import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=52';
-import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=52';
-import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=52';
+import {endingInfo} from './endings.js?v=53';
+import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=53';
+import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=53';
+import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=53';
+import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=53';
+import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=53';
 export {GODDESS_GIFTS};
-import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=52';
-import {STORY_KINDS,STORY_LENGTH} from './story.js?v=52';
-export {storyFrames} from './story.js?v=52';
-import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS,MAOU_STARTERS,MAOU_NORMALS} from './catalog.js?v=52';
+import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=53';
+import {STORY_KINDS,STORY_LENGTH} from './story.js?v=53';
+export {storyFrames} from './story.js?v=53';
+import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS,MAOU_STARTERS,MAOU_NORMALS} from './catalog.js?v=53';
 export {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS};
 export const MAX_UPGRADES=3;
 export const isSpecialStage=s=>!s.demon?.active&&!!s.endless&&s.legacySpecialChapter!==s.chapter&&(s.chapter+1)%50===0;
@@ -290,9 +290,12 @@ export function resistedHit(e,amount,aoe=false){if(aoe&&e.aoeResist)amount=Math.
 const resistPoison=(e,n)=>e.poisonResist?Math.ceil(n/2):n;
 function bossPhases(s){for(let e of s.battle.enemies){if(e.boss&&e.hp>0&&e.phase===1&&e.hp<=e.max/2){e.phase=2;if(e.phaseActions)e.actionsMax=Math.max(e.actionsMax||1,e.phaseActions);e.atk+=e.enrage||0;e.shield+=e.phaseShield||0;if(e.intent?.factor)e.intent.value=Math.max(0,Math.round(e.atk*e.intent.factor));for(const action of e.actions||[])if(action.factor)action.value=Math.max(1,Math.round(e.atk*action.factor));addLog(s,`${e.name}が第二形態へ！`);s.notice=`${e.name}：第二形態`}}}
 export function draw(s,n){let b=s.battle;for(let i=0;i<Math.max(0,n);i++){if(!b.draw.length){b.draw=shuffleDraw(s,b.discard);b.discard=[]}if(!b.draw.length||b.hand.length>=12)break;b.hand.push(b.draw.pop())}}
+// 序盤は仲間の人数と同じ数の敵　途中からは人数に関係なく複数体が出る（人数より多い分の敵は少し体力を抑える）
+export const EXTRA_ENEMY_HP=.8;
+export function minimumEnemies(s,type){if(type==='boss'||s.demon?.active||s.tutorial===0&&s.chapter===0&&s.step===0)return 1;const c=s.chapter||0,step=Math.max(0,s.step);if(c===0)return step>=6?2:1;if(c===1)return type==='elite'||step>=6?3:2;return 3}
 export function startBattle(s,type){
- let m=mods(s),boss=type==='boss',elite=type==='elite',pool=ENEMIES.filter(e=>e.chapter===biomeIndex(s)),count=boss?1:s.party.filter(Boolean).length===1?1:s.party.filter(Boolean).length===2?2:3;
- let enemies=Array.from({length:count},(_,i)=>{let def=boss?currentBoss(s):pick(s,pool),biome=biomeIndex(s),loop=loopNumber(s);let factor=boss?(s.hard?1.18:1):1+biome*.075+Math.max(0,s.step)*.01+(elite?.2:0)+(s.hard?.18:0);let floor=boss?150+s.chapter*55:20+s.chapter*13;let raw=Math.max(def.hp*factor,floor*(boss?1:.9+def.hp/500));let max=Math.round(raw*(isSpecialStage(s)?2.25:1)*Math.pow(1.25,loop)*(1+(m.enemyHP||0)));let attack=Math.max(def.atk*(boss?(s.hard?1.15:1):1+biome*.025+(elite?.18:0)+(s.hard?.15:0)),8+s.chapter*1.35);return{...def,max:def.fixedStats?def.hp:max,hp:def.fixedStats?def.hp:max,atk:def.fixedStats?def.atk:Math.round(attack*(isSpecialStage(s)?1.5:1)*Math.pow(1.18,loop))+(m.enemyAtk||0),shield:0,poison:0,weak:def.weakImmune?0:m.firstWeak||0,stun:0,phase:1,intent:null,index:i}});
+ let m=mods(s),boss=type==='boss',elite=type==='elite',pool=ENEMIES.filter(e=>e.chapter===biomeIndex(s)),partySize=Math.min(3,s.party.filter(Boolean).length),count=boss?1:Math.max(partySize,minimumEnemies(s,type));
+ let enemies=Array.from({length:count},(_,i)=>{let def=boss?currentBoss(s):pick(s,pool),biome=biomeIndex(s),loop=loopNumber(s);let factor=boss?(s.hard?1.18:1):1+biome*.075+Math.max(0,s.step)*.01+(elite?.2:0)+(s.hard?.18:0);let floor=boss?150+s.chapter*55:20+s.chapter*13;let raw=Math.max(def.hp*factor,floor*(boss?1:.9+def.hp/500));if(!boss&&i>=partySize)raw*=EXTRA_ENEMY_HP;let max=Math.round(raw*(isSpecialStage(s)?2.25:1)*Math.pow(1.25,loop)*(1+(m.enemyHP||0)));let attack=Math.max(def.atk*(boss?(s.hard?1.15:1):1+biome*.025+(elite?.18:0)+(s.hard?.15:0)),8+s.chapter*1.35);return{...def,max:def.fixedStats?def.hp:max,hp:def.fixedStats?def.hp:max,atk:def.fixedStats?def.atk:Math.round(attack*(isSpecialStage(s)?1.5:1)*Math.pow(1.18,loop))+(m.enemyAtk||0),shield:0,poison:0,weak:def.weakImmune?0:m.firstWeak||0,stun:0,phase:1,intent:null,index:i}});
  if(s.demon?.active){const e=enemies[0],base=s.demon.base,mult=s.demon.multiplier;if(!e.fixedStats){e.max=e.hp=Math.round(base.max*mult*(e.balanceHPFactor||1));e.atk=Math.round(base.atk*mult*(e.balanceAtkFactor||1))}for(const[k,v]of Object.entries({enrage:Math.round(e.atk*.2),phaseShield:Math.round(e.max*.06),shieldTurn:Math.round((base.shieldTurn||0)*mult),regen:Math.round((base.regen||0)*mult)}))if(!e.balanceEdited?.includes(k))e[k]=v}
  if(elite&&s.chapter>=3)for(const e of enemies)if(!e.demon)e.actionsMax=Math.max(e.actionsMax||1,2);
  if(!boss&&!s.demon?.active&&!isSpecialStage(s)&&s.tutorial!==0&&randomInt(s,1000)<treasureChance(s)*1000){const st=treasureStats(s.chapter,loopNumber(s)),foe={...TREASURE_ENEMY,max:st.max,hp:st.max,armor:st.armor,hitCap:st.hitCap,fleeTurns:st.fleeTurns,shield:0,poison:0,weak:0,stun:0,phase:1,intent:null,index:0};if(enemies.length>=2)enemies[enemies.length-1]=foe;else enemies.push(foe);enemies.forEach((e,i)=>e.index=i)}

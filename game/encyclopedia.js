@@ -1,8 +1,8 @@
-import {BONUS_LABELS} from './balance-schema.js?v=52';
-import {discoveredItems} from './discoveries.js?v=52';
-import {COMPANIONS,CARDS,RELICS,ENEMIES,BOSSES} from './catalog.js?v=52';
-import {characterArt,enemyArt,cardIllustration,icon} from './art.js?v=52';
-import {cardLines} from './presentation.js?v=52';
+import {BONUS_LABELS} from './balance-schema.js?v=53';
+import {discoveredItems} from './discoveries.js?v=53';
+import {COMPANIONS,CARDS,RELICS,ENEMIES,BOSSES} from './catalog.js?v=53';
+import {characterArt,enemyArt,cardIllustration,icon} from './art.js?v=53';
+import {cardLines} from './presentation.js?v=53';
 export const ENCYCLOPEDIA_SORTS={default:'標準',name:'名前順',cost:'コスト順',type:'種類順'};
 const ownerIndex=id=>{const i=COMPANIONS.findIndex(h=>h.id===id);return i<0?999:i};
 const collator=new Intl.Collator('ja',{numeric:true});

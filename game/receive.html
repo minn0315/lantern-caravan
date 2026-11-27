@@ -17,10 +17,10 @@ section{background:var(--panel);border:1px solid var(--line);border-radius:10px;
 <section id="failed" hidden><p class="error" id="error"></p><div class="actions"><a class="btn ghost" href="migrate.html">手動で移行する方法</a><a class="btn ghost go-game" href="./">ゲームへ</a></div></section>
 </main>
 <script type="module">
-import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=52';
+import {parseBackup,summarizeBackup,applyBackup} from './data-transfer.js?v=53';
 const OLD_ORIGINS=['https://lantern-caravan-yoru.fernycarat8.chatgpt.site'];
 if(location.hostname==='localhost')OLD_ORIGINS.push('http://localhost:8765'); // ローカル検証用
-const BUILD='v=52';
+const BUILD='v=53';
 // 配信側に古い版が残っていても必ず最新版を開く：version.json を毎回別URLで確かめ、版番号つきURLへ移動する
 async function latestBuild(){try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(5000)});if(r.ok)return (await r.json()).build||''}catch{}return ''}
 async function gameUrl(){const b=await latestBuild();return './?build='+(b?b.replace('v=',''):'latest')+'&t='+Date.now().toString(36)}

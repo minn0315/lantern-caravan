@@ -27,7 +27,7 @@ export class AudioMixer{
  loadMusic(name){
   this.musicBuffers??=new Map();
   if(this.musicBuffers.has(name)){const hit=this.musicBuffers.get(name);this.musicBuffers.delete(name);this.musicBuffers.set(name,hit);return hit}
-  const promise=(async()=>{const response=await fetch(`assets/audio/${name}.mp3?v=52`);if(!response.ok)throw Error('bgm fetch');return await this.context.decodeAudioData(await response.arrayBuffer())})();
+  const promise=(async()=>{const response=await fetch(`assets/audio/${name}.mp3?v=53`);if(!response.ok)throw Error('bgm fetch');return await this.context.decodeAudioData(await response.arrayBuffer())})();
   this.musicBuffers.set(name,promise);promise.catch(()=>this.musicBuffers.delete(name));
   while(this.musicBuffers.size>4){const oldest=this.musicBuffers.keys().next().value;if(oldest===this.scene||oldest===name)break;this.musicBuffers.delete(oldest)}
   return promise;
@@ -76,7 +76,7 @@ export class AudioMixer{
  }
  async loadCue(name){
   if(this.buffers.has(name))return this.buffers.get(name);if(this.loading.has(name))return this.loading.get(name);
-  let promise=(async()=>{let response=await fetch(`assets/audio/${name}.mp3?v=52`);if(!response.ok)throw Error('cue fetch');let buffer=await this.context.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer})();
+  let promise=(async()=>{let response=await fetch(`assets/audio/${name}.mp3?v=53`);if(!response.ok)throw Error('cue fetch');let buffer=await this.context.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer})();
   this.loading.set(name,promise);try{return await promise}finally{this.loading.delete(name)}
  }
  async play(name='card'){

@@ -1,5 +1,5 @@
-import {DICE_BALANCE,diceMultiplier,resolveDiceEffects} from './dice-rules.js?v=52';
-import * as E from './engine.js?v=52';
+import {DICE_BALANCE,diceMultiplier,resolveDiceEffects} from './dice-rules.js?v=53';
+import * as E from './engine.js?v=53';
 const span=values=>{const list=values.filter(Number.isFinite);if(!list.length)return 0;const lo=Math.min(...list),hi=Math.max(...list);return lo===hi?lo:lo+'〜'+hi};
 export function cardLines(card,s,resolved){if(card.fusion&&!resolved){const c=E.cardValues(card,s);if(c.components)return ['素材の効果を順に発動（合計気力'+c.cost+'）',...c.components.flatMap((part,i)=>['【'+(i+1)+'】'+part.name,...cardLines(card,s,part)])]}let c=resolved||E.cardValues(card,s),m=s?E.mods(s):{},h=s?E.heroInfo(s,c.actor):null,lines=[];
  if(c.dice&&!c.diceResolved){const saved=!card.fusion&&s?.pendingCast&&s.pendingCast.uid===card.uid?s.pendingCast.rolls:null,lo=saved?saved.reduce((a,b)=>a+b,0):c.dice,hi=saved?lo:c.dice*6,low=cardLines(card,s,{...resolveDiceEffects(c,lo),diceResolved:true}),high=cardLines(card,s,{...resolveDiceEffects(c,hi),diceResolved:true});const TOKEN=/\d+(?:\.\d+)?(?:〜\d+(?:\.\d+)?)?/g;return low.map((line,i)=>{let n=0;const others=(high[i]||line).match(TOKEN)||[];return line.replace(TOKEN,token=>{const all=[...token.split('〜'),...(others[n++]||token).split('〜')].map(Number);return span(all)})})}
