@@ -1,4 +1,4 @@
-import {cardValues} from './engine.js?v=50';
+import {cardValues} from './engine.js?v=51';
 const names=new Intl.Collator('ja',{numeric:true,sensitivity:'base'});
 export const CARD_SORTS={draw:'引いた順',acquired:'入手順',cost:'コスト順',actor:'使用キャラ順',name:'名前順',upgraded:'強化段階順'};
 export function cardEntries(cards,sort='acquired',state){

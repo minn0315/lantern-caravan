@@ -1,4 +1,4 @@
-import {designRelic} from './relic-design.js?v=50';
+import {designRelic} from './relic-design.js?v=51';
 // Additional relic content. All effects are implemented in engine.js.
 // Keep special-stage rewards outside the normal and boss offer pools.
 export const ADDITIONAL_RELICS = [
@@ -16,7 +16,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_02",
@@ -32,7 +32,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_03",
@@ -48,7 +48,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_04",
@@ -64,7 +64,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_05",
@@ -80,7 +80,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_06",
@@ -96,7 +96,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_07",
@@ -112,7 +112,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_08",
@@ -128,7 +128,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_01_09",
@@ -144,7 +144,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "小さな刃にも、帰路を切り開く意志が宿る。"
+    "flavor": "小さな刃にも帰路を切り開く意志が宿る。"
   },
   {
     "id": "expansion_n_02_01",
@@ -447,7 +447,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_02",
@@ -463,7 +463,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_03",
@@ -479,7 +479,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_04",
@@ -495,7 +495,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_05",
@@ -511,7 +511,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_06",
@@ -527,7 +527,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_07",
@@ -543,7 +543,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_08",
@@ -559,7 +559,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_04_09",
@@ -575,7 +575,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "",
     "tier": "normal",
-    "flavor": "人の集まる場所に、火は広がる。"
+    "flavor": "人の集まる場所に火は広がる。"
   },
   {
     "id": "expansion_n_05_01",
@@ -3882,7 +3882,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の縫い針",
     "enName": "Empty Bowl Needle",
     "zhName": "空碗缝针",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。カードで得る盾+1。各戦闘の最初のターンに手札+1。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。カードで得る盾+1。各戦闘の最初のターンに手札+1。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3898,7 +3898,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の護り帯",
     "enName": "Empty Bowl Sash",
     "zhName": "空碗护带",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。各戦闘の最初のターンに生存者全員に盾3。野営の休息による生存者のHP回復量+2。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。各戦闘の最初のターンに生存者全員に盾3。野営の休息による生存者のHP回復量+2。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3914,7 +3914,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の薬包",
     "enName": "Empty Bowl Herb Packet",
     "zhName": "空碗药包",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。戦闘勝利時に生存者全員のHPを2回復。生存者への回復薬のHP回復量+3。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。戦闘勝利時に生存者全員のHPを2回復。生存者への回復薬のHP回復量+3。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3930,7 +3930,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の折り札",
     "enName": "Empty Bowl Folded Charm",
     "zhName": "空碗折符",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。戦闘開始時に敵全員に弱点1。消費気力1のカードの攻撃威力+1。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。戦闘開始時に敵全員に弱点1。消費気力1のカードの攻撃威力+1。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3946,7 +3946,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の旅帳",
     "enName": "Empty Bowl Travel Ledger",
     "zhName": "空碗旅簿",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。戦闘の基礎銀貨報酬+4。ショップ価格の割引率+5ポイント（合計上限50%）。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。戦闘の基礎銀貨報酬+4。ショップ価格の割引率+5ポイント（合計上限50%）。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3962,7 +3962,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の火口箱",
     "enName": "Empty Bowl Tinderbox",
     "zhName": "空碗火种盒",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。野営での灯油回復量+4。カード強化時に生存者全員のHPを2回復。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。野営での灯油回復量+4。カード強化時に生存者全員のHPを2回復。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3978,7 +3978,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の結び玉",
     "enName": "Empty Bowl Knot Bead",
     "zhName": "空碗结珠",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。三人連携時に得る盾+2。三人連携時に生存者全員のHPを1回復。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。三人連携時に得る盾+2。三人連携時に生存者全員のHPを1回復。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -3994,7 +3994,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の星片",
     "enName": "Empty Bowl Star Shard",
     "zhName": "空碗星片",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。各戦闘の3の倍数ターンに手札+1。盾を最大2、次ターンへ持ち越す。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。各戦闘の3の倍数ターンに手札+1。盾を最大2、次ターンへ持ち越す。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -4010,7 +4010,7 @@ export const ADDITIONAL_RELICS = [
     "name": "空椀の木杯",
     "enName": "Empty Bowl Wooden Cup",
     "zhName": "空碗木杯",
-    "desc": "気力0でターンを終えると、次ターンの気力+1。カードの全体HP回復量+1。取得時に在籍者全員の最大HP+2、生存者のHP+2。今後の加入者にも最大HP加算。",
+    "desc": "気力0でターンを終えると次ターンの気力+1。カードの全体HP回復量+1。取得時に在籍者全員の最大HP+2、生存者のHP+2。今後の加入者にも最大HP加算。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 1,
@@ -4792,7 +4792,7 @@ export const ADDITIONAL_RELICS = [
     "name": "飢星の枷",
     "enName": "Hungry Star Shackle",
     "zhName": "饥星枷",
-    "desc": "気力0でターンを終えると、次ターンの気力+2。未使用の気力を最大2、次ターンへ持ち越す。",
+    "desc": "気力0でターンを終えると次ターンの気力+2。未使用の気力を最大2、次ターンへ持ち越す。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 2,
@@ -4808,7 +4808,7 @@ export const ADDITIONAL_RELICS = [
     "name": "飢星の刺環",
     "enName": "Hungry Star Thorn Ring",
     "zhName": "饥星刺环",
-    "desc": "気力0でターンを終えると、次ターンの気力+2。未使用の気力を最大2、次ターンへ持ち越す。",
+    "desc": "気力0でターンを終えると次ターンの気力+2。未使用の気力を最大2、次ターンへ持ち越す。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 2,
@@ -4824,7 +4824,7 @@ export const ADDITIONAL_RELICS = [
     "name": "飢星の重鎖",
     "enName": "Hungry Star Heavy Chain",
     "zhName": "饥星重链",
-    "desc": "気力0でターンを終えると、次ターンの気力+2。未使用の気力を最大2、次ターンへ持ち越す。",
+    "desc": "気力0でターンを終えると次ターンの気力+2。未使用の気力を最大2、次ターンへ持ち越す。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 2,
@@ -5140,7 +5140,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "マス移動時に全員のHP-1。",
     "tier": "boss",
-    "flavor": "刻印は洗っても落ちず、道具を選ぶ。"
+    "flavor": "刻印は洗っても落ちず道具を選ぶ。"
   },
   {
     "id": "expansion_b_18_02",
@@ -5156,7 +5156,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "カード・生存者への回復薬のHP回復量-25%（端数切捨て）。",
     "tier": "boss",
-    "flavor": "刻印は洗っても落ちず、道具を選ぶ。"
+    "flavor": "刻印は洗っても落ちず道具を選ぶ。"
   },
   {
     "id": "expansion_b_18_03",
@@ -5172,7 +5172,7 @@ export const ADDITIONAL_RELICS = [
     },
     "drawback": "野営の休息で生存者のHPが回復しない（倒れた仲間の復帰は可能）。",
     "tier": "boss",
-    "flavor": "刻印は洗っても落ちず、道具を選ぶ。"
+    "flavor": "刻印は洗っても落ちず道具を選ぶ。"
   },
   {
     "id": "expansion_b_19_01",
@@ -5291,7 +5291,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_02",
@@ -5308,7 +5308,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_03",
@@ -5325,7 +5325,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_04",
@@ -5342,7 +5342,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_05",
@@ -5359,7 +5359,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_06",
@@ -5376,7 +5376,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_07",
@@ -5393,7 +5393,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_08",
@@ -5410,7 +5410,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_09",
@@ -5427,7 +5427,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_10",
@@ -5444,7 +5444,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_11",
@@ -5461,14 +5461,14 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_12",
     "name": "永遠の巡礼時計",
     "enName": "Eternal Pilgrim Clock",
     "zhName": "永恒巡礼钟",
-    "desc": "未使用の気力を最大6、次ターンへ持ち越す。気力0でターンを終えると、次ターンの気力+4。毎ターンの気力+2（最低1）。各戦闘の3の倍数ターンに手札+4。",
+    "desc": "未使用の気力を最大6、次ターンへ持ち越す。気力0でターンを終えると次ターンの気力+4。毎ターンの気力+2（最低1）。各戦闘の3の倍数ターンに手札+4。",
     "icon": "eye",
     "effects": {
       "carryEnergy": 6,
@@ -5478,7 +5478,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_13",
@@ -5495,7 +5495,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_14",
@@ -5512,7 +5512,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_15",
@@ -5529,7 +5529,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_16",
@@ -5546,7 +5546,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_17",
@@ -5563,7 +5563,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_18",
@@ -5580,7 +5580,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_19",
@@ -5597,7 +5597,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_20",
@@ -5614,7 +5614,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_21",
@@ -5631,7 +5631,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_22",
@@ -5648,7 +5648,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_23",
@@ -5665,7 +5665,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_24",
@@ -5682,14 +5682,14 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_25",
     "name": "零時の王笏",
     "enName": "Scepter of the Zero Hour",
     "zhName": "零时王杖",
-    "desc": "気力0でターンを終えると、次ターンの気力+5。消費気力0のカード使用時に生存中の敵1体にランダムで18ダメージ。未使用の気力を最大5、次ターンへ持ち越す。毎ターン生存者全員に盾12。",
+    "desc": "気力0でターンを終えると次ターンの気力+5。消費気力0のカード使用時に生存中の敵1体にランダムで18ダメージ。未使用の気力を最大5、次ターンへ持ち越す。毎ターン生存者全員に盾12。",
     "icon": "star",
     "effects": {
       "emptyEnergy": 5,
@@ -5699,7 +5699,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_26",
@@ -5716,7 +5716,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_27",
@@ -5733,7 +5733,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_28",
@@ -5750,7 +5750,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_29",
@@ -5767,7 +5767,7 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   },
   {
     "id": "abyss_relic_30",
@@ -5784,6 +5784,6 @@ export const SPECIAL_RELICS = [
     },
     "drawback": "",
     "tier": "special",
-    "flavor": "深淵を越えた隊商だけが、この灯の真名を知る。"
+    "flavor": "深淵を越えた隊商だけがこの灯の真名を知る。"
   }
 ].map(designRelic);

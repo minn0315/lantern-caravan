@@ -1,21 +1,21 @@
-import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=50';
-import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=50';
-import {enemyActionRange} from './enemy-actions.js?v=50';
-import {roundHP,normalizeHealth} from './health.js?v=50';
-import {stampFreshBalance} from './balance-runtime.js?v=50';
-import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=50';
+import {treasureStats,treasureReward,treasureChance,TREASURE_ENEMY} from './enemy-traits.js?v=51';
+import {eligibleTraveler,hiddenTravelerUnlocked,allNormalTravelersCollected} from './hidden-traveler.js?v=51';
+import {enemyActionRange} from './enemy-actions.js?v=51';
+import {roundHP,normalizeHealth} from './health.js?v=51';
+import {stampFreshBalance} from './balance-runtime.js?v=51';
+import {debugGod,maintainDebugGod,overrideDebugCard} from './debug-rules.js?v=51';
 export {debugGod,maintainDebugGod};
-import {endingInfo} from './endings.js?v=50';
-import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=50';
-import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=50';
-import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=50';
-import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=50';
-import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=50';
+import {endingInfo} from './endings.js?v=51';
+import {RELIC_RARITIES,relicScalingBonus,relicBenefitFamilies} from './relic-design.js?v=51';
+import {allNormalStartersUnlocked,recordProgress,emptyProgress} from './progress.js?v=51';
+import {DEMON_CHAPTER,DEMON_SKILLS} from './demon-stage.js?v=51';
+import {DICE_BALANCE,diceBonus,resolveDiceEffects} from './dice-rules.js?v=51';
+import {GODDESS_GIFTS,forceGoddessEffect} from './goddess.js?v=51';
 export {GODDESS_GIFTS};
-import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=50';
-import {STORY_KINDS,STORY_LENGTH} from './story.js?v=50';
-export {storyFrames} from './story.js?v=50';
-import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS,MAOU_STARTERS,MAOU_NORMALS} from './catalog.js?v=50';
+import {EXPANDED_UPGRADE_IDS} from './upgrade-pool.js?v=51';
+import {STORY_KINDS,STORY_LENGTH} from './story.js?v=51';
+export {storyFrames} from './story.js?v=51';
+import {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS,MAOU_STARTERS,MAOU_NORMALS} from './catalog.js?v=51';
 export {HEROES,COMPANIONS,CHAPTERS,SPECIAL_CHAPTER,CARDS,RELICS,NORMAL_RELICS,BOSS_RELICS,SPECIAL_RELICS,ENEMIES,BOSSES,NODE_TYPES,EVENTS,MYSTERIES,STARTERS,STARTER_DECKS,RECRUIT_DECKS};
 export const MAX_UPGRADES=3;
 export const isSpecialStage=s=>!s.demon?.active&&!!s.endless&&s.legacySpecialChapter!==s.chapter&&(s.chapter+1)%50===0;
@@ -117,6 +117,7 @@ export function shuffleDraw(s,cards){const mixed=shuffle(s,cards);return [...mix
 export function offeredCard(s,id){return JSON.parse(JSON.stringify(s.offeredCards?.[id]||{id,up:0,branches:[]}))}
 export function acquireCard(s,id){if(!CARDS[id]||CARDS[id].status)return false;let card=offeredCard(s,id),uid=allocateCardUid(s);if(CARDS[id].special)s.deck=s.deck.filter(c=>!CARDS[c.id].special);s.deck.push({...card,...(!card.owner&&!s.party.includes(CARDS[id].owner)?{owner:s.party[CARDS[id].actor]}:{}),uid});return true}
 export function buyCard(s,index){let id=s.stock?.[index],price=shopPrice(s,40);if(s.phase!=='shop'||!id||s.gold<price)return false;s.gold-=price;acquireCard(s,id);s.stock.splice(index,1);maintainDebugGod(s);return true}
+export const MAOU_REFUND_CAP=10,MAOU_REPEAT_COST=2;
 export function cardOwner(card){return card.owner||CARDS[card.id]?.owner}
 // まおう（blackparty）：全旅人のカードを「借り物」として使う
 const isBlack=id=>!!COMPANIONS.find(h=>h.id===id)?.blackparty;
@@ -176,7 +177,7 @@ export function enter(s,row,lane){
  else if(type==='mystery'){s.phase='mystery';let good=rng(s)<mysteryGoodChance(s);s.mystery=pick(s,MYSTERIES.filter(e=>(e.kind==='good')===good)).effect}
  else if(type==='recruit'){s.phase='recruit';s.recruits=shuffle(s,COMPANIONS.filter(h=>eligibleTraveler(s,h.id)&&!s.party.includes(h.id)&&!(s.departed||[]).includes(h.id))).slice(0,3).map(h=>h.id)}
  else if(type==='goddess')startGoddess(s);
- else if(type==='treasure'){s.phase='incident';s.incident={title:'巡礼者の宝箱',text:'置き去りにされた物資が、旅を支えてくれる。',effect:'treasure',resolved:false}}
+ else if(type==='treasure'){s.phase='incident';s.incident={title:'巡礼者の宝箱',text:'置き去りにされた物資が旅を支えてくれる。',effect:'treasure',resolved:false}}
  else s.phase=type;
  maintainDebugGod(s);return true;
 }
@@ -248,6 +249,7 @@ export function cardValues(card,s){
  c=overrideDebugCard(c,card,s);
  if(s){const m=mods(s),actor=c.status?Math.max(0,s.heroes.findIndex(h=>h.hp>0)):s.party.indexOf(cardOwner(card));const adjust=v=>({...v,role:v.actor,owner:cardOwner(card),actor});c={...adjust(c),upgraded:!!effectiveUp,upgradeLevel:effectiveUp,cost:Math.max(0,c.cost+(c.type==='攻撃'?(m.attackCost||0):0)+(effectiveUp?(m.upgradeCostOffset||0):(m.unupgradedCostOffset||0)))};if(c.components)c.components=c.components.map(v=>({...adjust(v),castCost:c.cost,upgraded:!!effectiveUp,upgradeLevel:effectiveUp}));}
  if(s){if(c.components)c.components=c.components.map(p=>scaleCard(p,s));else c=scaleCard(c,s);}
+ if(s?.battle&&!c.status&&heroInfo(s,c.actor)?.bonus?.ownerRefund&&s.battle.originsUsed?.includes(originOwner(card)))c={...c,cost:c.cost+MAOU_REPEAT_COST,repeatOrigin:true};
  if(debugGod(s)){c={...c,cost:0,goldSpend:0,fuelCost:0,selfCost:0,selfPoison:0,selfVulnerable:0};if(c.components)c.components=c.components.map(p=>({...p,castCost:0,cost:0,goldSpend:0,fuelCost:0,selfCost:0,selfPoison:0,selfVulnerable:0}))}
  return c;
 }
@@ -350,7 +352,7 @@ function planSingleIntent(s,e){
  return{kind,target:target??0,value,hits:['attack','heavy','sweep','venom','flurry'].includes(kind)?Math.max(kind==='flurry'?2:1,e.multiStrike||1):1,poison:kind==='venom'?2+Math.floor(s.chapter/2):0,factor};
 }
 export function beginTurn(s,timeline=null){
- let b=s.battle,m=mods(s);b.turn++;b.cardsPlayed=0;b.firstSkillUsed=false;b.poisonDrawUsed=false;b.exhaustEnergyUsed=false;b.memberSkillUsed=[];b.actors=[];b.memberShieldUsed=[];b.linked=false;b.selected=null;b.originsUsed=[];
+ let b=s.battle,m=mods(s);b.turn++;b.cardsPlayed=0;b.firstSkillUsed=false;b.poisonDrawUsed=false;b.exhaustEnergyUsed=false;b.memberSkillUsed=[];b.actors=[];b.memberShieldUsed=[];b.linked=false;b.selected=null;b.originsUsed=[];b.refunds=0;
  const companionEnergy=s.heroes.reduce((n,h,i)=>n+(h.hp?heroInfo(s,i).bonus.energy||0:0),0);let drain=b.enemies.some(e=>e.hp&&e.energyDrain&&b.turn%3===0)?1:0;b.energy=Math.max(1,(s.fuel===0?3:4)+companionEnergy+(m.energy||0)+(b.turn===1?(m.firstEnergy||0):0)+(b.nextEnergy||0)+(b.carryEnergy||0)-drain);b.nextEnergy=0;b.carryEnergy=0;
  s.heroes.forEach((h,i)=>{if(!h.hp)return;h.shield=Math.min(h.shield,m.carryShield||0)+(m.shieldTurn||0)+(b.turn===1?(m.firstShield||0):0)+(heroInfo(s,i).bonus.selfTurnShield||0);h.thorns=0;if(h.poison>0){const result=hurtHero(s,i,h.poison,true);h.poison--;if(timeline&&result.damage)timeline.push({kind:'poison',enemyIndex:0,heroIndex:i,amount:result.damage,blocked:0,label:heroInfo(s,i).name+'の毒ダメージ',heroes:s.heroes.map(h=>({...h})),enemies:b.enemies.map(e=>({...e,intent:{...e.intent}}))})}if(h.hp&&(h.regen||m.turnRegen)){healHero(s,i,(h.regen||0)+(m.turnRegen||0),false,'other');if(h.regen)h.regen--}});
  if(s.heroes.every(h=>!h.hp)){loseRun(s);return}
@@ -385,7 +387,7 @@ export function play(s,index,target,heroTarget){
  if(isSkill&&member.bonus.firstSkillDraw&&!b.memberSkillUsed.includes(c.actor)){b.memberSkillUsed.push(c.actor);draw(s,member.bonus.firstSkillDraw)}
  if(parts.some(p=>p.poison||p.allPoison||p.poisonMultiplier)&&!b.poisonDrawUsed&&m.poisonDraw){b.poisonDrawUsed=true;draw(s,m.poisonDraw)}
  if(c.exhaust&&!b.exhaustEnergyUsed&&m.exhaustEnergy){b.exhaustEnergyUsed=true;b.energy+=m.exhaustEnergy}
- if(member.bonus.ownerRefund&&!c.status){const origin=originOwner(card);b.originsUsed??=[];if(origin&&!b.originsUsed.includes(origin)){b.originsUsed.push(origin);b.energy+=member.bonus.ownerRefund;addLog(s,`${member.name}：${COMPANIONS.find(h=>h.id===origin)?.name||'自分'}のカードを初めて使い、気力+${member.bonus.ownerRefund}`)}}
+ if(member.bonus.ownerRefund&&!c.status){const origin=originOwner(card);b.originsUsed??=[];b.refunds??=0;if(origin&&!b.originsUsed.includes(origin)){b.originsUsed.push(origin);if(b.refunds<MAOU_REFUND_CAP){b.refunds++;b.energy+=member.bonus.ownerRefund;addLog(s,`${member.name}：${COMPANIONS.find(h=>h.id===origin)?.name||'自分'}のカードを初めて使い、気力+${member.bonus.ownerRefund}`)}}}
  const steal=parts.reduce((n,p)=>n+(p.stealCard||0),0);if(steal)stealCards(s,card,c.actor,steal);
  if(c.cost===0&&m.zeroPing){let foe=pick(s,b.enemies.filter(e=>e.hp));if(foe)hitEnemy(s,foe,m.zeroPing)}
  let selfDamage=(c.components?0:c.selfCost||0)+(c.type==='攻撃'?(m.attackSelfDamage||0):0)+(b.cardsPlayed===0?(m.firstCardCostHP||0):0);if(selfDamage)hurtHero(s,c.actor,selfDamage,true);
@@ -430,9 +432,9 @@ function applyEffects(s,c,target,heroTarget,previewFace){c={...c};let b=s.battle
 }
 function addDebuff(s,i,key,n){if(debugGod(s))return;let h=s.heroes[i];if(h?.hp)h[key]+=Math.max(0,n-(mods(s).debuffWard||0))}
 export function applyStun(s,enemy,turns){
- if(!enemy?.hp||!Number.isInteger(turns)||turns<1)return false;if(enemy.stunImmune){addLog(s,`${enemy.name}は不動。足止めを受けない。`);return false}if(enemy.demon&&enemy.demonRules?.apocalypseEnabled!==false&&s.battle.turn>=(enemy.demonRules?.apocalypseTurn??10)){addLog(s,'終焉の詠唱は足止めで止められない。');return false;}
+ if(!enemy?.hp||!Number.isInteger(turns)||turns<1)return false;if(enemy.stunImmune){addLog(s,`${enemy.name}は不動　足止めを受けない。`);return false}if(enemy.demon&&enemy.demonRules?.apocalypseEnabled!==false&&s.battle.turn>=(enemy.demonRules?.apocalypseTurn??10)){addLog(s,'終焉の詠唱は足止めで止められない。');return false;}
  enemy.rage=1;
- if(enemy.lastStunnedTurn===s.battle.turn-1){addLog(s,`${enemy.name}は連続する足止めを無効化し、怒りを得た。`);return false}
+ if(enemy.lastStunnedTurn===s.battle.turn-1){addLog(s,`${enemy.name}は連続する足止めを無効化し怒りを得た。`);return false}
  enemy.stun=(enemy.stun||0)+turns;return true;
 }
 export function enemyIntentValue(enemy){
@@ -467,7 +469,7 @@ export function resolveEnemyRound(s,withTimeline=false){
   }else if(t.kind==='curse'){
    for(let k=0;k<n;k++)b.draw.push({id:'wound',uid:b.statusUid--,up:0,branches:[]});b.draw=shuffleDraw(s,b.draw);record('curse',i,null,n,0,`山札に妨害「焦燥」を${n}枚混入`);
   }else if(t.kind==='disrupt'){
-   b.discard.push(...b.draw.splice(Math.max(0,b.draw.length-n),n));b.nextDraw--;record('disrupt',i,null,n,0,`山札${n}枚を捨て、次の手札-1`);
+   b.discard.push(...b.draw.splice(Math.max(0,b.draw.length-n),n));b.nextDraw--;record('disrupt',i,null,n,0,`山札${n}枚を捨て次の手札-1`);
   }else if(t.kind==='rally'){
    for(let ally of b.enemies.filter(e=>e.hp))ally.atk+=n;refreshAttackValues(s);record('rally',i,null,n,0,`敵全員の攻撃力+${n}`);
   }else if(t.kind==='drain'){

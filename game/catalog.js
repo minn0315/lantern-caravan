@@ -1,12 +1,12 @@
-import {assignEnemyTraits,TREASURE_ENEMY} from './enemy-traits.js?v=50';
-import {KITS,LEGACY_SPECIAL_NAMES,kitSpecials,finalizeKitEffect} from './character-kits.js?v=50';
-import {roundHP} from './health.js?v=50';
-import {enemyFlavor} from './enemy-lore.js?v=50';
-import {designRelic} from './relic-design.js?v=50';
-import {DEMON_BOSS} from './demon-stage.js?v=50';
-import {simplifyRelic} from './simple-relics.js?v=50';
-import {attachUpgradePool} from './upgrade-pool.js?v=50';
-import {ADDITIONAL_RELICS,SPECIAL_RELICS} from './relic-expansion.js?v=50';
+import {assignEnemyTraits,TREASURE_ENEMY} from './enemy-traits.js?v=51';
+import {KITS,LEGACY_SPECIAL_NAMES,kitSpecials,finalizeKitEffect} from './character-kits.js?v=51';
+import {roundHP} from './health.js?v=51';
+import {enemyFlavor} from './enemy-lore.js?v=51';
+import {designRelic} from './relic-design.js?v=51';
+import {DEMON_BOSS} from './demon-stage.js?v=51';
+import {simplifyRelic} from './simple-relics.js?v=51';
+import {attachUpgradePool} from './upgrade-pool.js?v=51';
+import {ADDITIONAL_RELICS,SPECIAL_RELICS} from './relic-expansion.js?v=51';
 export {SPECIAL_RELICS};
 export const HEROES=[{id:'row',name:'ロウ',job:'灯の守り手',max:76,color:'#b8c59c',icon:'shield',actor:0,art:0,passive:'通常の盾カードの効果 +1',bonus:{block:1}},{id:'sena',name:'セナ',job:'星詠みの射手',max:56,color:'#c4b2e7',icon:'bow',actor:1,art:1,passive:'弱点のある敵への攻撃 +1',bonus:{weakAttack:1}},{id:'nico',name:'ニコ',job:'旅の錬金術師',max:60,color:'#e2ba86',icon:'flask',actor:2,art:2,passive:'回復カードの回復量 +1',bonus:{heal:1}}];
 export const COMPANIONS=[...HEROES,{id:'kai',name:'カイ',job:'旧都の衛士',max:86,color:'#a9bc9b',icon:'shield',actor:0,art:3,passive:'毎ターン自身に盾2',bonus:{selfTurnShield:2}},{id:'eda',name:'エダ',job:'灰刃の傭兵',max:66,color:'#b7b48e',icon:'sword',actor:0,art:4,passive:'自身の攻撃カードの威力 +2',bonus:{attack:2}},{id:'rika',name:'リカ',job:'湿地の猟師',max:62,color:'#c4afd3',icon:'bow',actor:1,art:5,passive:'自身が付与する毒 +2',bonus:{poison:2}},{id:'mio',name:'ミオ',job:'迷い星の占者',max:50,color:'#b2b8dc',icon:'star',actor:1,art:6,passive:'毎ターン最初の策略カードで1枚引く',bonus:{firstSkillDraw:1}},{id:'fin',name:'フィン',job:'巡礼の薬師',max:66,color:'#d8bf91',icon:'leaf',actor:2,art:7,passive:'回復カードの回復量 +3',bonus:{heal:3}},{id:'towa',name:'トワ',job:'硝子の調香師',max:54,color:'#d5b195',icon:'flask',actor:2,art:8,passive:'自身の全体攻撃 +3、毒 +1',bonus:{aoe:3,poison:1}}];
@@ -35,27 +35,27 @@ COMPANIONS.push({"id": "tetsu", "name": "テツ", "job": "旅路の鍛冶師", "
 COMPANIONS.push({"id": "mira", "name": "ミラ", "job": "鏡盾の騎士", "actor": 0, "max": 74, "icon": "shield", "color": "#c7aa72", "art": 29, "bonus": {"turnThorns": 2}, "passive": "毎ターン自身に反撃2。反撃量を攻撃に変える。", "theme": "mirror"});
 COMPANIONS.push({id:'aurora',name:'アウロラ',job:'黎明の継承者',max:92,color:'#e4c57c',icon:'sun',actor:2,art:30,hidden:true,theme:'aurora',passive:'毎ターン気力+1・自身に盾6。攻撃威力+6、回復量+4。',bonus:{energy:1,selfTurnShield:6,attack:6,heal:4}});
 // blackparty：通常の方法では仲間にならない旅人（プレイヤーには見えない括り）
-COMPANIONS.push({id:'maou',name:'まおう',job:'からっぽの王',actor:1,max:62,icon:'star',color:'#9fa8de',art:31,blackparty:true,bonus:{ownerRefund:1},passive:'ターン中、元の持ち主ごとに最初の1枚を使うと気力+1（毎ターンリセット）'});
-export const SPECIAL_CHAPTER={name:'無明の星骸',en:'THE ABYSSAL CONVERGENCE',desc:'五十の夜が重なるときだけ現れる、灯の届かない異界。',color:'#d197a5',beats:['夜の道に、存在しないはずの扉が開く。','時を越えた巡礼者の影。ここでは灯さえ喰らわれる。','古い宿場の灯だけが、かろうじて異界の侵食を退けている。','星の亡骸が目を開く。この世界に戻るには、主を越えるしかない。']};
+COMPANIONS.push({id:'maou',name:'まおう',job:'からっぽの王',actor:1,max:62,icon:'star',color:'#9fa8de',art:31,blackparty:true,bonus:{ownerRefund:1},passive:'元の持ち主ごとに最初の1枚で気力+1（1ターン10回まで）　同じ持ち主の2枚目からはコスト+2'});
+export const SPECIAL_CHAPTER={name:'無明の星骸',en:'THE ABYSSAL CONVERGENCE',desc:'五十の夜が重なるときだけ現れる、灯の届かない異界。',color:'#d197a5',beats:['夜の道に存在しないはずの扉が開く。','時を越えた巡礼者の影。ここでは灯さえ喰らわれる。','古い宿場の灯だけがかろうじて異界の侵食を退けている。','星の亡骸が目を開く。この世界に戻るには主を越えるしかない。']};
 export const CHAPTERS=[
-{name:'ささやきの森',en:'THE WHISPERING WOODS',desc:'故郷を覆った夜を抜け、根の王が守る古道へ。',boss:'根を張る王',color:'#a6b991',beats:['村を発った。古い灯台へ続く道は、森に呑まれていた。','木々に刻まれた巡礼の印。先を歩いた誰かが、まだいる。','森の奥で、地面が脈を打つ。灯を奪った根の気配が近い。','古道の門が見えた。森の主を越えれば、霧の巡礼路へ出られる。']},
-{name:'霧の巡礼路',en:'THE DROWNED PILGRIMAGE',desc:'沈んだ修道院で、夜を呼ぶ鐘を止める。',boss:'鐘楼の番人',color:'#a5bacb',beats:['森を越えると、道は冷たい水面へと続いていた。','水没した祠から、忘れられた巡礼歌が聞こえる。','鐘が鳴るたびに霧が濃くなる。修道院はまだ夜を祈っていた。','鐘楼の影が迫る。この鐘を止めなければ王都へは進めない。']},
-{name:'灰の王都',en:'THE ASHEN CAPITAL',desc:'灰冠の支配を破り、夜明けの門を開く。',boss:'灰冠の女王',color:'#d09e7e',beats:['霧の向こうに、焼け落ちた王都が姿を現した。','瓦礫の壁に、最後の夜を記した布告が貼られている。','王城はまだ熱を持つ。失われた朝を、灰の兵が守り続けていた。','大門に灯をかざす。王都の主との決戦が待つ。']},
-{name:'夜明けの境界',en:'THE EDGE OF DAWN',desc:'朝を奪ったものと対峙し、最後の灯を空へ。',boss:'終わらない夜',color:'#c0b3d0',beats:['王都の門を抜けると、地平そのものが割れていた。','星の残骸が道を照らす。ここでは夜さえ、形を失っている。','灯は小さい。それでも、三人の影は消えなかった。','夜明けの境界に着いた。最後の戦いを越え、空に灯を返そう。']}
+{name:'ささやきの森',en:'THE WHISPERING WOODS',desc:'故郷を覆った夜を抜け、根の王が守る古道へ。',boss:'根を張る王',color:'#a6b991',beats:['村を発った。古い灯台へ続く道は森に呑まれていた。','木々に刻まれた巡礼の印。先を歩いた誰かがまだいる。','森の奥で地面が脈を打つ。灯を奪った根の気配が近い。','古道の門が見えた。森の主を越えれば霧の巡礼路へ出られる。']},
+{name:'霧の巡礼路',en:'THE DROWNED PILGRIMAGE',desc:'沈んだ修道院で夜を呼ぶ鐘を止める。',boss:'鐘楼の番人',color:'#a5bacb',beats:['森を越えると道は冷たい水面へと続いていた。','水没した祠から忘れられた巡礼歌が聞こえる。','鐘が鳴るたびに霧が濃くなる。修道院はまだ夜を祈っていた。','鐘楼の影が迫る。この鐘を止めなければ王都へは進めない。']},
+{name:'灰の王都',en:'THE ASHEN CAPITAL',desc:'灰冠の支配を破り夜明けの門を開く。',boss:'灰冠の女王',color:'#d09e7e',beats:['霧の向こうに焼け落ちた王都が姿を現した。','瓦礫の壁に最後の夜を記した布告が貼られている。','王城はまだ熱を持つ。失われた朝を灰の兵が守り続けていた。','大門に灯をかざす。王都の主との決戦が待つ。']},
+{name:'夜明けの境界',en:'THE EDGE OF DAWN',desc:'朝を奪ったものと対峙し最後の灯を空へ。',boss:'終わらない夜',color:'#c0b3d0',beats:['王都の門を抜けると地平そのものが割れていた。','星の残骸が道を照らす。ここでは夜さえ、形を失っている。','灯は小さい。それでも三人の影は消えなかった。','夜明けの境界に着いた。最後の戦いを越え、空に灯を返そう。']}
 ];
 CHAPTERS.push(
-{name:'氷晶の採掘場',en:'THE FROZEN QUARRY',desc:'氷に閉じ込められた灯の鉱脈をたどる。',boss:'未知の章の主',color:'#a5c8d1',beats:['氷に閉じ込められた灯の鉱脈をたどる。', '氷晶の採掘場にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'胞子の庭',en:'THE SPORE GARDENS',desc:'光る胞子が降る、忘れられた庭を抜ける。',boss:'未知の章の主',color:'#b7bd92',beats:['光る胞子が降る、忘れられた庭を抜ける。', '胞子の庭にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'砂塵の霊廟',en:'THE DUSTBOUND TOMB',desc:'砂の下に眠る王の道を探す。',boss:'未知の章の主',color:'#d2b986',beats:['砂の下に眠る王の道を探す。', '砂塵の霊廟にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'錆の歯車都市',en:'THE RUSTED CITY',desc:'止まらない機械の街で次の門を開く。',boss:'未知の章の主',color:'#bb9f7c',beats:['止まらない機械の街で次の門を開く。', '錆の歯車都市にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'深紅の湿原',en:'THE CRIMSON MARSH',desc:'血色の葦と古い祈りが揺れる湿原へ。',boss:'未知の章の主',color:'#bd8c8e',beats:['血色の葦と古い祈りが揺れる湿原へ。', '深紅の湿原にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'沈黙の書庫',en:'THE SILENT ARCHIVE',desc:'夜の始まりを記した失われた書を追う。',boss:'未知の章の主',color:'#b2a1c3',beats:['夜の始まりを記した失われた書を追う。', '沈黙の書庫にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'竜骨の峡谷',en:'THE DRAGONBONE RIFT',desc:'巨大な竜の骨が架ける橋を渡る。',boss:'未知の章の主',color:'#c7baa0',beats:['巨大な竜の骨が架ける橋を渡る。', '竜骨の峡谷にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'雷鳴の浮島',en:'THE THUNDER ISLES',desc:'雷雲の間に浮かぶ島々を越える。',boss:'未知の章の主',color:'#9cb9d3',beats:['雷雲の間に浮かぶ島々を越える。', '雷鳴の浮島にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'鏡の宮廷',en:'THE MIRROR COURT',desc:'映るもののすべてが真実ではない宮廷へ。',boss:'未知の章の主',color:'#b9c5d1',beats:['映るもののすべてが真実ではない宮廷へ。', '鏡の宮廷にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'星屑の墓標',en:'THE STARFALL GRAVE',desc:'落ちた星が眠る空の墓地を進む。',boss:'未知の章の主',color:'#b1a3d3',beats:['落ちた星が眠る空の墓地を進む。', '星屑の墓標にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'止まった大聖堂',en:'THE TIMELESS CATHEDRAL',desc:'時を失った聖堂で最後の鐘を探す。',boss:'未知の章の主',color:'#baa991',beats:['時を失った聖堂で最後の鐘を探す。', '止まった大聖堂にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']},
-{name:'黎明の心臓',en:'THE HEART OF DAWN',desc:'夜を生み続ける心臓に、最後の灯を届ける。',boss:'未知の章の主',color:'#dbbc8b',beats:['夜を生み続ける心臓に、最後の灯を届ける。', '黎明の心臓にも、かつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主が、その向こうで待っている。']}
+{name:'氷晶の採掘場',en:'THE FROZEN QUARRY',desc:'氷に閉じ込められた灯の鉱脈をたどる。',boss:'未知の章の主',color:'#a5c8d1',beats:['氷に閉じ込められた灯の鉱脈をたどる。', '氷晶の採掘場にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'胞子の庭',en:'THE SPORE GARDENS',desc:'光る胞子が降る、忘れられた庭を抜ける。',boss:'未知の章の主',color:'#b7bd92',beats:['光る胞子が降る、忘れられた庭を抜ける。', '胞子の庭にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'砂塵の霊廟',en:'THE DUSTBOUND TOMB',desc:'砂の下に眠る王の道を探す。',boss:'未知の章の主',color:'#d2b986',beats:['砂の下に眠る王の道を探す。', '砂塵の霊廟にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'錆の歯車都市',en:'THE RUSTED CITY',desc:'止まらない機械の街で次の門を開く。',boss:'未知の章の主',color:'#bb9f7c',beats:['止まらない機械の街で次の門を開く。', '錆の歯車都市にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'深紅の湿原',en:'THE CRIMSON MARSH',desc:'血色の葦と古い祈りが揺れる湿原へ。',boss:'未知の章の主',color:'#bd8c8e',beats:['血色の葦と古い祈りが揺れる湿原へ。', '深紅の湿原にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'沈黙の書庫',en:'THE SILENT ARCHIVE',desc:'夜の始まりを記した失われた書を追う。',boss:'未知の章の主',color:'#b2a1c3',beats:['夜の始まりを記した失われた書を追う。', '沈黙の書庫にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'竜骨の峡谷',en:'THE DRAGONBONE RIFT',desc:'巨大な竜の骨が架ける橋を渡る。',boss:'未知の章の主',color:'#c7baa0',beats:['巨大な竜の骨が架ける橋を渡る。', '竜骨の峡谷にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'雷鳴の浮島',en:'THE THUNDER ISLES',desc:'雷雲の間に浮かぶ島々を越える。',boss:'未知の章の主',color:'#9cb9d3',beats:['雷雲の間に浮かぶ島々を越える。', '雷鳴の浮島にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'鏡の宮廷',en:'THE MIRROR COURT',desc:'映るもののすべてが真実ではない宮廷へ。',boss:'未知の章の主',color:'#b9c5d1',beats:['映るもののすべてが真実ではない宮廷へ。', '鏡の宮廷にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'星屑の墓標',en:'THE STARFALL GRAVE',desc:'落ちた星が眠る空の墓地を進む。',boss:'未知の章の主',color:'#b1a3d3',beats:['落ちた星が眠る空の墓地を進む。', '星屑の墓標にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'止まった大聖堂',en:'THE TIMELESS CATHEDRAL',desc:'時を失った聖堂で最後の鐘を探す。',boss:'未知の章の主',color:'#baa991',beats:['時を失った聖堂で最後の鐘を探す。', '止まった大聖堂にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']},
+{name:'黎明の心臓',en:'THE HEART OF DAWN',desc:'夜を生み続ける心臓に最後の灯を届ける。',boss:'未知の章の主',color:'#dbbc8b',beats:['夜を生み続ける心臓に最後の灯を届ける。', '黎明の心臓にもかつて朝はあった。残された巡礼の印が道を示している。', '旅人たちは灯を囲み、次の門へ進む支度を整えた。', '遠くに門が見えた。この土地の主がその向こうで待っている。']}
 );
 const cards={};
 function add(actor,id,name,cost,effect,icon='sword',power={},tactical={}){
@@ -86,7 +86,7 @@ add(2,'restorative','上薬草',2,{heal:21,target:'hero'},'leaf');add(2,'spores'
 add(2,'transmute','知識の抽出',1,{draw:4,exhaust:true,target:'all'},'eye',{draw:5},{cost:0});add(2,'volatile','揮発する火',1,{aoe:9,selfCost:3,target:'all'},'flame');add(2,'extract','生命の抽出',1,{damage:6,selfHeal:5},'flask');add(2,'regen','息吹の軟膏',1,{regen:3,target:'hero'},'leaf');add(2,'revive','帰還の霊水',3,{heal:12,revive:true,exhaust:true,target:'hero'},'flask');
 add(2,'stimulant','奮起の香',1,{targetPower:3,target:'hero'},'flask',{targetPower:5},{cost:0});add(2,'smokescreen','白煙の幕',1,{allShield:7,allCleanse:true,target:'all'},'moon');add(2,'oilbomb','油壺',2,{aoe:10,allWeak:1,target:'all'},'flame');add(2,'corrosion','腐食液',1,{poison:4,attackDown:1},'flask');add(2,'sunvial','日輪の小瓶',2,{allHeal:15,exhaust:true,target:'all'},'sun');
 add(2,'conserve','備えの調合',0,{nextEnergy:1,selfShield:4,target:'all'},'flask',{nextEnergy:2,selfShield:7},{draw:1});add(2,'fieldkit','野戦救急',1,{heal:9,draw:1,target:'hero'},'leaf');add(2,'nighttea','夜茶',0,{allRegen:1,exhaust:true,target:'all'},'leaf',{allRegen:3},{exhaust:false});add(2,'firebrew','火喰い酒',2,{damage:19,poison:3},'flame');add(2,'purify','浄化の雨',1,{allCleanse:true,allHeal:4,target:'all'},'leaf');
-// 仲間固有の技。役割が同じでも、カードと組み合わせは共有しない。
+// 仲間固有の技。役割が同じでもカードと組み合わせは共有しない。
 const uniqueSets={
  eda:[['灰刃',1,{damage:11,selfShield:2},'sword'],['受け流す刃',1,{shield:9,target:'hero'},'sword'],['戦場の呼吸',1,{selfHeal:8,selfShield:3,target:'all'},'leaf'],['血火の誓い',0,{power:2,selfCost:3,exhaust:true,target:'all'},'flame'],['踏み込み',0,{damage:5,exhaust:true},'sword'],['紅蓮の円舞',2,{aoe:10,selfCost:2,target:'all'},'flame'],['返しの太刀',1,{damage:7,selfShield:7},'sword'],['傭兵の勘',1,{draw:2,nextEnergy:1,target:'all'},'eye'],['鎧断ち',2,{damage:18,stripShield:true},'sword'],['灰の再起',2,{selfHeal:16,cleanse:true,target:'hero'},'leaf'],['一騎の覚悟',1,{power:4,selfCost:4,target:'all'},'sun'],['落日の断罪',3,{damage:32,lowBonus:12,exhaust:true},'flame']],
  kai:[['衛士の槍',1,{damage:8,selfShield:5},'sword'],['大盾の庇護',1,{shield:14,target:'hero'},'shield'],['糧食',1,{selfHeal:9,target:'all'},'leaf'],['陣形を組む',1,{allShield:6,redirect:true,target:'all'},'shield'],['槍の牽制',1,{damage:5,attackDown:1},'sword'],['鉄城の守り',2,{allShield:14,exhaust:true,target:'all'},'shield'],['城門の一突き',2,{damage:16,ignoreShield:true},'sword'],['盾を並べよ',0,{selfShield:7,exhaust:true,target:'all'},'shield'],['衛士の号令',1,{allPower:1,nextEnergy:1,target:'all'},'sun'],['献身の壁',2,{shield:18,thorns:5,target:'hero'},'shield'],['古都の備蓄',0,{draw:2,exhaust:true,target:'all'},'bag'],['不屈の巡回',1,{selfShield:10,allCleanse:true,target:'all'},'shield']],
@@ -201,14 +201,14 @@ export const CARDS=Object.freeze(cards);
 export const NORMAL_RELICS=[];export const BOSS_RELICS=[];
 function relic(id,name,desc,icon,effects,drawback=''){let r={id,name,desc,icon,effects,drawback,tier:drawback?'boss':'normal'};(drawback?BOSS_RELICS:NORMAL_RELICS).push(r)}
 relic('ember','消えない熾火','各戦闘の最初のターンに気力+1。','flame',{firstEnergy:1});relic('root','旅人の根飾り','戦闘勝利時に全員のHPを4回復。','leaf',{winHeal:4});relic('star','星図のかけら','毎ターンの手札+1。','star',{draw:1});relic('bell','夜明けの鈴','連携するたびに全員のHPを3回復。','bell',{linkHeal:3});relic('fang','銀狼の牙','攻撃カードの威力+2。','sword',{attack:2});relic('shell','月白の護符','毎ターン全員に盾3。','shield',{shieldTurn:3});relic('flask','小さな蒸留器','野営地での灯油回復+8。','flask',{campFuel:8});relic('coin','巡礼の硬貨','戦闘の銀貨報酬+10。','coin',{goldFlat:10});
-relic('candle','門守の蝋燭','戦闘開始時に全員に盾6。','flame',{firstShield:6});relic('compass','帰路の羅針盤','野営で休むと、HP回復+7。','map',{campHeal:7});relic('quill','預言者の羽根','毎ターン最初の策略カードで1枚引く。','eye',{firstSkillDraw:1});relic('whetstone','古い砥石','1コストの攻撃カードの威力+2。','sword',{cheapAttack:2});relic('herb','結び薬草','回復カードの回復量+2。','leaf',{heal:2});relic('pitcher','陶器の薬壺','回復薬の回復量+10。取得時に回復薬+1。','flask',{potionHeal:10,pickupPotion:1});relic('ribbon','星紡ぎのリボン','最初のターンに手札+2。','star',{firstDraw:2});relic('salt','湿地の白塩','付与する毒+1。','flask',{poison:1});
-relic('lens','ひび割れた照準器','弱点のある敵へのダメージが、さらに+2。','eye',{weakBonus:2});relic('medal','名もなき勲章','全員の攻撃カードの威力+1。','sword',{attack:1});relic('rope','巡礼の結び紐','取得時に全員の最大HP+5、HP+5。','heart',{maxHP:5});relic('clover','四つ葉の銀細工','戦闘の銀貨報酬が25%増える。','leaf',{goldMult:.25});relic('fossil','琥珀の化石','そのターン3枚目以降の攻撃の威力+3。','star',{lateAttack:3});relic('charcoal','踊る炭片','全体攻撃の威力+3。','flame',{aoe:3});relic('ice','氷河の留め具','カードで得る盾+2。','shield',{block:2});relic('branch','抱擁の枝','連携で得る盾が、さらに+3。','leaf',{linkShield:3});
+relic('candle','門守の蝋燭','戦闘開始時に全員に盾6。','flame',{firstShield:6});relic('compass','帰路の羅針盤','野営で休むとHP回復+7。','map',{campHeal:7});relic('quill','預言者の羽根','毎ターン最初の策略カードで1枚引く。','eye',{firstSkillDraw:1});relic('whetstone','古い砥石','1コストの攻撃カードの威力+2。','sword',{cheapAttack:2});relic('herb','結び薬草','回復カードの回復量+2。','leaf',{heal:2});relic('pitcher','陶器の薬壺','回復薬の回復量+10。取得時に回復薬+1。','flask',{potionHeal:10,pickupPotion:1});relic('ribbon','星紡ぎのリボン','最初のターンに手札+2。','star',{firstDraw:2});relic('salt','湿地の白塩','付与する毒+1。','flask',{poison:1});
+relic('lens','ひび割れた照準器','弱点のある敵へのダメージがさらに+2。','eye',{weakBonus:2});relic('medal','名もなき勲章','全員の攻撃カードの威力+1。','sword',{attack:1});relic('rope','巡礼の結び紐','取得時に全員の最大HP+5、HP+5。','heart',{maxHP:5});relic('clover','四つ葉の銀細工','戦闘の銀貨報酬が25%増える。','leaf',{goldMult:.25});relic('fossil','琥珀の化石','そのターン3枚目以降の攻撃の威力+3。','star',{lateAttack:3});relic('charcoal','踊る炭片','全体攻撃の威力+3。','flame',{aoe:3});relic('ice','氷河の留め具','カードで得る盾+2。','shield',{block:2});relic('branch','抱擁の枝','連携で得る盾がさらに+3。','leaf',{linkShield:3});
 relic('harp','三弦の小竪琴','連携で得る気力+1。','bell',{linkEnergy:1});relic('hourglass','砂漏れの時計','使わなかった気力を最大1、次ターンに持ち越す。','eye',{carryEnergy:1});relic('lanterncore','灯芯の核','マス移動時の灯油消費-1。','flame',{fuelCost:-1});relic('purse','商人の財布','ショップの価格が15%安くなる。','coin',{shopDiscount:.15});relic('rations','保存食の包み','野営地での灯油回復+10。','bag',{campFuel:10});relic('anvil','巡礼鍛冶の印','カード強化時に生存者全員のHPを5回復。','shield',{upgradeHeal:5});relic('amulet','身代わりの人形','各戦闘で一度だけ、倒れる仲間をHP12で復帰させる。','heart',{revive:12});relic('mask','討伐者の仮面','強敵勝利時に銀貨+20・全員のHP+6。','elite',{eliteGold:20,eliteHeal:6});
-relic('mapcase','折り畳み星図','未知のマスで、良い出来事が起きやすくなる。','map',{mysteryLuck:.2});relic('needle','毒銀の針','毎ターン最初に毒を付与するカードで1枚引く。','flask',{poisonDraw:1});relic('talisman','燃える札','毎ターン最初に消滅カードを使うと気力+1。','flame',{exhaustEnergy:1});relic('seed','眠らない種','毎ターン生存者全員のHPを1回復。','leaf',{turnRegen:1});relic('magnet','夜明けの磁石','戦闘開始時に敵全員に弱点1。','star',{firstWeak:1});relic('book','行商の帳面','ショップのカード陳列数+1。','book',{shopStock:1});relic('crystal','空腹の結晶','気力0でターンを終えると、次の気力+1。','star',{emptyEnergy:1});relic('snail','宿り貝','仲間の盾を最大5、次ターンに持ち越す。','shield',{carryShield:5});
+relic('mapcase','折り畳み星図','未知のマスで良い出来事が起きやすくなる。','map',{mysteryLuck:.2});relic('needle','毒銀の針','毎ターン最初に毒を付与するカードで1枚引く。','flask',{poisonDraw:1});relic('talisman','燃える札','毎ターン最初に消滅カードを使うと気力+1。','flame',{exhaustEnergy:1});relic('seed','眠らない種','毎ターン生存者全員のHPを1回復。','leaf',{turnRegen:1});relic('magnet','夜明けの磁石','戦闘開始時に敵全員に弱点1。','star',{firstWeak:1});relic('book','行商の帳面','ショップのカード陳列数+1。','book',{shopStock:1});relic('crystal','空腹の結晶','気力0でターンを終えると次の気力+1。','star',{emptyEnergy:1});relic('snail','宿り貝','仲間の盾を最大5、次ターンに持ち越す。','shield',{carryShield:5});
 relic('chalice','暁の聖杯','章クリア時のHP回復+10。','sun',{bossHeal:10});relic('ward','浄めの鈴緒','仲間が受ける毒・脆弱の量-1。','bell',{debuffWard:1});relic('vase','慈雨の水瓶','全体回復カードの回復量+3。','leaf',{allHeal:3});relic('shard','零光の欠片','0コストのカードを使うたびにランダムな敵に3ダメージ。','star',{zeroPing:3});
 relic('bloodsun','血の日輪','毎ターンの気力+1。','sun',{energy:1,healMult:-.5},'回復カード・回復薬による回復量が半分。');relic('blackcrown','黒星の冠','毎ターンの手札+2。','boss',{draw:2,energy:-1},'毎ターンの気力-1。');relic('ironheart','鉄の心臓','毎ターン全員に盾5。','shield',{shieldTurn:5,draw:-1},'毎ターンの手札-1。');relic('hollowlantern','虚ろな大灯籠','毎ターンの気力+1。','flame',{energy:1,fuelCost:1},'マス移動時の灯油消費+1。');
 relic('goldcontract','黄金の契約','戦闘の銀貨報酬が2倍。','coin',{goldMult:1,enemyAtk:3},'すべての敵の攻撃力+3。');relic('sacrificeseal','赤誓の封蝋','攻撃カードの威力+5。','sword',{attack:5,attackSelfDamage:1},'攻撃カードを使うたびにその仲間のHP-1。');relic('frozenclock','凍った巡礼時計','毎ターンの手札+1、最初の手札はさらに+2。','eye',{draw:1,firstDraw:2,campHealDisabled:1},'野営で休んでもHPが回復しない。');relic('thorncrown','毒棘の冠','付与する毒+3。','leaf',{poison:3,heal:-3},'回復カードの回復量-3。');
-relic('fractureplate','砕けぬ甲冑','カードで得る盾+6。','shield',{block:6,attackCost:1},'攻撃カードの消費気力+1。');relic('wildstar','野生の星核','毎ターンの気力+1。','star',{energy:1,draw:-2},'毎ターンの手札-2。');relic('hungryidol','飢えた偶像','取得時に全員の最大HP+18、HP+18。','heart',{maxHP:18,nodeDamage:2},'マス移動時に全員のHP-2。');relic('deathbell','死告の三重鐘','連携で得る気力が、さらに+2。','bell',{linkEnergy:2,firstCardCostHP:3},'毎ターン最初のカードで、使用者のHP-3。');
+relic('fractureplate','砕けぬ甲冑','カードで得る盾+6。','shield',{block:6,attackCost:1},'攻撃カードの消費気力+1。');relic('wildstar','野生の星核','毎ターンの気力+1。','star',{energy:1,draw:-2},'毎ターンの手札-2。');relic('hungryidol','飢えた偶像','取得時に全員の最大HP+18、HP+18。','heart',{maxHP:18,nodeDamage:2},'マス移動時に全員のHP-2。');relic('deathbell','死告の三重鐘','連携で得る気力がさらに+2。','bell',{linkEnergy:2,firstCardCostHP:3},'毎ターン最初のカードで使用者のHP-3。');
 relic('oracleeye','深淵の観測眼','毎ターンの手札+2。','eye',{draw:2,enemyHP:.25},'敵の最大HPが25%増える。');relic('whiteash','白灰の心壺','戦闘勝利時に全員のHPを12回復。','leaf',{winHeal:12,noGold:1},'戦闘で銀貨を得られなくなる。');relic('eclipseblade','蝕の剣','攻撃カードの威力が35%増える。','sword',{attackMult:.35,cardHealDisabled:1},'回復カードによるHP回復ができない。');relic('pilgrimking','遍歴王の印','強化済みカードの消費気力-1。','boss',{upgradeCostOffset:-1,unupgradedCostOffset:1},'未強化カードの消費気力+1。');
 NORMAL_RELICS.push(...ADDITIONAL_RELICS.filter(r=>r.tier==='normal'));BOSS_RELICS.push(...ADDITIONAL_RELICS.filter(r=>r.tier==='boss'));
 export const RELICS=[...NORMAL_RELICS,...BOSS_RELICS,...SPECIAL_RELICS].map(designRelic);
@@ -296,29 +296,29 @@ BOSSES.push({id:'sovereign_14_0',kind:'sovereign_14_0',boss:true,name:'振鐘の
 BOSSES.push({id:'sovereign_14_1',kind:'sovereign_14_1',boss:true,name:'時針翼の天使',chapter:14,hp:990,atk:30,pattern:['flurry', 'disrupt', 'attack', 'guardAlly', 'heavy'],ability:'毎ターンHP8回復。妨害と全体攻撃を使う。',shieldTurn:0,regen:8,enrage:7,phaseShield:32,energyDrain:1,atlas:{file:'boss-extra-1',cell:9}});
 BOSSES.push({id:'sovereign_15_0',kind:'sovereign_15_0',boss:true,name:'蝕日の竜',chapter:15,hp:1010,atk:30,pattern:['flurry', 'disrupt', 'attack', 'guardAlly', 'heavy'],ability:'毎ターン盾9。HP半分で攻撃力が上がる。',shieldTurn:9,regen:0,enrage:7,phaseShield:34,energyDrain:0,atlas:{file:'boss-extra-1',cell:10}});
 BOSSES.push({id:'sovereign_15_1',kind:'sovereign_15_1',boss:true,name:'黎明の不死鳥',chapter:15,hp:1040,atk:31,pattern:['venom', 'attack', 'hex', 'mend', 'heavy'],ability:'毎ターンHP8回復。妨害と全体攻撃を使う。',shieldTurn:0,regen:8,enrage:7,phaseShield:34,energyDrain:1,atlas:{file:'boss-extra-1',cell:11}});
-// 耐性・固有能力・複数回行動の割り当てと、逃げる敵の追加
+// 耐性・固有能力・複数回行動の割り当てと逃げる敵の追加
 for(const e of ENEMIES)assignEnemyTraits(e);for(const b of BOSSES)assignEnemyTraits(b,{boss:true});
 ENEMIES.push({...TREASURE_ENEMY,art:ENEMIES.length});
 export const NODE_TYPES=['battle','elite','boss','camp','shop','event','mystery','treasure','shrine','forge','recruit','blessing','goddess'];
 export const EVENTS=[
-{title:'苔むした祠',text:'祠の奥に、巡礼者が残した灯がある。',options:[['祈る','生存者のHP+14 / 灯油-6'],['油を買う','銀貨20 / 灯油+28'],['立ち去る','何も消費せず進む']]},
+{title:'苔むした祠',text:'祠の奥に巡礼者が残した灯がある。',options:[['祈る','生存者のHP+14 / 灯油-6'],['油を買う','銀貨20 / 灯油+28'],['立ち去る','何も消費せず進む']]},
 {title:'道に迷った行商人',text:'「灯を分けてもらえませんか」。行商人が古い遺物を差し出した。',options:[['灯を分ける','灯油-12 / 通常レリックを3択から選ぶ'],['道を教える','銀貨+25'],['薬を買う','銀貨20 / 回復薬+1']]},
-{title:'星降る水辺',text:'水面に浮かぶ星を、しばらく見つめた。',options:[['星の水を汲む','回復薬+1'],['技を磨く','好きなカードを1枚、分岐強化'],['岸辺を探す','銀貨+35']]},
+{title:'星降る水辺',text:'水面に浮かぶ星をしばらく見つめた。',options:[['星の水を汲む','回復薬+1'],['技を磨く','好きなカードを1枚、分岐強化'],['岸辺を探す','銀貨+35']]},
 {title:'錆びた門',text:'門の奥には銀貨がある。足元には黒い棘が伸びている。',options:[['棘を越える','全員に8ダメージ / 銀貨+65'],['灯で払う','灯油-10 / 銀貨+35'],['迂回する','灯油-2']]},
-{title:'忘れられた焚き火',text:'手記には、仲間と交わした約束が書かれていた。',options:[['手記を読む','3枚からカードを1枚選ぶ'],['体を休める','生存者のHP+14'],['油を集める','灯油+22']]},
-{title:'夜の取引',text:'仮面の人物が、命の代わりに力を売るという。',options:[['命を差し出す','先頭の仲間のHP-15 / 通常レリックを選択'],['銀貨を払う','銀貨40 / 全員の最大HP+7'],['断る','何も消費せず進む']]},
-{title:'失われた隊商',text:'崩れた荷車に、誰かが集めた旅の品が残されている。',options:[['物資を拾う','灯油+15 / 回復薬+1'],['銀貨を探す','銀貨+45'],['重荷を降ろす','カードを1枚選んで無料除去']]},
-{title:'渡し守の問い',text:'「何を残して、何を持っていく？」渡し守が道を塞いだ。',options:[['技を差し出す','好きなカード1枚を除去'],['傷を預ける','生存者のHP+20 / 銀貨-25'],['急いで渡る','灯油-5 / 銀貨+15']]}
+{title:'忘れられた焚き火',text:'手記には仲間と交わした約束が書かれていた。',options:[['手記を読む','3枚からカードを1枚選ぶ'],['体を休める','生存者のHP+14'],['油を集める','灯油+22']]},
+{title:'夜の取引',text:'仮面の人物が命の代わりに力を売るという。',options:[['命を差し出す','先頭の仲間のHP-15 / 通常レリックを選択'],['銀貨を払う','銀貨40 / 全員の最大HP+7'],['断る','何も消費せず進む']]},
+{title:'失われた隊商',text:'崩れた荷車に誰かが集めた旅の品が残されている。',options:[['物資を拾う','灯油+15 / 回復薬+1'],['銀貨を探す','銀貨+45'],['重荷を降ろす','カードを1枚選んで無料除去']]},
+{title:'渡し守の問い',text:'「何を残して何を持っていく？」渡し守が道を塞いだ。',options:[['技を差し出す','好きなカード1枚を除去'],['傷を預ける','生存者のHP+20 / 銀貨-25'],['急いで渡る','灯油-5 / 銀貨+15']]}
 ];
 export const MYSTERIES=[
-{title:'祝福の泉',text:'霧の下に、温かな水が湧いていた。',kind:'good',effect:'heal'},
-{title:'埋もれた小箱',text:'古い小箱には、まだ使える物資が残っていた。',kind:'good',effect:'supplies'},
+{title:'祝福の泉',text:'霧の下に温かな水が湧いていた。',kind:'good',effect:'heal'},
+{title:'埋もれた小箱',text:'古い小箱にはまだ使える物資が残っていた。',kind:'good',effect:'supplies'},
 {title:'星の落とし物',text:'掌に収まるほどの、世界の欠片を見つけた。',kind:'good',effect:'relic'},
-{title:'旅人の教え',text:'通りがかった旅人が、一つの技を教えてくれた。',kind:'good',effect:'card'},
-{title:'盗人の影',text:'振り返ると、銀貨の袋に切れ目が走っていた。',kind:'bad',effect:'goldLoss'},
-{title:'底なしの泥',text:'道が沈んだ。荷を守るために、灯油を失った。',kind:'bad',effect:'fuelLoss'},
-{title:'呪いの雨',text:'冷たい雨が、体温と気力を奪っていく。',kind:'bad',effect:'hurt'},
-{title:'伏兵',text:'道の両側から、夜の獣が襲いかかってくる。',kind:'bad',effect:'ambush'}
+{title:'旅人の教え',text:'通りがかった旅人が一つの技を教えてくれた。',kind:'good',effect:'card'},
+{title:'盗人の影',text:'振り返ると銀貨の袋に切れ目が走っていた。',kind:'bad',effect:'goldLoss'},
+{title:'底なしの泥',text:'道が沈んだ。荷を守るために灯油を失った。',kind:'bad',effect:'fuelLoss'},
+{title:'呪いの雨',text:'冷たい雨が体温と気力を奪っていく。',kind:'bad',effect:'hurt'},
+{title:'伏兵',text:'道の両側から夜の獣が襲いかかってくる。',kind:'bad',effect:'ambush'}
 ];
 
 for(const boss of BOSSES){boss.multiStrike=2;boss.ability+=' 攻撃行動は基本2連撃。';if(boss.chapter%3===1){boss.pattern.push('summon');boss.summonLimit=2;boss.ability+=' 2回まで増援を呼ぶ。'}if(boss.chapter>=8){boss.multiStrike=3;boss.ability+=' 後半は3連撃。'}}

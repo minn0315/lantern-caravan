@@ -366,3 +366,9 @@ html[data-motion="off"] .poison-impact>i{display:none}
 .settings-controls{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex:none}
 .settings-controls .btn{min-width:84px}
 @media (max-width:560px){.settings-group{padding:2px 12px}.settings-group .settings-row{flex-wrap:nowrap}.settings-controls .btn{min-width:70px;padding:8px 10px}}
+.encyclopedia-grid .encyclopedia-owner{grid-column:1/-1;margin:10px 0 2px;padding:4px 10px;border-left:3px solid #c9a95c;font-size:13px;letter-spacing:.08em;color:#5b4a26;background:rgba(201,169,92,.12)}
+.encyclopedia-filters select{margin-left:4px;padding:3px 6px;border-radius:6px}
+
+/* 戦闘エフェクトの描画レイヤー */
+.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:9500}
+.story-caption p{white-space:pre-line;line-height:2}

@@ -1,6 +1,6 @@
-import {recoverGoddessCards} from './deck-integrity.js?v=50';
-import {validDebugOverrides} from './debug-rules.js?v=50';
-import * as E from './engine.js?v=50';
+import {recoverGoddessCards} from './deck-integrity.js?v=51';
+import {validDebugOverrides} from './debug-rules.js?v=51';
+import * as E from './engine.js?v=51';
 const phases=['map','battle','reward','shop','camp','event','won','lost','mystery','incident','relic','forge','shrine','recruit','cardpick','remove','blessing','cycle','shopupgrade','goddess','demon-gate'];
 const num=(n,max=1e8)=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=max;
 const index=(n,max)=>Number.isInteger(n)&&n>=0&&n<max;
@@ -66,11 +66,11 @@ export function valid(s){try{
 }catch{return false}}
 export function migrate(input){
  if(!input||![1,2,3,4].includes(input.version))throw Error('このセーブ形式は読み込めません');
- let s=JSON.parse(JSON.stringify(input));if(Array.isArray(s.deck)&&Number.isSafeInteger(s.nextUid)&&s.nextUid>=0)s.nextUid=E.nextFreeCardUid(s);if(s.worldRevision!==2){s.worldRevision=2;if(s.endless&&s.chapter>=49){s.skippedAbyss=Math.floor((s.chapter+1)/50);if((s.chapter+1)%50===0)s.legacySpecialChapter=s.chapter}}s.potions=Math.min(3,s.potions);if(s.battle)for(const e of s.battle.enemies||[]){const d=[...E.ENEMIES,...E.BOSSES].find(d=>d.id===e.id);if(d){if(d.multiStrike!==undefined)e.multiStrike??=d.multiStrike;if(d.summonLimit!==undefined)e.summonLimit??=d.summonLimit}}if(s.version>=3){let old=s.version===3;s.version=4;s.endless??=false;if(s.starterId===undefined)s.starterId=s.party?.[0]||null;if(old&&s.hard&&s.phase==='won'&&s.chapter===3){delete s.cutscene;E.advanceStage(s)}if(!valid(s))throw Error('セーブ内容が不完全です。自動的な初期化は行いません');if(['camp','forge','event','goddess','shrine','incident'].includes(s.phase)&&E.nodeClaimed(s,s.phase)){s.phase='map';delete s.upgradeContext}E.settleCampaignVictory(s);E.ensureBlessing(s);E.ensureRelicOfferDiversity(s);return s}
+ let s=JSON.parse(JSON.stringify(input));if(Array.isArray(s.deck)&&Number.isSafeInteger(s.nextUid)&&s.nextUid>=0)s.nextUid=E.nextFreeCardUid(s);if(s.worldRevision!==2){s.worldRevision=2;if(s.endless&&s.chapter>=49){s.skippedAbyss=Math.floor((s.chapter+1)/50);if((s.chapter+1)%50===0)s.legacySpecialChapter=s.chapter}}s.potions=Math.min(3,s.potions);if(s.battle)for(const e of s.battle.enemies||[]){const d=[...E.ENEMIES,...E.BOSSES].find(d=>d.id===e.id);if(d){if(d.multiStrike!==undefined)e.multiStrike??=d.multiStrike;if(d.summonLimit!==undefined)e.summonLimit??=d.summonLimit}}if(s.version>=3){let old=s.version===3;s.version=4;s.endless??=false;if(s.starterId===undefined)s.starterId=s.party?.[0]||null;if(old&&s.hard&&s.phase==='won'&&s.chapter===3){delete s.cutscene;E.advanceStage(s)}if(!valid(s))throw Error('セーブ内容が不完全です　自動的な初期化は行いません');if(['camp','forge','event','goddess','shrine','incident'].includes(s.phase)&&E.nodeClaimed(s,s.phase)){s.phase='map';delete s.upgradeContext}E.settleCampaignVictory(s);E.ensureBlessing(s);E.ensureRelicOfferDiversity(s);return s}
  if(!Array.isArray(s.deck)||!Array.isArray(s.relics)||!Array.isArray(s.heroes)||!Array.isArray(s.route))throw Error('旧セーブに必要なデータがありません');
  if(s.version===1){
  s.version=2;s.party=E.HEROES.map(h=>h.id);s.heroes.forEach(h=>{for(let k of ['power','poison','vulnerable','regen','thorns'])h[k]??=0});s.deck.forEach(c=>{c.branches=Array.from({length:c.up||0},()=>c.branch||'power')});
- s.relicCycles={normal:{seen:[],cycle:1},boss:{seen:[],cycle:1}};s.cardBag=[];s.journal=[E.CHAPTERS[s.chapter].beats[0]];s.notice='旧版の旅を引き継ぎました。デッキ・強化・レリックは維持されています。';s.bossId=E.BOSSES.find(b=>b.chapter===E.biomeIndex(s)).id;
+ s.relicCycles={normal:{seen:[],cycle:1},boss:{seen:[],cycle:1}};s.cardBag=[];s.journal=[E.CHAPTERS[s.chapter].beats[0]];s.notice='旧版の旅を引き継ぎました　デッキ・強化・レリックは維持されています。';s.bossId=E.BOSSES.find(b=>b.chapter===E.biomeIndex(s)).id;
  E.rebuildGraph(s);
  if(s.battle){let b=s.battle;b.exhaust??=[];for(let key of ['hand','draw','discard','exhaust'])for(let c of b[key]||[])c.branches=Array.from({length:c.up||0},()=>c.branch||'power');Object.assign(b,{cardsPlayed:0,nextEnergy:0,nextDraw:0,carryEnergy:0,reviveUsed:false,enemyActions:0,statusUid:-1,memberSkillUsed:[],firstSkillUsed:false,poisonDrawUsed:false,exhaustEnergyUsed:false});
  b.enemies=b.enemies.map((e,i)=>{let d=E.ENEMIES.find(x=>x.id===e.kind)||E.currentBoss(s);let intent={...e.intent};if(intent.kind==='heavy')intent.factor=1.65;else if(intent.kind==='attack')intent.factor=1;else intent.factor=1.3;intent.hits=1;intent.poison=0;return{...d,...e,id:d.id,kind:d.id,art:d.art,pattern:[...new Set([...d.pattern,intent.kind])],phase:1,stun:0,index:i,intent}})}
@@ -82,11 +82,11 @@ export function migrate(input){
  if(s.phase==='recruit'&&Array.isArray(s.recruits))s.recruits=s.recruits.filter(id=>!s.party.includes(id)&&!s.departed.includes(id));
  const bind=c=>{if(!E.CARDS[c.id]?.status)c.owner??=s.party[E.CARDS[c.id]?.actor]||E.CARDS[c.id]?.owner};s.deck.forEach(bind);if(s.battle)for(const k of ['hand','draw','discard','exhaust'])for(const c of s.battle[k]||[])bind(c);
  if(s.hard&&s.phase==='won'&&s.chapter===3){delete s.cutscene;E.advanceStage(s)}
- if(!valid(s))throw Error('旧セーブの内容を検証できませんでした。元データを保護しています');if(['camp','forge','event','goddess','shrine','incident'].includes(s.phase)&&E.nodeClaimed(s,s.phase)){s.phase='map';delete s.upgradeContext}E.settleCampaignVictory(s);E.ensureBlessing(s);E.ensureRelicOfferDiversity(s);return s;
+ if(!valid(s))throw Error('旧セーブの内容を検証できませんでした　元データを保護しています');if(['camp','forge','event','goddess','shrine','incident'].includes(s.phase)&&E.nodeClaimed(s,s.phase)){s.phase='map';delete s.upgradeContext}E.settleCampaignVictory(s);E.ensureBlessing(s);E.ensureRelicOfferDiversity(s);return s;
 }
 export const AUTO_KEY='lantern-caravan-save-v1';
 export function checksum(text){let h=2166136261;for(let i=0;i<text.length;i++){h^=text.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(16).padStart(8,'0')}
-export function encodeSave(state){if(!valid(state))throw Error('保存するデータが不完全です。前のセーブを保持しました');let body=JSON.stringify(state);return JSON.stringify({format:'lantern-save',schema:4,savedAt:Date.now(),checksum:checksum(body),state})}
+export function encodeSave(state){if(!valid(state))throw Error('保存するデータが不完全です　前のセーブを保持しました');let body=JSON.stringify(state);return JSON.stringify({format:'lantern-save',schema:4,savedAt:Date.now(),checksum:checksum(body),state})}
 export function decodeSave(raw){let parsed=JSON.parse(raw);if(parsed.format==='lantern-save'){if(![2,3,4].includes(parsed.schema)||checksum(JSON.stringify(parsed.state))!==parsed.checksum)throw Error('セーブの整合性チェックに失敗しました');return{state:migrate(parsed.state),savedAt:parsed.savedAt,legacy:false}}return{state:migrate(parsed),savedAt:parsed.started||Date.now(),legacy:true}}
 export class SaveRepository{
  constructor(storage=globalThis.localStorage){this.storage=storage}

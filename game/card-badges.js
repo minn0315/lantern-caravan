@@ -81,10 +81,10 @@ function shortNote(line){
   .replace(/^自分HP半分以下なら威力 \+(\d+)$/,'自分HP半分以下：威力+$1')
   .replace(/^敵HP半分以下なら威力 \+(\d+)$/,'敵HP半分以下：威力+$1')
   .replace(/^敵に弱点があれば (\d+)枚 引く$/,'敵が弱点なら$1枚引く')
-  .replace(/^先に敵の毒をすべて消費し、その数ぶんダメージ/,'敵の毒を消費してダメージ')
+  .replace(/^先に敵の毒をすべて消費しその数ぶんダメージ/,'敵の毒を消費してダメージ')
   .replace(/^所持銀貨(\d+)枚ごとに威力\+1.*$/,'銀貨$1枚ごとに威力+1')
   .replace(/^特殊：山札の一番下・デッキ全体で1枚まで$/,'特殊カード（山札の一番下）')
-  .replace(/^効果なし。使うと戦闘中の山札から消える$/,'効果なし・使うと消える');
+  .replace(/^効果なし　使うと戦闘中の山札から消える$/,'効果なし・使うと消える');
 }
 export function badgeHTML(b){
  if(!b.icon)return `<span class="cb cb-tag cb-${b.tone}" title="${b.line.replace(/"/g,'&quot;')}">${b.value}</span>`;
